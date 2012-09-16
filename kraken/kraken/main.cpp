@@ -10,7 +10,7 @@ using namespace kraken;
 int main( int argc, const char** argv )
 {
   Settings settings( argc, argv );
-  
+
   if( false == settings.run() )
   {
     return EXIT_FAILURE;

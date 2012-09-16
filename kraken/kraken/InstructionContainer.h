@@ -12,40 +12,40 @@ using namespace std;
 
 class InstructionContainer
 {
-    private:
-        typedef vector<CodeChunk> code_collection_t;
+  private:
+    typedef vector<CodeChunk> code_collection_t;
 
-        // Vector with parsed chunks of code
-        code_collection_t _codeCollection;
+    // Vector with parsed chunks of code
+    code_collection_t _codeCollection;
 
-        // Raw code
-        vector<unsigned char> _codeBuff;
-        
-    public:
-        InstructionContainer(const vector<unsigned char> &memBuff, size_t startCodeSection, CodeChunk::rva_t virtualAddress);
-        ~InstructionContainer();
+    // Raw code
+    vector<unsigned char> _codeBuff;
 
-        // Get the container in which the code chunks are stored
-        inline vector<CodeChunk> get_code_collection() const;
+  public:
+    InstructionContainer(const vector<unsigned char> &memBuff, size_t startCodeSection, CodeChunk::rva_t virtualAddress);
+    ~InstructionContainer();
 
-    private:
-        // Calculate offset in the memory based on the passed virtual address
-        int rva_to_offset(const int &rva);
+    // Get the container in which the code chunks are stored
+    inline vector<CodeChunk> get_code_collection() const;
 
-        // Disassemble code chunk
-        CodeChunk disassemble_code_chunk(queue<DISASM>& jumpInstructionQueue);
+  private:
+    // Calculate offset in the memory based on the passed virtual address
+    int rva_to_offset(const int &rva);
 
-        // OPTIMIZE: this function is not optimized
-        // Checks if there is a code chunk that intersects with the one that is passed to this function
-        // and returns iterator to that chunk, otherwise returns iterator to end
-        code_collection_t::iterator check_if_intersects(const CodeChunk& codeChunk);
+    // Disassemble code chunk
+    CodeChunk disassemble_code_chunk(queue<DISASM>& jumpInstructionQueue);
 
-        void merge_code_chunks(CodeChunk& destination, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk);
+    // OPTIMIZE: this function is not optimized
+    // Checks if there is a code chunk that intersects with the one that is passed to this function
+    // and returns iterator to that chunk, otherwise returns iterator to end
+    code_collection_t::iterator check_if_intersects(const CodeChunk& codeChunk);
+
+    void merge_code_chunks(CodeChunk& destination, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk);
 };
 
 inline vector<CodeChunk> InstructionContainer::get_code_collection() const
 {
-    return _codeCollection;
+  return _codeCollection;
 };
 
 #endif
