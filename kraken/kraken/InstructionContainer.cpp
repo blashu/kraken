@@ -1,42 +1,51 @@
+#include <algorithm>
 #include "InstructionContainer.h"
 
 using namespace std;
 
+// OPTIMIZE: code chunks are stored in vector, which causes extra operations when finding intersections between chunks 
+// because we are removing them from vector, combining them in one chunk and re-adding it to vector. This may cause 
+// some problems and it may be a good idea to combine them inside an existing code chunk or use list container instead of vector
+
 InstructionContainer::InstructionContainer(
 	const vector<unsigned char> &memBuff, 
-	int* startCodeSection, 
-	long long virtualAddress)
+	size_t startCodeSection, 
+    CodeChunk::rva_t virtualAddress)
 {
 	_codeBuff = memBuff;
 
 	queue<DISASM> jumpInstructionQueue;
 
 	DISASM disasm;
-	disasm.EIP = (int) startCodeSection;
+	disasm.EIP = startCodeSection;
 	disasm.VirtualAddr = virtualAddress;
 	disasm.Archi = 0;
 
-	jumpInstructionQueue.push(disasm);
+	jumpInstructionQueue.push( disasm );
 
-	while(jumpInstructionQueue.size() != 0)
+	while( jumpInstructionQueue.size() != 0 )
 	{
-		auto disassembledCodeChunk = disassemble_code_chunk(jumpInstructionQueue);
+		auto disassembledCodeChunk = disassemble_code_chunk( jumpInstructionQueue );
 
-		auto iteratorToIntersection = check_if_intersects(disassembledCodeChunk);
+		auto iteratorToIntersection = check_if_intersects( disassembledCodeChunk );
 
 		if( (iteratorToIntersection) != _codeCollection.end() ||
             ( iteratorToIntersection->includes(disassembledCodeChunk) ) )
 		{
             continue;
 		}
-		if(disassembledCodeChunk.includes(*iteratorToIntersection))
+		if( disassembledCodeChunk.includes( *iteratorToIntersection ) )
 		{
-			_codeCollection.erase(iteratorToIntersection);
-			_codeCollection.push_back(disassembledCodeChunk);
+			_codeCollection.erase( iteratorToIntersection );
+			_codeCollection.push_back( disassembledCodeChunk );
 		}
 		else
 		{
+            CodeChunk mergedCodeChunk;
+            
+            merge_code_chunks( mergedCodeChunk, *iteratorToIntersection, disassembledCodeChunk );
 
+            _codeCollection[ distance( _codeCollection.begin(), iteratorToIntersection) - 1 ] = mergedCodeChunk;
 		}
 	}
 };

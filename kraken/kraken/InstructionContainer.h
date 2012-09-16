@@ -10,9 +10,6 @@
 
 using namespace std;
 
-// OPTIMIZE: code chunks are stored in vector, which causes extra operations when finding intersections between chunks 
-// because we are removing them from vector, combining them in one chunk and re-adding it to vector. This may cause 
-// some problems and it may be a good idea to combine them inside an existing code chunk or use list container instead of vector
 class InstructionContainer
 {
     private:
@@ -25,7 +22,7 @@ class InstructionContainer
         vector<unsigned char> _codeBuff;
         
     public:
-        InstructionContainer(const vector<unsigned char> &memBuff, int* startCodeSection, long long virtualAddress);
+        InstructionContainer(const vector<unsigned char> &memBuff, size_t startCodeSection, CodeChunk::rva_t virtualAddress);
         ~InstructionContainer();
 
         // Get the container in which the code chunks are stored
