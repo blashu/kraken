@@ -41,10 +41,8 @@ class CodeChunk
     // Get RVA of the last instruction in this code chunk
     inline rva_t last_rva() const;
 
+    // Checks if passed rva is contained in this code chunk
     inline bool CodeChunk::is_address_included(rva_t address) const;
-
-    // Get code chunk
-    //inline const vector<DISASM>& get() const;
 
     // Check if the passed code chunk intersects with\ is included in the current code chunk
     inline bool intersects_with(const CodeChunk& codeChunk) const;
