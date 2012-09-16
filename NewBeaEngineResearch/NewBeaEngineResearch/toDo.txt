@@ -1,0 +1,3 @@
+Реализовать LIR (Low-Level Intermediate Representation). Для этого мне надо сделать следующее:
+
+	1) 
