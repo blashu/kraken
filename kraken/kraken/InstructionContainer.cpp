@@ -1,4 +1,3 @@
-#include <algorithm>
 #include "InstructionContainer.h"
 
 using namespace std;
@@ -45,7 +44,7 @@ InstructionContainer::InstructionContainer(
 
       merge_code_chunks( mergedCodeChunk, *iteratorToIntersection, disassembledCodeChunk );
 
-      _codeCollection[ distance( _codeCollection.begin(), iteratorToIntersection) - 1 ] = mergedCodeChunk;
+      _codeCollection[ iteratorToIntersection - _codeCollection.begin() ] = mergedCodeChunk;
     }
   }
 };
