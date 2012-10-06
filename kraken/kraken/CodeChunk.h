@@ -1,12 +1,14 @@
 #ifndef __H_CODE_CHUNK__
 #define __H_CODE_CHUNK__
 
+#include "kraken.h"
+
 #include <vector>
 #include <BeaEngine\BeaEngine.h>
 
 using namespace std;
 
-class CodeChunk
+KRAKEN_API_ class CodeChunk
 {
   private:
     // Instructions, contained in this code chunk

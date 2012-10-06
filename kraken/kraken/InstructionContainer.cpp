@@ -13,7 +13,7 @@ InstructionContainer::InstructionContainer(
 {
   _codeBuff = memBuff;
 
-  queue<DISASM> jumpInstructionQueue;
+  queue<DISASM> jumpInstructionQueue; 
 
   DISASM disasm;
   disasm.EIP = startCodeSection;

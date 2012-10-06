@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5DAC4C17-F6DA-4409-9038-587833EDA780}</ProjectGuid>
-    <RootNamespace>kraken</RootNamespace>
+    <ProjectGuid>{85795385-2556-4351-8FA1-011BCA0665AD}</ProjectGuid>
+    <RootNamespace>kraken_test</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -39,26 +39,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExecutablePath>$(SolutionDir)bin\boost;$(VCInstallDir)bin;$(WindowsSDK_ExecutablePath_x86);$(VSInstallDir)Common7\Tools\bin;$(VSInstallDir)Common7\tools;$(VSInstallDir)Common7\ide;$(ProgramFiles)\HTML Help Workshop;$(MSBuildToolsPath32);$(VSInstallDir);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
-    <IncludePath>$(SolutionDir)include\;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\;$(SolutionDir)lib\boost\;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>KRAKEN_CREATE_SHARED_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GTEST_LINKED_AS_SHARED_LIBRARY;_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>BeaEngine.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\gtest\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gtest.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /yd "$(SolutionDir)bin\*.dll" "$(OutDir)"
-xcopy /yd "$(SolutionDir)bin\boost\boost_program_options-vc110-mt-gd-1_51.dll" "$(OutDir)"
-xcopy /yd "$(SolutionDir)bin\boost\boost_filesystem-vc110-mt-gd-1_51.dll" "$(OutDir)"
-xcopy /yd "$(SolutionDir)bin\boost\boost_system-vc110-mt-gd-1_51.dll" "$(OutDir)"</Command>
+      <Command>xcopy /yd "$(SolutionDir)bin\gtest\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,32 +72,13 @@ xcopy /yd "$(SolutionDir)bin\boost\boost_system-vc110-mt-gd-1_51.dll" "$(OutDir)
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CodeChunk.cpp" />
-    <ClCompile Include="InstructionContainer.cpp" />
-    <ClCompile Include="PEFileLoader.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Settings.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="StdAfx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="utf8_codecvt_facet.cpp" />
+    <ClCompile Include="CodeChunkTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CodeChunk.h" />
-    <ClInclude Include="InstructionContainer.h" />
-    <ClInclude Include="PEFileLoader.h" />
-    <ClInclude Include="kraken.h" />
-    <ClInclude Include="PEStructs.h" />
-    <ClInclude Include="Settings.h" />
-    <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="utf8_codecvt_facet.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="toDo.txt" />
+    <ProjectReference Include="..\kraken\kraken.vcxproj">
+      <Project>{5dac4c17-f6da-4409-9038-587833eda780}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

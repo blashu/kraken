@@ -1,4 +1,4 @@
-#include "main.h"
+#include "kraken.h"
 
 #include "Settings.h"
 #include "PEFileLoader.h"
