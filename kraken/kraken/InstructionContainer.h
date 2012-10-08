@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class InstructionContainer
+KRAKEN_API_ class InstructionContainer
 {
   private:
     typedef vector<CodeChunk> code_collection_t;

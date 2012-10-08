@@ -72,6 +72,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DisasmHelper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CodeChunkTest.cpp" />
   </ItemGroup>
@@ -79,6 +80,10 @@
     <ProjectReference Include="..\kraken\kraken.vcxproj">
       <Project>{5dac4c17-f6da-4409-9038-587833eda780}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CodeChunkTest.h" />
+    <ClInclude Include="DisasmHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

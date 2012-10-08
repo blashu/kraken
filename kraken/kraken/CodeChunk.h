@@ -35,6 +35,8 @@ KRAKEN_API_ class CodeChunk
 
     inline code_chunk_iter end() const;
 
+    inline const DISASM& front() const;
+
     inline const DISASM& back() const;
 
     // Get RVA of the first instruction in this code chunk
@@ -69,6 +71,11 @@ inline CodeChunk::code_chunk_iter CodeChunk::end() const
   return _codeChunk.end();
 }
 
+inline const DISASM& CodeChunk::front() const
+{
+  return _codeChunk.front();
+}
+
 inline const DISASM& CodeChunk::back() const
 {
   return _codeChunk.back();
@@ -87,6 +94,11 @@ inline CodeChunk::rva_t CodeChunk::last_rva() const
 
 inline bool CodeChunk::is_address_included(rva_t address) const
 {
+  if( address < 0 )
+  {
+    return false;
+  }
+
   return ( ( address >= first_rva() ) &&
     ( address <= last_rva() ) );
 }
