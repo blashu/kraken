@@ -1,4 +1,4 @@
-#include "InstructionContainer.h"
+#include "CodeContainer.h"
 
 using namespace std;
 
@@ -6,7 +6,7 @@ using namespace std;
 // because we are removing them from vector, combining them in one chunk and re-adding it to vector. This may cause 
 // some problems and it may be a good idea to combine them inside an existing code chunk or use list container instead of vector
 
-InstructionContainer::InstructionContainer(
+CodeContainer::CodeContainer(
   const vector<unsigned char> &memBuff, 
   size_t startCodeSection, 
   CodeChunk::rva_t virtualAddress)
@@ -28,12 +28,13 @@ InstructionContainer::InstructionContainer(
 
     auto iteratorToIntersection = check_if_intersects( disassembledCodeChunk );
 
-    if( (iteratorToIntersection) != _codeCollection.end() ||
-      ( iteratorToIntersection->includes(disassembledCodeChunk) ) )
+    // Checking if disassembled code chunk intersects with any of the previously disassembled ones
+    if( ( iteratorToIntersection ) == _codeCollection.end()
+        || ( iteratorToIntersection->includes( disassembledCodeChunk ) ) )
     {
       continue;
     }
-    if( disassembledCodeChunk.includes( *iteratorToIntersection ) )
+    else if( disassembledCodeChunk.includes( *iteratorToIntersection ) )
     {
       _codeCollection.erase( iteratorToIntersection );
       _codeCollection.push_back( disassembledCodeChunk );
@@ -47,34 +48,38 @@ InstructionContainer::InstructionContainer(
       _codeCollection[ iteratorToIntersection - _codeCollection.begin() ] = mergedCodeChunk;
     }
   }
+
+  sort( _codeCollection.begin(), _codeCollection.end(), [] (const CodeChunk& firstChunk, const CodeChunk& secondChunk)
+    {
+      return firstChunk.first_rva() < secondChunk.first_rva();
+    } );
 };
 
-CodeChunk InstructionContainer::disassemble_code_chunk(queue<DISASM>& jumpInstructionQueue)
+CodeChunk CodeContainer::disassemble_code_chunk(queue<DISASM>& jumpInstructionQueue)
 {
   int instructionLength;
   CodeChunk codeChunk;
 
   auto isEndOfCodeBlock = false;
-  auto disasm = jumpInstructionQueue.front();  
+  auto disasm = jumpInstructionQueue.front();
 
   while (!isEndOfCodeBlock)
   {
     instructionLength = Disasm(&disasm);
 
-    if ((instructionLength != OUT_OF_BLOCK) && (instructionLength != UNKNOWN_OPCODE))
+    if ( ( instructionLength != OUT_OF_BLOCK ) && ( instructionLength != UNKNOWN_OPCODE ) )
     {
-      if ((disasm.Instruction.BranchType == JmpType)
-        && (disasm.Instruction.AddrValue != 0))
+      if ( ( disasm.Instruction.BranchType == JmpType ) && ( disasm.Instruction.AddrValue != 0 ) )
       {
         DISASM tempDisasm;
 
-        tempDisasm.EIP = rva_to_offset((int) disasm.Instruction.AddrValue - 0x400000);
+        tempDisasm.EIP = rva_to_offset( (int) disasm.Instruction.AddrValue - 0x400000 );
         tempDisasm.VirtualAddr = disasm.Instruction.AddrValue;
 
-        jumpInstructionQueue.push(tempDisasm);
+        jumpInstructionQueue.push( tempDisasm );
       }
 
-      codeChunk.add_to_chunk(disasm);
+      codeChunk.add_to_chunk( disasm );
       disasm.EIP = disasm.EIP + instructionLength;
       disasm.VirtualAddr = disasm.VirtualAddr + instructionLength;
     }
@@ -90,62 +95,61 @@ CodeChunk InstructionContainer::disassemble_code_chunk(queue<DISASM>& jumpInstru
 };
 
 // TODO: rename variables and get rid of all that needless dark magic if possible
-int InstructionContainer::rva_to_offset(const int& rva)
+int CodeContainer::rva_to_offset(const int& rva)
 {
-  int RawSize,
-    VirtualBorneInf,
-    RawBorneInf,
-    SectionHeader,
-    OffsetNtHeaders,
-    OffsetSectionHeaders,
-    NumberOfSections,
-    SizeOfOptionalHeaders,
-    VirtualAddress;
+  int rawSize,
+    virtualBorneInf,
+    rawBorneInf,
+    sectionHeader,
+    offsetNtHeaders,
+    offsetSectionHeaders,
+    numberOfSections,
+    sizeOfOptionalHeaders,
+    virtualAddress;
 
   // Calculating offset to get through section headers
-  OffsetNtHeaders = (int) *((int*) (&(*_codeBuff.begin()) + 0x3c));
-  SizeOfOptionalHeaders = (int) *((unsigned short*) (&(*_codeBuff.begin())  + OffsetNtHeaders + 0x14));
-  OffsetSectionHeaders = OffsetNtHeaders + SizeOfOptionalHeaders + 0x18;
+  offsetNtHeaders = (int) *( (int*) ( &_codeBuff.front() + 0x3c ) );
+  sizeOfOptionalHeaders = (int) *( (unsigned short*) ( &_codeBuff.front() + offsetNtHeaders + 0x14 ) );
+  offsetSectionHeaders = offsetNtHeaders + sizeOfOptionalHeaders + 0x18;
 
-  NumberOfSections = (int) *((unsigned short*) (&(*_codeBuff.begin())  + OffsetNtHeaders + 6)); // Wtf do we need this for? Can't find any use of this variable.
+  numberOfSections = (int) *( (unsigned short*) ( &_codeBuff.front() + offsetNtHeaders + 6) ); // Wtf do we need this for? Can't find any use of this variable.
 
-  VirtualBorneInf = 0;
-  RawBorneInf = 0;
-  VirtualAddress = 0;
-  SectionHeader = 0;
+  virtualBorneInf = 0;
+  rawBorneInf = 0;
+  virtualAddress = 0;
+  sectionHeader = 0;
 
-  while (VirtualAddress <= rva)
+  while ( virtualAddress <= rva )
   {
-    if (VirtualAddress != 0)
+    if ( virtualAddress != 0 )
     {
-      VirtualBorneInf = VirtualAddress;
-      RawSize = (int) *((unsigned int*) (&(*_codeBuff.begin())  + OffsetSectionHeaders + 0x10)); // Why the fuck we are reassigning this shit every time in the cycle?
-      RawBorneInf = (int) *((unsigned int*) (&(*_codeBuff.begin())  + OffsetSectionHeaders + 0x14));
+      virtualBorneInf = virtualAddress;
+      rawSize = (int) *( (unsigned int*) ( &_codeBuff.front() + offsetSectionHeaders + 0x10 ) ); // Why the fuck we are reassigning this shit every time in the cycle?
+      rawBorneInf = (int) *( (unsigned int*) ( &_codeBuff.front() + offsetSectionHeaders + 0x14 ) );
     }
 
-    VirtualAddress = (int) *((unsigned int*) (&(*_codeBuff.begin())  + OffsetSectionHeaders 
-      + SectionHeader*0x28 + 0x0C));
-    SectionHeader ++;
+    virtualAddress = (int) *( (unsigned int*) ( &_codeBuff.front()  + offsetSectionHeaders + sectionHeader*0x28 + 0x0C ) );
+    sectionHeader ++;
   }
 
-  if ((rva - VirtualBorneInf) > RawSize) 
+  if ( ( rva - virtualBorneInf ) > rawSize )
   {
     return -1;
   }
 
-  RawBorneInf = RawBorneInf >> 8;
+  rawBorneInf = rawBorneInf >> 8;
 
-  if (RawBorneInf & 1) 
+  if ( rawBorneInf & 1 )
   { 
-    RawBorneInf--;
+    rawBorneInf--;
   }
 
-  RawBorneInf = RawBorneInf << 8;
+  rawBorneInf = rawBorneInf << 8;
 
-  return rva - VirtualBorneInf + RawBorneInf + (int) &(*_codeBuff.begin()) ;
+  return rva - virtualBorneInf + rawBorneInf + (int) &_codeBuff.front();
 };
 
-InstructionContainer::code_collection_t::iterator InstructionContainer::check_if_intersects(const CodeChunk& codeChunk)
+CodeContainer::code_collection_t::iterator CodeContainer::check_if_intersects(const CodeChunk& codeChunk)
 {
   for( auto it = _codeCollection.begin(), end = _codeCollection.end(); it != end; ++it )
   {
@@ -158,7 +162,7 @@ InstructionContainer::code_collection_t::iterator InstructionContainer::check_if
   return _codeCollection.end();
 };
 
-void InstructionContainer::merge_code_chunks(CodeChunk& destination, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk)
+void CodeContainer::merge_code_chunks(CodeChunk& destination, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk)
 {
   const CodeChunk* endChunk;
 

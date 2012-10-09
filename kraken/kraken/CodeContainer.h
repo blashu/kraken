@@ -10,7 +10,7 @@
 
 using namespace std;
 
-KRAKEN_API_ class InstructionContainer
+KRAKEN_API_ class CodeContainer
 {
   private:
     typedef vector<CodeChunk> code_collection_t;
@@ -22,8 +22,8 @@ KRAKEN_API_ class InstructionContainer
     vector<unsigned char> _codeBuff;
 
   public:
-    InstructionContainer(const vector<unsigned char> &memBuff, size_t startCodeSection, CodeChunk::rva_t virtualAddress);
-    ~InstructionContainer();
+    CodeContainer(const vector<unsigned char> &memBuff, size_t startCodeSection, CodeChunk::rva_t virtualAddress);
+    ~CodeContainer();
 
     // Get the container in which the code chunks are stored
     inline vector<CodeChunk> get_code_collection() const;
@@ -43,7 +43,7 @@ KRAKEN_API_ class InstructionContainer
     void merge_code_chunks(CodeChunk& destination, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk);
 };
 
-inline vector<CodeChunk> InstructionContainer::get_code_collection() const
+inline vector<CodeChunk> CodeContainer::get_code_collection() const
 {
   return _codeCollection;
 };

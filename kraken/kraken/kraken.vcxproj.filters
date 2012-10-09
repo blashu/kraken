@@ -33,7 +33,7 @@
     <ClCompile Include="CodeChunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InstructionContainer.cpp">
+    <ClCompile Include="CodeContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,10 +56,10 @@
     <ClInclude Include="CodeChunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InstructionContainer.h">
+    <ClInclude Include="kraken.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="kraken.h">
+    <ClInclude Include="CodeContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

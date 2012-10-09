@@ -76,7 +76,7 @@ xcopy /yd "$(SolutionDir)bin\boost\boost_system-vc110-mt-gd-1_51.dll" "$(OutDir)
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CodeChunk.cpp" />
-    <ClCompile Include="InstructionContainer.cpp" />
+    <ClCompile Include="CodeContainer.cpp" />
     <ClCompile Include="PEFileLoader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
@@ -91,7 +91,7 @@ xcopy /yd "$(SolutionDir)bin\boost\boost_system-vc110-mt-gd-1_51.dll" "$(OutDir)
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CodeChunk.h" />
-    <ClInclude Include="InstructionContainer.h" />
+    <ClInclude Include="CodeContainer.h" />
     <ClInclude Include="PEFileLoader.h" />
     <ClInclude Include="kraken.h" />
     <ClInclude Include="PEStructs.h" />
