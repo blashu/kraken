@@ -23,7 +23,7 @@ KRAKEN_API_ class CodeContainer
 
   public:
     CodeContainer(const vector<unsigned char> &memBuff, size_t startCodeSection, CodeChunk::rva_t virtualAddress);
-    ~CodeContainer();
+    ~CodeContainer() {};
 
     // Get the container in which the code chunks are stored
     inline vector<CodeChunk> get_code_collection() const;

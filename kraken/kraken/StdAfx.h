@@ -1,6 +1,10 @@
 //////////////////////////////////////
-// boost dlls
-#define BOOST_ALL_DYN_LINK
+// beaengine
+
+#include <BeaEngine\BeaEngine.h>
+
+//////////////////////////////////////
+// boost libraries
 
 #include <boost\program_options.hpp>
 #include <boost\filesystem.hpp>
