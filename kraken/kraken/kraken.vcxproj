@@ -83,12 +83,6 @@
   <ItemGroup>
     <ClCompile Include="CodeChunk.cpp" />
     <ClCompile Include="CodeContainer.cpp" />
-    <ClCompile Include="PEFileLoader.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Settings.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -97,10 +91,8 @@
   <ItemGroup>
     <ClInclude Include="CodeChunk.h" />
     <ClInclude Include="CodeContainer.h" />
-    <ClInclude Include="PEFileLoader.h" />
     <ClInclude Include="kraken.h" />
     <ClInclude Include="PEStructs.h" />
-    <ClInclude Include="Settings.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="utf8_codecvt_facet.hpp" />
   </ItemGroup>
