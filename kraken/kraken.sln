@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kraken_test", "kraken_test\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kraken_console", "kraken_console\kraken_console.vcxproj", "{EB4559C6-F4F8-4BDC-98A7-96A03E06D24A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple_exe", "simple_exe\simple_exe.vcxproj", "{7E4000E2-8766-4CFC-A2FB-4B716A141CB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -25,6 +27,10 @@ Global
 		{EB4559C6-F4F8-4BDC-98A7-96A03E06D24A}.Debug|Win32.Build.0 = Debug|Win32
 		{EB4559C6-F4F8-4BDC-98A7-96A03E06D24A}.Release|Win32.ActiveCfg = Release|Win32
 		{EB4559C6-F4F8-4BDC-98A7-96A03E06D24A}.Release|Win32.Build.0 = Release|Win32
+		{7E4000E2-8766-4CFC-A2FB-4B716A141CB6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7E4000E2-8766-4CFC-A2FB-4B716A141CB6}.Debug|Win32.Build.0 = Debug|Win32
+		{7E4000E2-8766-4CFC-A2FB-4B716A141CB6}.Release|Win32.ActiveCfg = Release|Win32
+		{7E4000E2-8766-4CFC-A2FB-4B716A141CB6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

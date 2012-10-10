@@ -17,12 +17,11 @@ int main( int argc, const char** argv )
   }
 
   PEFileLoader fileLoader;
-  cout << "Loading file \"" << settings.path_to_bin() << "\"..." << std::endl;
+  cout << "Loading file \"" << settings.path_to_bin() << "\"..." << endl;
   if( fileLoader.load( settings.path_to_bin() ) )
   {
-    cout << settings.path_to_bin() << " is successfully loaded.";
+    cout << settings.path_to_bin() << " is successfully loaded." << endl;
   }
 
-  std::getchar();
   return EXIT_SUCCESS;
 }
