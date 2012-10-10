@@ -26,10 +26,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DisasmHelper.h">
+    <ClInclude Include="CodeChunkTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CodeChunkTest.h">
+    <ClInclude Include="DisasmHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
