@@ -4,24 +4,24 @@
 #include "kraken.h"
 
 #include <vector>
-#include <BeaEngine\BeaEngine.h>
+#include "AsmCode.h"
 
 using namespace std;
+using namespace kraken;
 
 KRAKEN_API_ class CodeChunk
 {
   private:
     // Instructions, contained in this code chunk
-    vector<DISASM> _codeChunk;
+    vector<AsmCode> _codeChunk;
 
   public:
-    typedef vector<DISASM> code_chunk_t;
+    typedef vector<AsmCode> code_chunk_t;
     typedef code_chunk_t::const_iterator code_chunk_iter;
-    typedef long long rva_t;
 
     CodeChunk(){};
 
-    CodeChunk(const vector<DISASM> &codeChunk)
+    CodeChunk(const vector<AsmCode> &codeChunk)
     {
       _codeChunk = codeChunk;
     }
@@ -35,9 +35,9 @@ KRAKEN_API_ class CodeChunk
 
     inline code_chunk_iter end() const;
 
-    inline const DISASM& front() const;
+    inline const AsmCode& front() const;
 
-    inline const DISASM& back() const;
+    inline const AsmCode& back() const;
 
     // Get RVA of the first instruction in this code chunk
     inline rva_t first_rva() const;
@@ -55,7 +55,7 @@ KRAKEN_API_ class CodeChunk
     inline bool includes(const CodeChunk& codeChunk) const;
 
     // Add instruction to the code chunk
-    inline void add_to_chunk(const DISASM& disasm);
+    inline void add_to_chunk(const AsmCode& disasm);
 
     // Append one code chunk to the other based on iterator to vector
     inline void add_to_chunk(code_chunk_t::const_iterator begin, code_chunk_t::const_iterator end);
@@ -71,22 +71,22 @@ inline CodeChunk::code_chunk_iter CodeChunk::end() const
   return _codeChunk.end();
 }
 
-inline const DISASM& CodeChunk::front() const
+inline const AsmCode& CodeChunk::front() const
 {
   return _codeChunk.front();
 }
 
-inline const DISASM& CodeChunk::back() const
+inline const AsmCode& CodeChunk::back() const
 {
   return _codeChunk.back();
 }
 
-inline CodeChunk::rva_t CodeChunk::first_rva() const
+inline rva_t CodeChunk::first_rva() const
 {
   return _codeChunk.empty() ? -1 : _codeChunk.begin()->VirtualAddr;
 };
 
-inline CodeChunk::rva_t CodeChunk::last_rva() const
+inline rva_t CodeChunk::last_rva() const
 
 {
   return _codeChunk.empty() ? -1 : _codeChunk.back().VirtualAddr;
@@ -113,7 +113,7 @@ inline bool CodeChunk::includes(const CodeChunk& codeChunk) const
   return is_address_included( codeChunk.first_rva() ) && is_address_included( codeChunk.last_rva() );
 };
 
-inline void CodeChunk::add_to_chunk(const DISASM& disasm)
+inline void CodeChunk::add_to_chunk(const AsmCode& disasm)
 {
   _codeChunk.push_back( disasm );
 };

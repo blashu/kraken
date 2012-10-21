@@ -24,7 +24,13 @@
     <ClCompile Include="CodeChunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CodeContainer.cpp">
+    <ClCompile Include="ChunkContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Disassembler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PeDisassembler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,11 +50,17 @@
     <ClInclude Include="kraken.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CodeContainer.h">
+    <ClInclude Include="ChunkContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="toDo.txt" />
+    <ClInclude Include="Disassembler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AsmCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PeDisassembler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 #include "CodeChunkTest.h"
 
-#include "DisasmHelper.h"
+#include "AsmCodeHelper.h"
 
 TEST_F(CodeChunkTest, ChunkIsEmptyBeginAndEndAreEqual)
 {
@@ -11,34 +11,34 @@ TEST_F(CodeChunkTest, ChunkIsEmptyBeginAndEndAreEqual)
 
 TEST_F(CodeChunkTest, BeginChunkIsNotEmptyReturnsIteratorToTheBeginningOfChunk)
 {
-  DISASM disasm;
+  AsmCode disasm;
   disasm.VirtualAddr = _baseRva;
 
-  EXPECT_TRUE( DisasmHelper::cmp( disasm, *_chunk.begin() ) );
+  EXPECT_TRUE( AsmCodeHelper::cmp( disasm, *_chunk.begin() ) );
 }
 
 TEST_F(CodeChunkTest, EndChunkIsNotEmptyReturnsIteratorToTheEndOfChunk)
 {
-  DISASM disasm;
+  AsmCode disasm;
   disasm.VirtualAddr = _lastRva;
 
-  EXPECT_TRUE( DisasmHelper::cmp( disasm,  *(_chunk.end() - 1) ) );
+  EXPECT_TRUE( AsmCodeHelper::cmp( disasm,  *(_chunk.end() - 1) ) );
 }
 
 TEST_F(CodeChunkTest, FrontAlwaysReturnsFirstElement)
 {
-  DISASM disasm;
+  AsmCode disasm;
   disasm.VirtualAddr = _baseRva;
 
-  EXPECT_TRUE( DisasmHelper::cmp( disasm, _chunk.front() ) );
+  EXPECT_TRUE( AsmCodeHelper::cmp( disasm, _chunk.front() ) );
 }
 
 TEST_F(CodeChunkTest, BackAlwaysReturnsLastElement)
 {
-  DISASM disasm;
+  AsmCode disasm;
   disasm.VirtualAddr = _lastRva;
 
-  EXPECT_TRUE( DisasmHelper::cmp( disasm, _chunk.back() ) );
+  EXPECT_TRUE( AsmCodeHelper::cmp( disasm, _chunk.back() ) );
 }
 
 TEST_F(CodeChunkTest, FirstRvaChunkIsEmptyReturnsMinusOne)
@@ -173,20 +173,20 @@ TEST_F(CodeChunkTest, IncludesPassedChunkNeverInetsectsWithInnerChunkReturnsFals
 
 TEST_F(CodeChunkTest, AddToChunkAlwaysAddsSingleDisasm)
 {
-  DISASM disasm;
+  AsmCode disasm;
   disasm.VirtualAddr = 1000;
   CodeChunk chunk;
 
   chunk.add_to_chunk( disasm );
 
-  EXPECT_TRUE( DisasmHelper::cmp( disasm, chunk.front() ) );
+  EXPECT_TRUE( AsmCodeHelper::cmp( disasm, chunk.front() ) );
 }
 
 TEST_F(CodeChunkTest, AddToChunkAlwaysAddsDisasmVector)
 {
   CodeChunk::code_chunk_t disasmVector;
 
-  DISASM tempDisasm;
+  AsmCode tempDisasm;
   for( int i = _baseRva; i <= _lastRva; ++i )
   {
     tempDisasm.VirtualAddr = i;
@@ -204,18 +204,18 @@ TEST_F(CodeChunkTest, AddToChunkAlwaysAddsDisasmVector)
   auto chunkIterator = chunk.begin();
   while( vectorIterator != disasmVector.end() && chunkIterator == chunk.end() )
   {
-    EXPECT_TRUE( DisasmHelper::cmp( *vectorIterator, *chunkIterator ) );
+    EXPECT_TRUE( AsmCodeHelper::cmp( *vectorIterator, *chunkIterator ) );
 
     ++vectorIterator;
     ++chunkIterator;
   }
 }
 
-CodeChunk CodeChunkTest::GenerateCodeChunk(const CodeChunk::rva_t& firstRva, const CodeChunk::rva_t& lastRva)
+CodeChunk CodeChunkTest::GenerateCodeChunk(const rva_t& firstRva, const rva_t& lastRva)
 {
   CodeChunk chunk;
   
-  DISASM tempDisasm;
+  AsmCode tempDisasm;
   for( auto passedChunkBaseRva = firstRva; passedChunkBaseRva <= lastRva; ++passedChunkBaseRva )
   {
     tempDisasm.VirtualAddr = passedChunkBaseRva;

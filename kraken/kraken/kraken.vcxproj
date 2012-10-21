@@ -82,22 +82,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CodeChunk.cpp" />
-    <ClCompile Include="CodeContainer.cpp" />
+    <ClCompile Include="ChunkContainer.cpp" />
+    <ClCompile Include="Disassembler.cpp" />
+    <ClCompile Include="PeDisassembler.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="utf8_codecvt_facet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsmCode.h" />
     <ClInclude Include="CodeChunk.h" />
-    <ClInclude Include="CodeContainer.h" />
+    <ClInclude Include="ChunkContainer.h" />
+    <ClInclude Include="Disassembler.h" />
     <ClInclude Include="kraken.h" />
+    <ClInclude Include="PeDisassembler.h" />
     <ClInclude Include="PEStructs.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="utf8_codecvt_facet.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="toDo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

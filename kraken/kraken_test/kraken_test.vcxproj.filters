@@ -18,7 +18,13 @@
     <ClCompile Include="CodeChunkTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DisasmHelper.cpp">
+    <ClCompile Include="ChunkContainerTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AsmCodeHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisassemblerTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,7 +32,13 @@
     <ClInclude Include="CodeChunkTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DisasmHelper.h">
+    <ClInclude Include="MockDisassembler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MockChunkContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AsmCodeHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

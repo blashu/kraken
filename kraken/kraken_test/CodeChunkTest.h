@@ -18,5 +18,5 @@ class CodeChunkTest : public :: testing::Test
       _chunk = GenerateCodeChunk( _baseRva, _lastRva );
     }
 
-    CodeChunk GenerateCodeChunk(const CodeChunk::rva_t& firstRva, const CodeChunk::rva_t& lastRva);
+    CodeChunk GenerateCodeChunk(const rva_t& firstRva, const rva_t& lastRva);
 };
