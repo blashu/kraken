@@ -12,7 +12,7 @@ int PeDisassembler::disassemble(AsmCode *disasmResult) const
   DISASM disasm;
 
   disasm.EIP = disasmResult->Eip;
-  disasm.VirtualAddr = disasmResult->VirtualAddr - _imageNtHeader32->OptionalHeader.ImageBase;
+  disasm.VirtualAddr = disasmResult->VirtualAddr;
   
   int length = Disasm( &disasm );
 
@@ -161,7 +161,7 @@ CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr )
 
   AsmCode tempDisasm;
 
-  tempDisasm.Eip = rva_to_offset( instrAddr );
+  tempDisasm.Eip = (size_t)( buf() + rva_to_offset( instrAddr ) );
   tempDisasm.VirtualAddr = instrAddr;
   tempDisasm.Archi = 0;
 
