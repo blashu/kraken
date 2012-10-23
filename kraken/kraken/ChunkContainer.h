@@ -5,7 +5,7 @@
 #include <queue>
 #include <string>
 
-#include "PeDisassembler.h"
+#include "Disassembler.h"
 #include "CodeChunk.h"
 
 using namespace std;
@@ -13,37 +13,50 @@ using namespace kraken;
 
 KRAKEN_API_ class ChunkContainer
 {
-  private:
-    typedef vector<CodeChunk> code_collection_t;
-
-    // Vector with parsed chunks of code
-    code_collection_t _codeCollection;
-
-    // Raw code
-    vector<unsigned char> _codeBuff;
-
   public:
-    ChunkContainer(){}
+    typedef vector<CodeChunk> chunk_container_t;
+    typedef chunk_container_t::const_iterator chunk_container_iter;
 
-    ChunkContainer(const vector<unsigned char> &memBuff, size_t startCodeSection, rva_t virtualAddress);
+    ChunkContainer() {}
 
-    virtual bool fill(const vector<unsigned char> &memBuff, size_t startCodeSection, rva_t virtualAddress);
+    ChunkContainer(const Disassembler& disassembler);
+
+    // Fills chunk container with disassembled chunks of code, while handling unconditional branch instructions and possible chunk intersections
+    virtual bool fill(const Disassembler& disassembler);
     
     virtual ~ChunkContainer() {};
 
-  private:
-    // Calculate offset in the memory based on the passed virtual address
-    virtual int rva_to_offset(const int &rva);
+    virtual inline chunk_container_iter begin() const;
 
-    // Disassemble code chunk
-    virtual CodeChunk disassemble_code_chunk(queue<AsmCode>& jumpInstructionQueue, const Disassembler* disassemble);
+    virtual inline chunk_container_iter end() const;
+
+  private:
+    /////////////////////////////////////////
+    // fields
+    typedef vector<CodeChunk> code_collection_t;
+
+    code_collection_t _codeCollection;
+
+    /////////////////////////////////////////
+    // functions
+    virtual CodeChunk disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Disassembler& disassemble);
 
     // OPTIMIZE: this function is not optimized
     // Checks if there is a code chunk that intersects with the one that is passed to this function
     // and returns iterator to that chunk, otherwise returns iterator to end
     virtual code_collection_t::iterator check_if_intersects(const CodeChunk& codeChunk);
 
-    virtual void merge_code_chunks(CodeChunk& destination, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk);
+    virtual void merge_code_chunks(CodeChunk& resultChunk, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk);
 };
+
+inline ChunkContainer::chunk_container_iter ChunkContainer::begin() const
+{
+  return _codeCollection.begin();
+}
+
+inline ChunkContainer::chunk_container_iter ChunkContainer::end() const
+{
+  return _codeCollection.end();
+}
 
 #endif

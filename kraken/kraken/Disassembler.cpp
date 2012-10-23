@@ -1,24 +1,22 @@
 #include "Disassembler.h"
 
-#include <BeaEngine\BeaEngine.h>
-
 using namespace kraken;
 
-int Disassembler::disassemble(AsmCode *disasmResult) const
+int Disassembler::disassemble(AsmCode *asmCode) const
 {
-  DISASM disasm;
+  memset( asmCode, 0, sizeof( AsmCode ) );
 
-  disasm.EIP = disasmResult->Eip;
-  disasm.VirtualAddr = disasmResult->VirtualAddr;
-  
-  int length = Disasm( &disasm );
+  return 0;
+}
 
-  memcpy( disasmResult->CompleteInstr, disasm.CompleteInstr, sizeof( disasmResult->CompleteInstr ) );
-  disasmResult->Eip = disasm.EIP;
-  disasmResult->VirtualAddr = disasm.VirtualAddr;
-  disasmResult->Instruction.AddrValue = disasm.Instruction.AddrValue;
-  disasmResult->Instruction.BranchType = (BranchType)disasm.Instruction.BranchType;
-  disasmResult->Archi = disasm.Archi;
+CodeChunk Disassembler::disassemble_code_chunk(rva_t instrAddr) const
+{
+  CodeChunk codeChunk;
 
-  return length;
+  return codeChunk;
+}
+
+rva_t Disassembler::entry_point() const
+{
+  return 0;
 }

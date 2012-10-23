@@ -88,11 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PEFileLoader.cpp" />
     <ClCompile Include="Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PEFileLoader.h" />
     <ClInclude Include="Settings.h" />
   </ItemGroup>
   <ItemGroup>

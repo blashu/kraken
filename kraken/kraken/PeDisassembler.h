@@ -15,18 +15,17 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
 
     virtual int disassemble(AsmCode *disasmResult) const;
 
+    // Disassemble code chunk
+    virtual CodeChunk disassemble_code_chunk(rva_t instrAddr) const;
+
+    // Returns the entry point of the contained file
+    virtual rva_t entry_point() const;
+
+    // Calculate offset in the memory based on the passed virtual address
+    int rva_to_offset(rva_t rva) const;
+
+    // Load specified file
     bool load( const std::string &path );
-
-    const unsigned char* buf();
-
-    template <typename T>
-    const T* buf( size_t offset );
-
-    CodeChunk disassemble_code_chunk(rva_t instrAddr);
-
-    int rva_to_offset(rva_t rva);
-
-    rva_t entry_point();
 
   private:
     /////////////////////////////////////////
@@ -40,6 +39,11 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
     /////////////////////////////////////////
     // functions
     PeDisassembler( const PeDisassembler& ){};
+
+    template <typename T>
+    const T* buf( size_t offset ) const;
+
+    const unsigned char* buf() const;
 
     bool is_it_pe_file();
 

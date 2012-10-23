@@ -1,6 +1,5 @@
 
 #include "Settings.h"
-#include "PEFileLoader.h"
 
 #include <kraken.h>
 #include <iostream>

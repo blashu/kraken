@@ -13,7 +13,7 @@ int PeDisassembler::disassemble(AsmCode *disasmResult) const
 
   disasm.EIP = disasmResult->Eip;
   disasm.VirtualAddr = disasmResult->VirtualAddr;
-  
+
   int length = Disasm( &disasm );
 
   memcpy( disasmResult->CompleteInstr, disasm.CompleteInstr, sizeof( disasmResult->CompleteInstr ) );
@@ -50,14 +50,14 @@ bool PeDisassembler::load( const std::string &path )
   return true;
 }
 
-const unsigned char* PeDisassembler::buf()
+const unsigned char* PeDisassembler::buf() const
 {
   return ( _fileBuf.empty() ? ( (const unsigned char*) NULL ) : &(_fileBuf[ 0 ]) );
 }
 
 //TODO validate that fileBuf contains the last byte of T type (check sizeof(T) ).
 template <typename T>
-const T* PeDisassembler::buf( size_t offset )
+const T* PeDisassembler::buf( size_t offset ) const
 {
   return ( offset >= _fileBuf.size() ? (const T*) NULL : (const T*) &(_fileBuf[ offset ]) );
 }
@@ -148,14 +148,14 @@ bool PeDisassembler::load_file_in_filebuf( const std::string &fileName )
   _fileBuf.reserve( fileSize );
 
   fileStream >> std::noskipws;
-  copy( istream_iterator(fileStream),
-        istream_iterator(),
-			  std::back_inserter(_fileBuf));
+  copy( istream_iterator( fileStream ),
+    istream_iterator(),
+    std::back_inserter( _fileBuf ) );
 
   return true;
 }
 
-CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr )
+CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr ) const
 {
   CodeChunk codeChunk;
 
@@ -166,8 +166,8 @@ CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr )
   tempDisasm.Archi = 0;
 
   for( int instructionLength = disassemble( &tempDisasm );
-       ( instructionLength != kraken::OUT_OF_BLOCK ) && ( instructionLength != kraken::UNKNOWN_OPCODE );
-       instructionLength = disassemble( &tempDisasm ) )
+    ( instructionLength != kraken::OUT_OF_BLOCK ) && ( instructionLength != kraken::UNKNOWN_OPCODE );
+    instructionLength = disassemble( &tempDisasm ) )
   {
     codeChunk.add_to_chunk( tempDisasm );
 
@@ -178,7 +178,12 @@ CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr )
   return codeChunk;
 };
 
-int PeDisassembler::rva_to_offset(rva_t rva)
+rva_t PeDisassembler::entry_point() const
+{
+  return _imageNtHeader32->OptionalHeader.AddressOfEntryPoint + _imageNtHeader32->OptionalHeader.ImageBase;
+}
+
+int PeDisassembler::rva_to_offset(rva_t rva) const
 {
   rva -= _imageNtHeader32->OptionalHeader.ImageBase;
 
@@ -195,8 +200,3 @@ int PeDisassembler::rva_to_offset(rva_t rva)
 
   return -1;
 };
-
-rva_t PeDisassembler::entry_point()
-{
-  return _imageNtHeader32->OptionalHeader.AddressOfEntryPoint + _imageNtHeader32->OptionalHeader.ImageBase;
-}

@@ -4,15 +4,27 @@
 using ::testing::AtLeast;
 using ::testing::Return;
 using ::testing::_;
-/*
-TEST(DISABLED_ChunkContainerTest, Fill_WorksFine)
+
+TEST(DISABLED_ChunkContainerTest, Fill_StoresOneChunkCorrectly)
 {
-  MockChunkContainer container;
-  MockDisassembler disassm;
+  MockDisassembler disasm;
+  ChunkContainer container;
 
-  EXPECT_CALL( container, disassemble_code_chunk( _, _ ) ).Times(AtLeast(1));
+  CodeChunk chunk;
 
-  unsigned char buff[] = { 1,2,3 };
-  vector<unsigned char> memBuf( buff, &(buff[ sizeof(buff)/sizeof(*buff) ]) );
-  container.fill( memBuf, 0, 0 );
-}*/
+  AsmCode tempAsmCode;
+  for( auto passedChunkBaseRva = 100; passedChunkBaseRva <= 200; ++passedChunkBaseRva )
+  {
+    tempAsmCode.VirtualAddr = passedChunkBaseRva;
+    chunk.add_to_chunk( tempAsmCode );
+  }
+
+  EXPECT_CALL( disasm, entry_point()).Times(1).WillOnce(Return(0));
+  EXPECT_CALL( disasm, disassemble_code_chunk( _ ) ).Times(AtLeast(1)).WillOnce(Return(chunk));
+
+  container.fill( disasm );
+
+  // Надо замутить проверку сохраненного результата.
+  auto comparationResult = memcmp( &chunk, &container.begin(), sizeof( CodeChunk ) );
+  EXPECT_EQ( 0, comparationResult );
+}

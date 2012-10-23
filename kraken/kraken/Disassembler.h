@@ -10,13 +10,11 @@ using namespace kraken;
 KRAKEN_API_ class Disassembler
 {
   public:
+    virtual int disassemble(AsmCode *asmCode) const = 0;
 
+    virtual CodeChunk disassemble_code_chunk(rva_t instrAddr) const = 0;
 
-    virtual int disassemble(AsmCode *disasmResult) const = 0;
-
-  private:
-    // Calculate offset in the memory based on the passed virtual address
-    //int rva_to_offset( const int &rva, unsigned char  );
+    virtual rva_t entry_point() const = 0;
 };
 
 #endif
