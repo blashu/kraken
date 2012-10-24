@@ -30,6 +30,10 @@ KRAKEN_API_ class ChunkContainer
 
     virtual inline chunk_container_iter end() const;
 
+    virtual const CodeChunk& front() const;
+
+    virtual const CodeChunk& back() const;
+
   private:
     /////////////////////////////////////////
     // fields
@@ -57,6 +61,16 @@ inline ChunkContainer::chunk_container_iter ChunkContainer::begin() const
 inline ChunkContainer::chunk_container_iter ChunkContainer::end() const
 {
   return _codeCollection.end();
+}
+
+inline const CodeChunk& ChunkContainer::front() const
+{
+  return _codeCollection.front();
+}
+
+inline const CodeChunk& ChunkContainer::back() const
+{
+  return _codeCollection.back();
 }
 
 #endif

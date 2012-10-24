@@ -31,6 +31,8 @@ KRAKEN_API_ class CodeChunk
       _codeChunk = codeChunk._codeChunk;
     }
 
+    bool operator ==( const CodeChunk &otherChunk );
+
     inline code_chunk_iter begin() const;
 
     inline code_chunk_iter end() const;

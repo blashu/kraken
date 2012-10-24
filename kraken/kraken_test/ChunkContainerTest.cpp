@@ -5,7 +5,7 @@ using ::testing::AtLeast;
 using ::testing::Return;
 using ::testing::_;
 
-TEST(DISABLED_ChunkContainerTest, Fill_StoresOneChunkCorrectly)
+TEST(ChunkContainerTest, Fill_StoresOneChunkCorrectly)
 {
   MockDisassembler disasm;
   ChunkContainer container;
@@ -24,7 +24,5 @@ TEST(DISABLED_ChunkContainerTest, Fill_StoresOneChunkCorrectly)
 
   container.fill( disasm );
 
-  // Надо замутить проверку сохраненного результата.
-  auto comparationResult = memcmp( &chunk, &container.begin(), sizeof( CodeChunk ) );
-  EXPECT_EQ( 0, comparationResult );
+  EXPECT_EQ( 0, chunk == container.front() );
 }
