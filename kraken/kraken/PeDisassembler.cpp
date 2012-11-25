@@ -2,26 +2,27 @@
 
 #include <boost\filesystem.hpp>
 
-#include <BeaEngine\BeaEngine.h>
-
 using namespace std;
 namespace fs = boost::filesystem;
 
 int PeDisassembler::disassemble(AsmCode *disasmResult) const
 {
-  DISASM disasm;
+  DISASM disasmedCode;
 
-  disasm.EIP = disasmResult->Eip;
-  disasm.VirtualAddr = disasmResult->VirtualAddr;
+  disasmedCode.EIP = disasmResult->Eip;
+  disasmedCode.VirtualAddr = disasmResult->VirtualAddr;
 
-  int length = Disasm( &disasm );
+  int length = Disasm( &disasmedCode );
 
-  memcpy( disasmResult->CompleteInstr, disasm.CompleteInstr, sizeof( disasmResult->CompleteInstr ) );
-  disasmResult->Eip = disasm.EIP;
-  disasmResult->VirtualAddr = disasm.VirtualAddr;
-  disasmResult->Instruction.AddrValue = disasm.Instruction.AddrValue;
-  disasmResult->Instruction.BranchType = (BranchType)disasm.Instruction.BranchType;
-  disasmResult->Archi = disasm.Archi;
+  memcpy( disasmResult->CompleteInstr, disasmedCode.CompleteInstr, sizeof( disasmResult->CompleteInstr ) );
+  disasmResult->Eip = disasmedCode.EIP;
+  disasmResult->VirtualAddr = disasmedCode.VirtualAddr;
+  disasmResult->Archi = disasmedCode.Archi;
+  disasmResult->Instruction.AddrValue = disasmedCode.Instruction.AddrValue;
+  disasmResult->Instruction.BranchType = (BranchType)disasmedCode.Instruction.BranchType;
+  disasmResult->Argument1 = convert_argument( disasmedCode.Argument1 );
+  disasmResult->Argument2 = convert_argument( disasmedCode.Argument2 );
+  disasmResult->Argument3 = convert_argument( disasmedCode.Argument3 );
 
   return length;
 }
@@ -171,6 +172,11 @@ CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr ) const
   {
     codeChunk.add_to_chunk( tempDisasm );
 
+    if ( tempDisasm.Instruction.BranchType == kraken::JmpType )
+    {
+      break;
+    }
+
     tempDisasm.Eip = tempDisasm.Eip + instructionLength;
     tempDisasm.VirtualAddr = tempDisasm.VirtualAddr + instructionLength;
   }
@@ -199,4 +205,20 @@ int PeDisassembler::rva_to_offset(rva_t rva) const
   }
 
   return -1;
+};
+
+Argument PeDisassembler::convert_argument(const ARGTYPE &sourceArg) const
+{
+  Argument convertedArg;
+  convertedArg.AccessMode = sourceArg.AccessMode;
+  memcpy( convertedArg.ArgMnemonic, sourceArg.ArgMnemonic, sizeof( sourceArg.ArgMnemonic ) );
+  convertedArg.ArgPosition = sourceArg.ArgPosition;
+  convertedArg.ArgSize = sourceArg.ArgSize;
+  convertedArg.ArgType = (ArgumentType)sourceArg.ArgType;
+  convertedArg.SegmentReg = sourceArg.SegmentReg;
+  convertedArg.Memory.BaseRegister = sourceArg.Memory.BaseRegister;
+  convertedArg.Memory.Displacement = sourceArg.Memory.BaseRegister;
+  convertedArg.Memory.IndexRegister = sourceArg.Memory.IndexRegister;
+  convertedArg.Memory.Scale = sourceArg.Memory.Scale;
+  return convertedArg;
 };

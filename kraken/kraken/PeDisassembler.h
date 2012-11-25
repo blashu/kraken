@@ -1,6 +1,7 @@
 #ifndef __H_PE_DISASSEMBLER__
 #define __H_PE_DISASSEMBLER__
 
+#include <BeaEngine\BeaEngine.h>
 #include "PEStructs.h"
 #include "Disassembler.h"
 #include <string>
@@ -25,8 +26,8 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
     int rva_to_offset(rva_t rva) const;
 
     // Load specified file
-    bool load( const std::string &path );
-
+    bool load(const std::string &path);
+        
   private:
     /////////////////////////////////////////
     // fields
@@ -38,18 +39,20 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
 
     /////////////////////////////////////////
     // functions
-    PeDisassembler( const PeDisassembler& ){};
+    PeDisassembler(const PeDisassembler&){};
 
     template <typename T>
-    const T* buf( size_t offset ) const;
+    const T* buf(size_t offset) const;
 
     const unsigned char* buf() const;
 
     bool is_it_pe_file();
 
-    bool load_file_in_filebuf( const std::string &path );
+    bool load_file_in_filebuf(const std::string &path);
   
     bool fill_pe_struct_fields();
+
+    Argument convert_argument(const ARGTYPE &sourceArg) const;
 };
 
 #endif

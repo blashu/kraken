@@ -43,6 +43,8 @@ KRAKEN_API_ class ChunkContainer
 
     /////////////////////////////////////////
     // functions
+    bool is_instruct_decoded( rva_t address );
+
     virtual CodeChunk disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Disassembler& disassemble);
 
     // OPTIMIZE: this function is not optimized

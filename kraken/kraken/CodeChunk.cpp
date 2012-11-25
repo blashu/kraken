@@ -2,7 +2,7 @@
 
 using namespace std;
 
-bool CodeChunk::operator==( const CodeChunk &otherChunk ) const
+bool CodeChunk::operator == ( const CodeChunk &otherChunk ) const
 {
   return this->_codeChunk == otherChunk._codeChunk;
 }

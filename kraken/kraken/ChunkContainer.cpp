@@ -21,6 +21,12 @@ bool ChunkContainer::fill(const Disassembler& disassembler)
 
   while( jumpInstructionQueue.size() != 0 )
   {
+    if( is_instruct_decoded( jumpInstructionQueue.front() ) )
+    {
+      jumpInstructionQueue.pop();
+      continue;
+    }
+
     auto disassembledCodeChunk = disassemble_next_code_chunk( jumpInstructionQueue, disassembler );
 
     auto iteratorToIntersection = check_if_intersects( disassembledCodeChunk );
@@ -63,19 +69,33 @@ bool ChunkContainer::fill(const Disassembler& disassembler)
 CodeChunk ChunkContainer::disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Disassembler& disassembler)
 {
   CodeChunk codeChunk = disassembler.disassemble_code_chunk( jumpInstructionQueue.front() );
+  jumpInstructionQueue.pop();
 
   for( auto currentAsmCode = codeChunk.begin(), endAsmCode = codeChunk.end(); currentAsmCode != endAsmCode; ++currentAsmCode )
   {
-    if( JmpType == currentAsmCode->Instruction.BranchType )
+    if( JmpType == currentAsmCode->Instruction.BranchType || CallType == currentAsmCode->Instruction.BranchType )
     {
-      jumpInstructionQueue.push( currentAsmCode->Instruction.AddrValue );
+      if( 0 != currentAsmCode->Instruction.AddrValue )
+      {
+        jumpInstructionQueue.push( currentAsmCode->Instruction.AddrValue );
+      }
     }
   }
 
-  jumpInstructionQueue.pop();
-
   return codeChunk;
 };
+
+bool ChunkContainer::is_instruct_decoded( rva_t address )
+{
+  for( auto chunk : _codeCollection )
+  {
+    if( chunk.is_address_included( address ) )
+    {
+      return true;
+    }
+  }
+  return false;
+}
 
 ChunkContainer::code_collection_t::iterator ChunkContainer::check_if_intersects(const CodeChunk& codeChunk)
 {

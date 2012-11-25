@@ -93,9 +93,6 @@
   <ItemGroup>
     <ClInclude Include="Settings.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\kraken\toDo.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

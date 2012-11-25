@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsmCode.h" />
+    <ClInclude Include="BasicTypes.h" />
     <ClInclude Include="CodeChunk.h" />
     <ClInclude Include="ChunkContainer.h" />
     <ClInclude Include="Disassembler.h" />
