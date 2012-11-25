@@ -1,5 +1,7 @@
 #include "ChunkContainer.h"
 
+#include <algorithm>
+
 using namespace std;
 using namespace kraken;
 
@@ -103,17 +105,7 @@ void ChunkContainer::merge_code_chunks(CodeChunk& resultChunk, const CodeChunk& 
     endChunk = &firstCodeChunk;
   }
 
-  auto it = resultChunk.begin();
-  for( auto end = endChunk->end(); it != end; ++it )
-  {
-    if( it->VirtualAddr == resultChunk.back().VirtualAddr )
-    {
-      if( it != resultChunk.end() )
-      {
-        resultChunk.add_to_chunk( it, endChunk->end() );
-      }
+  auto iteratorToIntersection = std::find( endChunk->begin(), endChunk->end(), resultChunk.back() );
 
-      break;
-    }
-  }
+  resultChunk.add_to_chunk( iteratorToIntersection, endChunk->end() );
 };

@@ -27,9 +27,6 @@
     <ClCompile Include="ChunkContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Disassembler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PeDisassembler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

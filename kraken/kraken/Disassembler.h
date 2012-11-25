@@ -2,7 +2,6 @@
 #define __H_DISASSMEBLER__
 
 #include "kraken.h"
-#include "AsmCode.h"
 #include "CodeChunk.h"
 
 using namespace kraken;

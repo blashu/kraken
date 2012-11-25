@@ -83,7 +83,6 @@
   <ItemGroup>
     <ClCompile Include="CodeChunk.cpp" />
     <ClCompile Include="ChunkContainer.cpp" />
-    <ClCompile Include="Disassembler.cpp" />
     <ClCompile Include="PeDisassembler.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

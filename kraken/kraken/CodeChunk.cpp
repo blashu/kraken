@@ -2,7 +2,7 @@
 
 using namespace std;
 
-bool CodeChunk::operator==( const CodeChunk &otherChunk )
+bool CodeChunk::operator==( const CodeChunk &otherChunk ) const
 {
-  return 0 == memcmp( this, &otherChunk, sizeof( CodeChunk ) );
+  return this->_codeChunk == otherChunk._codeChunk;
 }

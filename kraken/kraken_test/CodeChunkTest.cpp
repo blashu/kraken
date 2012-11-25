@@ -1,7 +1,5 @@
 #include "CodeChunkTest.h"
 
-#include "AsmCodeHelper.h"
-
 TEST_F(CodeChunkTest, ChunkIsEmptyBeginAndEndAreEqual)
 {
   CodeChunk chunk;
@@ -14,7 +12,7 @@ TEST_F(CodeChunkTest, BeginChunkIsNotEmptyReturnsIteratorToTheBeginningOfChunk)
   AsmCode disasm;
   disasm.VirtualAddr = _baseRva;
 
-  EXPECT_TRUE( AsmCodeHelper::cmp( disasm, *_chunk.begin() ) );
+  EXPECT_EQ( disasm, *_chunk.begin() );
 }
 
 TEST_F(CodeChunkTest, EndChunkIsNotEmptyReturnsIteratorToTheEndOfChunk)
@@ -22,7 +20,7 @@ TEST_F(CodeChunkTest, EndChunkIsNotEmptyReturnsIteratorToTheEndOfChunk)
   AsmCode disasm;
   disasm.VirtualAddr = _lastRva;
 
-  EXPECT_TRUE( AsmCodeHelper::cmp( disasm,  *(_chunk.end() - 1) ) );
+  EXPECT_EQ( disasm, *(_chunk.end() - 1) );
 }
 
 TEST_F(CodeChunkTest, FrontAlwaysReturnsFirstElement)
@@ -30,7 +28,7 @@ TEST_F(CodeChunkTest, FrontAlwaysReturnsFirstElement)
   AsmCode disasm;
   disasm.VirtualAddr = _baseRva;
 
-  EXPECT_TRUE( AsmCodeHelper::cmp( disasm, _chunk.front() ) );
+  EXPECT_EQ( disasm, _chunk.front() );
 }
 
 TEST_F(CodeChunkTest, BackAlwaysReturnsLastElement)
@@ -38,7 +36,7 @@ TEST_F(CodeChunkTest, BackAlwaysReturnsLastElement)
   AsmCode disasm;
   disasm.VirtualAddr = _lastRva;
 
-  EXPECT_TRUE( AsmCodeHelper::cmp( disasm, _chunk.back() ) );
+  EXPECT_EQ( disasm, _chunk.back() );
 }
 
 TEST_F(CodeChunkTest, FirstRvaChunkIsEmptyReturnsMinusOne)
@@ -76,7 +74,7 @@ TEST_F(CodeChunkTest, IsAddressIncludedAddressIsLessThanZeroReturnsFalse)
 {
   CodeChunk chunk;
 
-  EXPECT_EQ( false, chunk.is_address_included( -1 ) );
+  EXPECT_FALSE( chunk.is_address_included( -1 ) );
 }
 
 TEST_F(CodeChunkTest, IsAddressIncludedBoundaryRvasReturnsTrue)
@@ -98,8 +96,8 @@ TEST_F(CodeChunkTest, IsAddressIncludedAddressIsNotBetweenFirstRvaAndLastRvaRetu
 
 TEST_F(CodeChunkTest, IntersectsWithPassedChunkBoundaryRvasOverlapWithInnerChunkReturnsTrue)
 {
-  CodeChunk passedChunk1 = GenerateCodeChunk( _baseRva - 10, _baseRva );
-  CodeChunk passedChunk2 = GenerateCodeChunk( _lastRva, _lastRva + 10 );
+  CodeChunk passedChunk1 = CodeChunkHelper::GenerateCodeChunk( _baseRva - 10, _baseRva );
+  CodeChunk passedChunk2 = CodeChunkHelper::GenerateCodeChunk( _lastRva, _lastRva + 10 );
 
   EXPECT_TRUE( _chunk.intersects_with( passedChunk1 ) );
   EXPECT_TRUE( _chunk.intersects_with( passedChunk2 ) );
@@ -107,8 +105,8 @@ TEST_F(CodeChunkTest, IntersectsWithPassedChunkBoundaryRvasOverlapWithInnerChunk
 
 TEST_F(CodeChunkTest, IntersectsWithPassedCodeChunkIntersectsReturnsTrue)
 {
-  CodeChunk passedChunk1 = GenerateCodeChunk( _baseRva - 10, _baseRva + 10 );
-  CodeChunk passedChunk2 = GenerateCodeChunk( _baseRva + 10, _lastRva + 10 );
+  CodeChunk passedChunk1 = CodeChunkHelper::GenerateCodeChunk( _baseRva - 10, _baseRva + 10 );
+  CodeChunk passedChunk2 = CodeChunkHelper::GenerateCodeChunk( _baseRva + 10, _lastRva + 10 );
 
   EXPECT_TRUE( _chunk.intersects_with( passedChunk1 ) );
   EXPECT_TRUE( _chunk.intersects_with( passedChunk2 ) );
@@ -116,8 +114,8 @@ TEST_F(CodeChunkTest, IntersectsWithPassedCodeChunkIntersectsReturnsTrue)
 
 TEST_F(CodeChunkTest, IntersectsWithPassedCodeChunkDoesntIntersectReturnsFalse)
 {
-  CodeChunk passedChunk1 = GenerateCodeChunk( _baseRva - 10, _baseRva - 1 );
-  CodeChunk passedChunk2 = GenerateCodeChunk( _lastRva + 1, _lastRva + 10 );
+  CodeChunk passedChunk1 = CodeChunkHelper::GenerateCodeChunk( _baseRva - 10, _baseRva - 1 );
+  CodeChunk passedChunk2 = CodeChunkHelper::GenerateCodeChunk( _lastRva + 1, _lastRva + 10 );
 
   EXPECT_FALSE( _chunk.intersects_with( passedChunk1 ) );
   EXPECT_FALSE( _chunk.intersects_with( passedChunk2 ) );
@@ -132,8 +130,8 @@ TEST_F(CodeChunkTest, IncludesCodeChunkIsEmptyReturnsFalse)
 
 TEST_F(CodeChunkTest, IncludesPassedChunkBoundaryRvasOverlapWithOnesFromInnerChunksReturnsTrue)
 {
-  CodeChunk passedChunk1 = GenerateCodeChunk( _baseRva, _lastRva - 10 );
-  CodeChunk passedChunk2 = GenerateCodeChunk( _baseRva + 10, _lastRva );
+  CodeChunk passedChunk1 = CodeChunkHelper::GenerateCodeChunk( _baseRva, _lastRva - 10 );
+  CodeChunk passedChunk2 = CodeChunkHelper::GenerateCodeChunk( _baseRva + 10, _lastRva );
 
   EXPECT_TRUE( _chunk.includes( passedChunk1 ) );
   EXPECT_TRUE( _chunk.includes( passedChunk2 ) );
@@ -141,22 +139,22 @@ TEST_F(CodeChunkTest, IncludesPassedChunkBoundaryRvasOverlapWithOnesFromInnerChu
 
 TEST_F(CodeChunkTest, IncludesPassedChunkMatchesInnerChunkReturnsTrue)
 {
-  CodeChunk passedChunk = GenerateCodeChunk( _baseRva, _lastRva );
+  CodeChunk passedChunk = CodeChunkHelper::GenerateCodeChunk( _baseRva, _lastRva );
 
   EXPECT_TRUE( _chunk.includes( passedChunk ) );
 }
 
 TEST_F(CodeChunkTest, IncludesPassedChunkIsInnerChunksSubsetReturnsTrue)
 {
-  CodeChunk passedChunk = GenerateCodeChunk( _baseRva + 10, _lastRva - 10 );
+  CodeChunk passedChunk = CodeChunkHelper::GenerateCodeChunk( _baseRva + 10, _lastRva - 10 );
 
   EXPECT_TRUE( _chunk.includes( passedChunk ) );
 }
 
 TEST_F(CodeChunkTest, IncludesPassedChunkPartiallyInetsectsWithInnerChunkReturnsFalse)
 {
-  CodeChunk passedChunk1 = GenerateCodeChunk( _baseRva - 10, _lastRva - 10 );
-  CodeChunk passedChunk2 = GenerateCodeChunk( _baseRva + 10, _lastRva + 10 );
+  CodeChunk passedChunk1 = CodeChunkHelper::GenerateCodeChunk( _baseRva - 10, _lastRva - 10 );
+  CodeChunk passedChunk2 = CodeChunkHelper::GenerateCodeChunk( _baseRva + 10, _lastRva + 10 );
 
   EXPECT_FALSE( _chunk.includes( passedChunk1 ) );
   EXPECT_FALSE( _chunk.includes( passedChunk2 ) );
@@ -164,8 +162,8 @@ TEST_F(CodeChunkTest, IncludesPassedChunkPartiallyInetsectsWithInnerChunkReturns
 
 TEST_F(CodeChunkTest, IncludesPassedChunkNeverInetsectsWithInnerChunkReturnsFalse)
 {
-  CodeChunk passedChunk1 = GenerateCodeChunk( _baseRva - 10, _baseRva - 1 );
-  CodeChunk passedChunk2 = GenerateCodeChunk( _lastRva + 1, _lastRva + 10 );
+  CodeChunk passedChunk1 = CodeChunkHelper::GenerateCodeChunk( _baseRva - 10, _baseRva - 1 );
+  CodeChunk passedChunk2 = CodeChunkHelper::GenerateCodeChunk( _lastRva + 1, _lastRva + 10 );
 
   EXPECT_FALSE( _chunk.includes( passedChunk1 ) );
   EXPECT_FALSE( _chunk.includes( passedChunk2 ) );
@@ -179,7 +177,7 @@ TEST_F(CodeChunkTest, AddToChunkAlwaysAddsSingleDisasm)
 
   chunk.add_to_chunk( disasm );
 
-  EXPECT_TRUE( AsmCodeHelper::cmp( disasm, chunk.front() ) );
+  EXPECT_EQ( disasm, chunk.front() );
 }
 
 TEST_F(CodeChunkTest, AddToChunkAlwaysAddsDisasmVector)
@@ -204,23 +202,9 @@ TEST_F(CodeChunkTest, AddToChunkAlwaysAddsDisasmVector)
   auto chunkIterator = chunk.begin();
   while( vectorIterator != disasmVector.end() && chunkIterator == chunk.end() )
   {
-    EXPECT_TRUE( AsmCodeHelper::cmp( *vectorIterator, *chunkIterator ) );
+    EXPECT_EQ( *vectorIterator, *chunkIterator );
 
     ++vectorIterator;
     ++chunkIterator;
   }
-}
-
-CodeChunk CodeChunkTest::GenerateCodeChunk(const rva_t& firstRva, const rva_t& lastRva)
-{
-  CodeChunk chunk;
-  
-  AsmCode tempDisasm;
-  for( auto passedChunkBaseRva = firstRva; passedChunkBaseRva <= lastRva; ++passedChunkBaseRva )
-  {
-    tempDisasm.VirtualAddr = passedChunkBaseRva;
-    chunk.add_to_chunk( tempDisasm );
-  }
-  
-  return chunk;
 }

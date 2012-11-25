@@ -76,14 +76,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AsmCodeHelper.cpp" />
+    <ClCompile Include="CodeChunkHelper.cpp" />
     <ClCompile Include="CodeChunkTest.cpp" />
     <ClCompile Include="ChunkContainerTest.cpp" />
     <ClCompile Include="DisassemblerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChunkContainerTest.h" />
+    <ClInclude Include="CodeChunkHelper.h" />
     <ClInclude Include="CodeChunkTest.h" />
-    <ClInclude Include="AsmCodeHelper.h" />
     <ClInclude Include="MockChunkContainer.h" />
     <ClInclude Include="MockDisassembler.h" />
   </ItemGroup>

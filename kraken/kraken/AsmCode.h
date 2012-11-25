@@ -1,9 +1,11 @@
 #ifndef __H_ASM_CODE__
 #define __H_ASM_CODE__
 
+#include <string.h>
+
 namespace kraken
 {
-  #define INSTRUCT_LENGTH 64
+#define INSTRUCT_LENGTH 64
 
   typedef long long rva_t;
 
@@ -32,6 +34,7 @@ namespace kraken
 
   enum BranchType
   {
+    Undefined = 0,
     JO = 1,
     JC,
     JE,
@@ -70,6 +73,22 @@ namespace kraken
     Instruction Instruction;
     unsigned int Archi;
     char CompleteInstr[INSTRUCT_LENGTH];
+
+    AsmCode()
+    {
+      VirtualAddr = 0;
+      Eip = 0;
+      Archi = 0;
+      CompleteInstr[0] = '\0';
+      Instruction.AddrValue = 0;
+      Instruction.BranchType = Undefined;
+    }
+
+    // TODO change comparation principle so that it would be based on start rva, Instruction and size of the AsmCode
+    inline bool operator ==(const AsmCode& otherAsmCode) const
+    {
+      return this->VirtualAddr == otherAsmCode.VirtualAddr;
+    }
   };
 }
 

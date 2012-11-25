@@ -6,7 +6,6 @@
 #include <string>
 
 #include "Disassembler.h"
-#include "CodeChunk.h"
 
 using namespace std;
 using namespace kraken;
@@ -21,7 +20,8 @@ KRAKEN_API_ class ChunkContainer
 
     ChunkContainer(const Disassembler& disassembler);
 
-    // Fills chunk container with disassembled chunks of code, while handling unconditional branch instructions and possible chunk intersections
+    // Fills chunk container with disassembled chunks of code, while handling
+    // unconditional branch instructions and possible chunk intersections
     virtual bool fill(const Disassembler& disassembler);
     
     virtual ~ChunkContainer() {};
