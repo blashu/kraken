@@ -9,7 +9,7 @@ int PeDisassembler::disassemble(AsmCode *disasmResult) const
 {
   DISASM disasmedCode;
 
-  disasmedCode.EIP = (UIntPtr)disasmResult->Eip;
+  disasmedCode.EIP = (kraken::UIntPtr)disasmResult->Eip;
   disasmedCode.VirtualAddr = disasmResult->VirtualAddr;
 
   int length = Disasm( &disasmedCode );
