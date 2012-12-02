@@ -9,7 +9,7 @@ int PeDisassembler::disassemble(AsmCode *disasmResult) const
 {
   DISASM disasmedCode;
 
-  disasmedCode.EIP = disasmResult->Eip;
+  disasmedCode.EIP = (UIntPtr)disasmResult->Eip;
   disasmedCode.VirtualAddr = disasmResult->VirtualAddr;
 
   int length = Disasm( &disasmedCode );
@@ -115,8 +115,6 @@ bool PeDisassembler::fill_pe_struct_fields()
 
   _sectionHeaders.NumberOfSections = _imageNtHeader32->FileHeader.NumberOfSections;
 
-  size_t sizeOfImageSectionHeader = sizeof(IMAGE_SECTION_HEADER);
-
   return true;
 }
 
@@ -189,7 +187,7 @@ rva_t PeDisassembler::entry_point() const
   return _imageNtHeader32->OptionalHeader.AddressOfEntryPoint + _imageNtHeader32->OptionalHeader.ImageBase;
 }
 
-int PeDisassembler::rva_to_offset(rva_t rva) const
+offset_t PeDisassembler::rva_to_offset(rva_t rva) const
 {
   rva -= _imageNtHeader32->OptionalHeader.ImageBase;
 

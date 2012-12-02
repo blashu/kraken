@@ -1,6 +1,6 @@
 #include "..\kraken\CodeChunk.h"
 
-static class CodeChunkHelper 
+class CodeChunkHelper 
 {
   public:
     static CodeChunk GenerateCodeChunk(const rva_t& firstRva, const rva_t& lastRva);

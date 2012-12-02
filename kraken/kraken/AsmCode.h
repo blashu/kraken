@@ -10,6 +10,8 @@ namespace kraken
 
   typedef long long rva_t;
 
+  typedef long long offset_t;
+
   enum SPECIAL_INFO
   {
     UNKNOWN_OPCODE = -1,
@@ -129,7 +131,7 @@ namespace kraken
   struct AsmCode
   {
     rva_t VirtualAddr;
-    size_t Eip;
+    offset_t Eip;
     unsigned int Archi;
     Instruction Instruction;
     Argument Argument1;

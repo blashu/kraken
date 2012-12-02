@@ -10,7 +10,6 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
 {
   public:
     PeDisassembler() {};
-    PeDisassembler( const std::string &path ) {};
 
     virtual ~PeDisassembler() {};
 
@@ -23,7 +22,7 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
     virtual rva_t entry_point() const;
 
     // Calculate offset in the memory based on the passed virtual address
-    int rva_to_offset(rva_t rva) const;
+    offset_t rva_to_offset(rva_t rva) const;
 
     // Load specified file
     bool load(const std::string &path);
