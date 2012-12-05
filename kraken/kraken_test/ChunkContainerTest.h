@@ -8,4 +8,7 @@ class ChunkContainerTest : public :: testing::Test
     MockDisassembler _disassembler;
 
     ChunkContainer _container;
+
+    ChunkContainerTest() : _container( _disassembler )
+    {}
 };

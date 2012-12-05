@@ -1,11 +1,13 @@
 #ifndef __H_INSTRUCTION_CONTAINER__
 #define __H_INSTRUCTION_CONTAINER__
 
+#include "Disassembler.h"
+#include "CodeChunkMap.h"
+
 #include <vector>
 #include <queue>
 #include <string>
-
-#include "Disassembler.h"
+#include <map>
 
 using namespace std;
 using namespace kraken;
@@ -15,8 +17,6 @@ KRAKEN_API_ class ChunkContainer
   public:
     typedef vector<CodeChunk> chunk_container_t;
     typedef chunk_container_t::const_iterator chunk_container_iter;
-
-    ChunkContainer() {}
 
     ChunkContainer(const Disassembler& disassembler);
 
@@ -40,6 +40,12 @@ KRAKEN_API_ class ChunkContainer
     typedef vector<CodeChunk> code_collection_t;
 
     code_collection_t _codeCollection;
+
+    CodeChunkMap _chunkMap;
+
+    /////////////////////////////////////////
+    // ctors
+    ChunkContainer() {}
 
     /////////////////////////////////////////
     // functions

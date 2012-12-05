@@ -21,37 +21,46 @@ bool ChunkContainer::fill(const Disassembler& disassembler)
 
   while( jumpInstructionQueue.size() != 0 )
   {
-    if( is_instruct_decoded( jumpInstructionQueue.front() ) )
+    //_ASSERT( _chunkMap.includes( jumpInstructionQueue.front() ) == is_instruct_decoded( jumpInstructionQueue.front() ) );
+
+    if( _chunkMap.includes( jumpInstructionQueue.front() ) )
     {
       jumpInstructionQueue.pop();
       continue;
     }
 
-    auto disassembledCodeChunk = disassemble_next_code_chunk( jumpInstructionQueue, disassembler );
+    auto disassembledChunk = disassemble_next_code_chunk( jumpInstructionQueue, disassembler );
 
-    auto iteratorToIntersection = check_if_intersects( disassembledCodeChunk );
+    auto iteratorToIntersection = check_if_intersects( disassembledChunk );
 
     // Checking if disassembled code chunk intersects with any of the previously disassembled ones    
     if( iteratorToIntersection == _codeCollection.end() )
     {
-      _codeCollection.push_back( disassembledCodeChunk );
+      _codeCollection.push_back( disassembledChunk );
+
+      // Add to chunk map. Don't fogive to delete from chunk map when delete from code collection
+      _chunkMap.add( disassembledChunk );
     }
     else
     {
-      if( iteratorToIntersection->includes( disassembledCodeChunk ) ) 
+      if( iteratorToIntersection->includes( disassembledChunk ) ) 
       {
         continue;
       }
-      else if( disassembledCodeChunk.includes( *iteratorToIntersection ) )
+      else if( disassembledChunk.includes( *iteratorToIntersection ) )
       {
+        _chunkMap.remove( *iteratorToIntersection );
+
         _codeCollection.erase( iteratorToIntersection );
-        _codeCollection.push_back( disassembledCodeChunk );
+        _codeCollection.push_back( disassembledChunk );
+
+        _chunkMap.add( disassembledChunk );
       }
       else
       {
         CodeChunk mergedCodeChunk;
 
-        merge_code_chunks( mergedCodeChunk, *iteratorToIntersection, disassembledCodeChunk );
+        merge_code_chunks( mergedCodeChunk, *iteratorToIntersection, disassembledChunk );
 
         _codeCollection[ iteratorToIntersection - _codeCollection.begin() ] = mergedCodeChunk;
       }

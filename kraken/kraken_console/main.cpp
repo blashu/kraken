@@ -1,12 +1,26 @@
 #include "Settings.h"
 
 #include <kraken.h>
-#include <iostream>
 
 #include <PeDisassembler.h>
 #include <ChunkContainer.h>
 
+#include <iostream>
+#include <set>
+
 using namespace kraken;
+
+std::string complete2short_instr( const char* completeInstruction )
+{
+  const char* whiteCharPtr;
+
+  if( NULL == ( whiteCharPtr = strchr( completeInstruction, ' ' ) ) )
+  {
+    return completeInstruction;
+  }
+
+  return std::string( completeInstruction, whiteCharPtr );
+}
 
 int main( int argc, const char** argv )
 {
@@ -19,21 +33,28 @@ int main( int argc, const char** argv )
 
   PeDisassembler peDisassembler;
   cout << "Loading file \"" << settings.path_to_bin() << "\"..." << endl;
-  if( peDisassembler.load( settings.path_to_bin() ) )
+  if( false == peDisassembler.load( settings.path_to_bin() ) )
   {
-    cout << settings.path_to_bin() << " is successfully loaded." << endl;
+    return EXIT_FAILURE;
   }
 
-  // auto codeChunk = peDisassembler.disassemble_code_chunk( peDisassembler.entry_point() );
+  cout << settings.path_to_bin() << " is successfully loaded." << endl;
 
-  ChunkContainer chunkContainer(peDisassembler);
+  std::set<std::string> instructionList;
+  ChunkContainer chunkContainer( peDisassembler );
 
-  for( auto begin = chunkContainer.begin(), end = chunkContainer.end(); begin != end; ++begin )
+  for(auto it = chunkContainer.begin(), end = chunkContainer.end(); it != end; ++it )
   {
-    for ( auto beginChunk = begin->begin(), endChunk = begin->end(); beginChunk != endChunk; ++beginChunk)
+    for ( auto beginChunk = it->begin(), endChunk = it->end(); beginChunk != endChunk; ++beginChunk)
     {
-      (void) printf("%.8X %s\n",(int) beginChunk->VirtualAddr, &beginChunk->CompleteInstr);
+      instructionList.insert( complete2short_instr( beginChunk->CompleteInstr ) );
     }
+  }
+
+  cout << "Exe file contains next list of instruction:" << endl;
+  for( auto it = instructionList.begin(), end = instructionList.end(); it != end; ++it )
+  {
+    cout << *it << endl;
   }
 
   return EXIT_SUCCESS;
