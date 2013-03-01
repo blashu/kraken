@@ -34,7 +34,7 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
 
     SECTION_HEADERS _sectionHeaders;
 
-    const IMAGE_NT_HEADERS32* _imageNtHeader32;
+    const kraken::IMAGE_NT_HEADERS32* _imageNtHeader32;
 
     /////////////////////////////////////////
     // functions
