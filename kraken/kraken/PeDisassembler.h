@@ -52,6 +52,8 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
     bool fill_pe_struct_fields();
 
     Argument convert_argument(const ARGTYPE &sourceArg) const;
+
+    void convert_instruction(const INSTRTYPE &source, Instruction &destination);
 };
 
 #endif

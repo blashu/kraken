@@ -7,6 +7,7 @@
 namespace kraken
 {
   #define INSTRUCT_LENGTH 64
+  #define MNEMONIC_LENGTH 16
 
   typedef long long rva_t;
 
@@ -113,6 +114,8 @@ namespace kraken
 
   struct Instruction
   {
+    char Mnemonic[MNEMONIC_LENGTH];
+
     rva_t AddrValue;
     BranchType BranchType;
   };

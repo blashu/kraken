@@ -14,12 +14,16 @@ int PeDisassembler::disassemble(AsmCode *disasmResult) const
 
   int length = Disasm( &disasmedCode );
 
+  assert( sizeof( disasmResult->CompleteInstr ) == sizeof( disasmedCode.CompleteInstr ) );
   memcpy( disasmResult->CompleteInstr, disasmedCode.CompleteInstr, sizeof( disasmResult->CompleteInstr ) );
+
   disasmResult->Eip = disasmedCode.EIP;
   disasmResult->VirtualAddr = disasmedCode.VirtualAddr;
   disasmResult->Archi = disasmedCode.Archi;
+  
   disasmResult->Instruction.AddrValue = disasmedCode.Instruction.AddrValue;
   disasmResult->Instruction.BranchType = (BranchType)disasmedCode.Instruction.BranchType;
+
   disasmResult->Argument1 = convert_argument( disasmedCode.Argument1 );
   disasmResult->Argument2 = convert_argument( disasmedCode.Argument2 );
   disasmResult->Argument3 = convert_argument( disasmedCode.Argument3 );
@@ -180,7 +184,7 @@ CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr ) const
   }
 
   return codeChunk;
-};
+}
 
 rva_t PeDisassembler::entry_point() const
 {
@@ -203,7 +207,13 @@ offset_t PeDisassembler::rva_to_offset(rva_t rva) const
   }
 
   return -1;
-};
+}
+
+void PeDisassembler::convert_instruction(const INSTRTYPE &source, Instruction &destination)
+{
+  destination.AddrValue = source.AddrValue;
+  destination.BranchType = (BranchType)source.BranchType;
+}
 
 Argument PeDisassembler::convert_argument(const ARGTYPE &sourceArg) const
 {
@@ -219,4 +229,4 @@ Argument PeDisassembler::convert_argument(const ARGTYPE &sourceArg) const
   convertedArg.Memory.IndexRegister = sourceArg.Memory.IndexRegister;
   convertedArg.Memory.Scale = sourceArg.Memory.Scale;
   return convertedArg;
-};
+}
