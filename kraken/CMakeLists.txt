@@ -49,7 +49,8 @@ else()
 endif()
 
 if(NOT EXISTS "${gmock_dir}/CMakeLists.txt")
-    message( SEND_ERROR "gmock is necessary")
+    message(SEND_ERROR "gmock is necessary")
+    return()
 endif()
 
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/beaengine/CMakeLists.txt")
@@ -59,7 +60,8 @@ else()
 endif()
 
 if(NOT EXISTS "${beaengine_dir}/CMakeLists.txt")
-    message( SEND_ERROR "beaengine is necessary")
+    message(SEND_ERROR "beaengine is necessary")
+    return()
 endif()
 
 #=======================================================================
@@ -78,7 +80,10 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 #######################################
 # Qt
-set(CMAKE_PREFIX_PATH "C:\\Qt\\Qt5.0.1\\5.0.1\\msvc2010\\")
+if(NOT DEFINED CMAKE_PREFIX_PATH)
+    message(SEND_ERROR "You should set CMAKE_PREFIX_PATH to point the Qt library folder. For example: -DCMAKE_PREFIX_PATH=\"C:\\Qt\\Qt5.0.1\\5.0.1\\msvc2010\\\"")
+    return()
+endif()
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5Core)
 find_package(Qt5Widgets)
