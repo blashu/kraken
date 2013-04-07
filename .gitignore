@@ -57,9 +57,7 @@ Ankh.NoLoad
 
 # third party library #
 #######################
-kraken/bin/*
-kraken/lib/*
-kraken/include/*
+kraken-build/*
 gmock/*
 beaengine/*
  
