@@ -19,7 +19,7 @@ KRAKEN_API_ class CodeChunk
 
     CodeChunk(const vector<AsmCode> &codeChunk)
     {
-      _codeChunk = _codeChunk;
+      _codeChunk = codeChunk;
     }
 
     CodeChunk(const CodeChunk &codeChunk)

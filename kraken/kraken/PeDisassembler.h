@@ -9,9 +9,9 @@
 KRAKEN_API_ class PeDisassembler : public Disassembler
 {
   public:
-    PeDisassembler() {};
+    PeDisassembler() {}
 
-    virtual ~PeDisassembler() {};
+    virtual ~PeDisassembler() {}
 
     virtual int disassemble(AsmCode *disasmResult) const;
 
@@ -38,7 +38,7 @@ KRAKEN_API_ class PeDisassembler : public Disassembler
 
     /////////////////////////////////////////
     // functions
-    PeDisassembler(const PeDisassembler&){};
+    PeDisassembler(const PeDisassembler&){}
 
     template <typename T>
     const T* buf(size_t offset) const;

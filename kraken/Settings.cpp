@@ -1,6 +1,7 @@
-#include "StdAfx.h"
-
 #include "Settings.h"
+
+#include <boost/program_options.hpp>
+#include <vector>
 
 using namespace std;
 namespace po = boost::program_options;
