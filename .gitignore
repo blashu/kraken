@@ -60,8 +60,8 @@ Ankh.NoLoad
 kraken/bin/*
 kraken/lib/*
 kraken/include/*
-kraken/gmock/*
-kraken/beaengine/*
+gmock/*
+beaengine/*
  
 # Directories #
 ####################################
