@@ -1,5 +1,5 @@
 project(kraken_console)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.9)
 aux_source_directory(. SRC_LIST)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -77,7 +77,14 @@ find_package(Boost COMPONENTS program_options system filesystem REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 #######################################
-# BeaEngine library
+# Qt
+set(CMAKE_PREFIX_PATH "C:\\Qt\\Qt5.0.1\\5.0.1\\msvc2010\\")
+set(CMAKE_AUTOMOC ON)
+find_package(Qt5Core)
+find_package(Qt5Widgets)
+
+#######################################
+# BeaEngine
 add_definitions( -DBEA_ENGINE_STATIC )
 add_definitions( -DBEA_USE_STDCALL )
 
@@ -108,6 +115,16 @@ add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} BeaEngine)
 target_link_libraries(${PROJECT_NAME} kraken)
+
+#######################################
+# kraken_gui project
+
+aux_source_directory(kraken_gui KRAKEN_GUI_SRC_LIST)
+
+include_directories("kraken_gui")
+cxx_executable(kraken_gui kraken_gui "kraken;${Boost_LIBRARIES}" "${KRAKEN_GUI_SRC_LIST}")
+
+qt5_use_modules(kraken_gui Widgets)
 
 #######################################
 # Build exe project to test main project.
