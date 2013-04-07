@@ -18,6 +18,12 @@ set(BUILD_SHARED_LIBS OFF)
 
 ########################################################################
 #
+# This has to be before config_compiler_and_linker() to avoid huge file size due to static linking.
+# Small size is required so that it is easier to check decompiling results.
+add_subdirectory("simple_exe")
+
+########################################################################
+#
 # Config compiler
 
 include(cmake/internal_utils.cmake)
@@ -82,7 +88,7 @@ if(NOT EXISTS "${beaengine_dir}/CMakeLists_origin.txt")
     file(COPY "cmake/beaengine/CMakeLists.txt" DESTINATION "${beaengine_dir}")
 endif()
 set(optBUILD_STDCALL ON)
-add_subdirectory("${beaengine_dir}" "${QtTest_BINARY_DIR}/beaengine")
+add_subdirectory("${beaengine_dir}" "${QtTest_BINARY_DIR}/beaengine" EXCLUDE_FROM_ALL)
 
 #######################################
 # Build kraken project
@@ -106,8 +112,8 @@ target_link_libraries(${PROJECT_NAME} kraken)
 #######################################
 # Build exe project to test main project.
 
-aux_source_directory(simple_exe SIMPLE_EXE_SRC_LIST)
-cxx_executable(simple_exe simple_exe "" "${SIMPLE_EXE_SRC_LIST}" )
+#aux_source_directory(simple_exe SIMPLE_EXE_SRC_LIST)
+#cxx_executable(simple_exe simple_exe "" "${SIMPLE_EXE_SRC_LIST}" )
 
 #=======================================================================
 # Kraken's tests
@@ -116,7 +122,7 @@ cxx_executable(simple_exe simple_exe "" "${SIMPLE_EXE_SRC_LIST}" )
 
 #######################################
 # Google Mock
-add_subdirectory("${gmock_dir}" "${QtTest_BINARY_DIR}/gmock")
+add_subdirectory("${gmock_dir}" "${QtTest_BINARY_DIR}/gmock" EXCLUDE_FROM_ALL)
 
 include_directories("${gmock_dir}/include")
 include_directories("${gmock_dir}/gtest/include")

@@ -51,11 +51,14 @@ int main( int argc, const char** argv )
     }
   }
 
+  int count = 0;
   cout << "Exe file contains next list of instruction:" << endl;
   for( auto it = instructionList.begin(), end = instructionList.end(); it != end; ++it )
   {
     cout << *it << endl;
+    count++;
   }
+  cout << count << endl;
 
   return EXIT_SUCCESS;
 }
