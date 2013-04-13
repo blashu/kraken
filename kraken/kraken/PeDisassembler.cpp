@@ -1,11 +1,12 @@
 #include "PeDisassembler.h"
+#include "Decoder.h"
 
 #include <boost\filesystem.hpp>
 
 using namespace std;
 namespace fs = boost::filesystem;
 
-int PeDisassembler::disassemble(AsmCode *disasmResult) const
+int PeDisassembler::decode(AsmCode *disasmResult) const
 {
   DISASM disasmedCode;
 
@@ -158,7 +159,7 @@ bool PeDisassembler::load_file_in_filebuf( const std::string &fileName )
   return true;
 }
 
-CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr ) const
+CodeChunk PeDisassembler::decode_chunk( rva_t instrAddr ) const
 {
   CodeChunk codeChunk;
 
@@ -168,9 +169,9 @@ CodeChunk PeDisassembler::disassemble_code_chunk( rva_t instrAddr ) const
   tempDisasm.VirtualAddr = instrAddr;
   tempDisasm.Archi = 0;
 
-  for( int instructionLength = disassemble( &tempDisasm );
+  for( int instructionLength = decode( &tempDisasm );
     ( instructionLength != kraken::OUT_OF_BLOCK ) && ( instructionLength != kraken::UNKNOWN_OPCODE );
-    instructionLength = disassemble( &tempDisasm ) )
+    instructionLength = decode( &tempDisasm ) )
   {
     codeChunk.add_to_chunk( tempDisasm );
 

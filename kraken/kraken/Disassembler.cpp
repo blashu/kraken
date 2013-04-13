@@ -1,4 +1,4 @@
-#include "ChunkContainer.h"
+#include "Disassembler.h"
 
 #include <algorithm>
 
@@ -9,12 +9,12 @@ using namespace kraken;
 // because we are removing them from vector, combining them in one chunk and re-adding it to vector. This may cause 
 // some problems and it may be a good idea to combine them inside an existing code chunk or use list container instead of vector
 
-ChunkContainer::ChunkContainer(const Disassembler& disassembler)
+Disassembler::Disassembler(const Decoder& disassembler)
 {
   fill( disassembler );
 }
 
-bool ChunkContainer::fill(const Disassembler& disassembler)
+bool Disassembler::fill(const Decoder& disassembler)
 {
   queue<rva_t> jumpInstructionQueue;
   jumpInstructionQueue.push( disassembler.entry_point() );
@@ -73,11 +73,11 @@ bool ChunkContainer::fill(const Disassembler& disassembler)
   } );
 
   return true;
-};
+}
 
-CodeChunk ChunkContainer::disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Disassembler& disassembler)
+CodeChunk Disassembler::disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Decoder& disassembler)
 {
-  CodeChunk codeChunk = disassembler.disassemble_code_chunk( jumpInstructionQueue.front() );
+  CodeChunk codeChunk = disassembler.decode_chunk( jumpInstructionQueue.front() );
   jumpInstructionQueue.pop();
 
   for( auto currentAsmCode = codeChunk.begin(), endAsmCode = codeChunk.end(); currentAsmCode != endAsmCode; ++currentAsmCode )
@@ -92,9 +92,9 @@ CodeChunk ChunkContainer::disassemble_next_code_chunk(queue<rva_t>& jumpInstruct
   }
 
   return codeChunk;
-};
+}
 
-bool ChunkContainer::is_instruct_decoded( rva_t address )
+bool Disassembler::is_instruct_decoded( rva_t address )
 {
   for( auto chunk : _codeCollection )
   {
@@ -106,7 +106,7 @@ bool ChunkContainer::is_instruct_decoded( rva_t address )
   return false;
 }
 
-ChunkContainer::code_collection_t::iterator ChunkContainer::check_if_intersects(const CodeChunk& codeChunk)
+Disassembler::code_collection_t::iterator Disassembler::check_if_intersects(const CodeChunk& codeChunk)
 {
   for( auto it = _codeCollection.begin(), end = _codeCollection.end(); it != end; ++it )
   {
@@ -117,9 +117,9 @@ ChunkContainer::code_collection_t::iterator ChunkContainer::check_if_intersects(
   }
 
   return _codeCollection.end();
-};
+}
 
-void ChunkContainer::merge_code_chunks(CodeChunk& resultChunk, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk)
+void Disassembler::merge_code_chunks(CodeChunk& resultChunk, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk)
 {
   const CodeChunk* endChunk;
 
@@ -137,4 +137,4 @@ void ChunkContainer::merge_code_chunks(CodeChunk& resultChunk, const CodeChunk& 
   auto iteratorToIntersection = std::find( endChunk->begin(), endChunk->end(), resultChunk.back() );
 
   resultChunk.add_to_chunk( iteratorToIntersection, endChunk->end() );
-};
+}

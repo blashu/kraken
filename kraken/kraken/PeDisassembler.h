@@ -3,20 +3,20 @@
 
 #include <BeaEngine\BeaEngine.h>
 #include "PEStructs.h"
-#include "Disassembler.h"
+#include "Decoder.h"
 #include <string>
 
-KRAKEN_API_ class PeDisassembler : public Disassembler
+KRAKEN_API_ class PeDisassembler : public Decoder
 {
   public:
     PeDisassembler() {}
 
     virtual ~PeDisassembler() {}
 
-    virtual int disassemble(AsmCode *disasmResult) const;
+    virtual int decode(AsmCode *disasmResult) const;
 
     // Disassemble code chunk
-    virtual CodeChunk disassemble_code_chunk(rva_t instrAddr) const;
+    virtual CodeChunk decode_chunk(rva_t instrAddr) const;
 
     // Returns the entry point of the contained file
     virtual rva_t entry_point() const;
