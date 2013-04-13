@@ -3,7 +3,7 @@
 #include <kraken.h>
 
 #include <PeDisassembler.h>
-#include <ChunkContainer.h>
+#include <Disassembler.h>
 
 #include <iostream>
 #include <set>
@@ -41,13 +41,15 @@ int main( int argc, const char** argv )
   cout << settings.path_to_bin() << " is successfully loaded." << endl;
 
   std::set<std::string> instructionList;
-  ChunkContainer chunkContainer( peDisassembler );
+  Disassembler disassem( peDisassembler );
 
-  for(auto it = chunkContainer.begin(), end = chunkContainer.end(); it != end; ++it )
+  for(auto chunkIt = disassem.begin(), end = disassem.end(); chunkIt != end; ++chunkIt )
   {
-    for ( auto beginChunk = it->begin(), endChunk = it->end(); beginChunk != endChunk; ++beginChunk)
+    for(auto instrIt = chunkIt->begin(), endInstrIt = chunkIt->end();
+        instrIt != endInstrIt;
+        ++instrIt)
     {
-      instructionList.insert( complete2short_instr( beginChunk->CompleteInstr ) );
+      instructionList.insert( complete2short_instr( instrIt->CompleteInstr ) );
     }
   }
 

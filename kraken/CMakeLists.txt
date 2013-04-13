@@ -2,6 +2,8 @@ project(kraken_console)
 cmake_minimum_required(VERSION 2.8.9)
 aux_source_directory(. SRC_LIST)
 
+set( MY_SRCS "kraken/Disassembler.h")
+
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "Release mode")
 else()
@@ -156,7 +158,6 @@ enable_testing()
 aux_source_directory(test KRAKEN_TEST_SRC_LIST)
 set( kraken_test_LIBS kraken gmock_main)
 
-cxx_test(ChunkContainerTest "${kraken_test_LIBS}" "${KRAKEN_TEST_SRC_LIST}")
+cxx_test(DisassemblerTest "${kraken_test_LIBS}" "${KRAKEN_TEST_SRC_LIST}")
 cxx_test(CodeChunkMapTest "${kraken_test_LIBS}" "${KRAKEN_TEST_SRC_LIST}")
 cxx_test(CodeChunkTest "${kraken_test_LIBS}" "${KRAKEN_TEST_SRC_LIST}")
-cxx_test(DisassemblerTest "${kraken_test_LIBS}" "${KRAKEN_TEST_SRC_LIST}")
