@@ -81,7 +81,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 #######################################
 # Qt
 if(NOT DEFINED CMAKE_PREFIX_PATH)
-    message(SEND_ERROR "You should set CMAKE_PREFIX_PATH to point the Qt library folder. For example: -DCMAKE_PREFIX_PATH=\"C:\\Qt\\Qt5.0.1\\5.0.1\\msvc2010\\\"")
+    message(SEND_ERROR "You should set CMAKE_PREFIX_PATH to point the Qt library folder. For example: -DCMAKE_PREFIX_PATH=\"C:/Qt/Qt5.0.1/5.0.1/msvc2010/\"")
     return()
 endif()
 set(CMAKE_AUTOMOC ON)
