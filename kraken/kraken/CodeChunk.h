@@ -12,10 +12,7 @@ using namespace kraken;
 KRAKEN_API_ class CodeChunk
 {
   public:
-    typedef vector<AsmCode> code_chunk_t;
-    typedef code_chunk_t::const_iterator code_chunk_iter;
-
-    CodeChunk(){};
+    CodeChunk(){}
 
     CodeChunk(const vector<AsmCode> &codeChunk)
     {
@@ -29,9 +26,9 @@ KRAKEN_API_ class CodeChunk
 
     bool operator ==( const CodeChunk &otherChunk ) const;
 
-    inline code_chunk_iter begin() const;
+    inline vector<AsmCode>::const_iterator begin() const;
 
-    inline code_chunk_iter end() const;
+    inline vector<AsmCode>::const_iterator end() const;
 
     inline const AsmCode& front() const;
 
@@ -56,22 +53,22 @@ KRAKEN_API_ class CodeChunk
     inline void add_to_chunk(const AsmCode& disasm);
 
     // Append one code chunk to the other based on iterator to vector
-    inline void add_to_chunk(code_chunk_t::const_iterator begin, code_chunk_t::const_iterator end);
+    inline void add_to_chunk(vector<AsmCode>::const_iterator begin, vector<AsmCode>::const_iterator end);
 
     // Cound of chunks.
     inline size_t size() const;
 
     private:
       // Instructions, contained in this code chunk
-      code_chunk_t _codeChunk;
+      vector<AsmCode> _codeChunk;
 };
 
-inline CodeChunk::code_chunk_iter CodeChunk::begin() const
+inline vector<AsmCode>::const_iterator CodeChunk::begin() const
 {
   return _codeChunk.begin();
 }
 
-inline CodeChunk::code_chunk_iter CodeChunk::end() const
+inline vector<AsmCode>::const_iterator CodeChunk::end() const
 {
   return _codeChunk.end();
 }
@@ -123,7 +120,8 @@ inline void CodeChunk::add_to_chunk(const AsmCode& disasm)
   _codeChunk.push_back( disasm );
 };
 
-inline void CodeChunk::add_to_chunk(code_chunk_t::const_iterator begin, code_chunk_t::const_iterator end)
+inline void CodeChunk::add_to_chunk(vector<AsmCode>::const_iterator begin,
+                                    vector<AsmCode>::const_iterator end)
 {
   _codeChunk.insert( _codeChunk.end(), begin, end );
 }

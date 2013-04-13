@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <set>
+#include <vector>
 
 using namespace kraken;
 
@@ -45,7 +46,7 @@ int main( int argc, const char** argv )
 
   for(auto chunkIt = disassem.begin(), end = disassem.end(); chunkIt != end; ++chunkIt )
   {
-    for(auto instrIt = chunkIt->begin(), endInstrIt = chunkIt->end();
+    for(vector<AsmCode>::const_iterator instrIt = chunkIt->begin(), endInstrIt = chunkIt->end();
         instrIt != endInstrIt;
         ++instrIt)
     {

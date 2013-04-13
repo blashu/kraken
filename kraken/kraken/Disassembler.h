@@ -1,5 +1,5 @@
-#ifndef __H_INSTRUCTION_CONTAINER__
-#define __H_INSTRUCTION_CONTAINER__
+#ifndef __H_DISASSEMBLER__
+#define __H_DISASSEMBLER__
 
 #include "Decoder.h"
 #include "CodeChunkMap.h"
@@ -18,7 +18,7 @@ KRAKEN_API_ class Disassembler
     typedef vector<CodeChunk> chunk_container_t;
     typedef chunk_container_t::const_iterator chunk_container_iter;
 
-    Disassembler(const Decoder& disassembler);
+    Disassembler(const Decoder& decoder);
 
     // Fills chunk container with disassembled chunks of code, while handling
     // unconditional branch instructions and possible chunk intersections

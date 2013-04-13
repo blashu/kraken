@@ -9,15 +9,15 @@ using namespace kraken;
 // because we are removing them from vector, combining them in one chunk and re-adding it to vector. This may cause 
 // some problems and it may be a good idea to combine them inside an existing code chunk or use list container instead of vector
 
-Disassembler::Disassembler(const Decoder& disassembler)
+Disassembler::Disassembler(const Decoder& decoder)
 {
-  fill( disassembler );
+  fill( decoder );
 }
 
-bool Disassembler::fill(const Decoder& disassembler)
+bool Disassembler::fill(const Decoder& decoder)
 {
   queue<rva_t> jumpInstructionQueue;
-  jumpInstructionQueue.push( disassembler.entry_point() );
+  jumpInstructionQueue.push( decoder.entry_point() );
 
   while( jumpInstructionQueue.size() != 0 )
   {
@@ -29,7 +29,7 @@ bool Disassembler::fill(const Decoder& disassembler)
       continue;
     }
 
-    auto disassembledChunk = disassemble_next_code_chunk( jumpInstructionQueue, disassembler );
+    auto disassembledChunk = disassemble_next_code_chunk( jumpInstructionQueue, decoder );
 
     auto iteratorToIntersection = check_if_intersects( disassembledChunk );
 
@@ -75,9 +75,9 @@ bool Disassembler::fill(const Decoder& disassembler)
   return true;
 }
 
-CodeChunk Disassembler::disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Decoder& disassembler)
+CodeChunk Disassembler::disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Decoder& decoder)
 {
-  CodeChunk codeChunk = disassembler.decode_chunk( jumpInstructionQueue.front() );
+  CodeChunk codeChunk = decoder.decode_chunk( jumpInstructionQueue.front() );
   jumpInstructionQueue.pop();
 
   for( auto currentAsmCode = codeChunk.begin(), endAsmCode = codeChunk.end(); currentAsmCode != endAsmCode; ++currentAsmCode )
@@ -119,7 +119,9 @@ Disassembler::code_collection_t::iterator Disassembler::check_if_intersects(cons
   return _codeCollection.end();
 }
 
-void Disassembler::merge_code_chunks(CodeChunk& resultChunk, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk)
+void Disassembler::merge_code_chunks(CodeChunk& resultChunk,
+                                     const CodeChunk& firstCodeChunk,
+                                     const CodeChunk& secondCodeChunk)
 {
   const CodeChunk* endChunk;
 

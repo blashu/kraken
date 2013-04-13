@@ -180,27 +180,27 @@ TEST_F(CodeChunkTest, AddToChunkAlwaysAddsSingleDisasm)
   EXPECT_EQ( disasm, chunk.front() );
 }
 
-TEST_F(CodeChunkTest, AddToChunkAlwaysAddsDisasmVector)
+TEST_F(CodeChunkTest, AddToChunkAlwaysAddsInstructions)
 {
-  CodeChunk::code_chunk_t disasmVector;
+  vector<AsmCode> instructs;
 
   AsmCode tempDisasm;
   for( int i = _baseRva; i <= _lastRva; ++i )
   {
     tempDisasm.VirtualAddr = i;
-    disasmVector.push_back( tempDisasm );
+    instructs.push_back( tempDisasm );
   }
   
   CodeChunk chunk;
 
-  chunk.add_to_chunk( disasmVector.begin(), disasmVector.end() );
+  chunk.add_to_chunk( instructs.begin(), instructs.end() );
 
   // There is no size() function for CodeChunk() yet so the only way we can get it's length is like this :)
-  EXPECT_EQ( ( chunk.end() - chunk.begin() ), disasmVector.size() );
+  EXPECT_EQ( ( chunk.end() - chunk.begin() ), instructs.size() );
 
-  auto vectorIterator = disasmVector.begin();
+  auto vectorIterator = instructs.begin();
   auto chunkIterator = chunk.begin();
-  while( vectorIterator != disasmVector.end() && chunkIterator == chunk.end() )
+  while( vectorIterator != instructs.end() && chunkIterator == chunk.end() )
   {
     EXPECT_EQ( *vectorIterator, *chunkIterator );
 
