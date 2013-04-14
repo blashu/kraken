@@ -170,12 +170,13 @@ CodeChunk PeDecoder::decode_chunk( rva_t instrAddr ) const
   tempDisasm.Archi = 0;
 
   for( int instructionLength = decode( &tempDisasm );
-    ( instructionLength != kraken::OUT_OF_BLOCK ) && ( instructionLength != kraken::UNKNOWN_OPCODE );
-    instructionLength = decode( &tempDisasm ) )
+      ( instructionLength != kraken::OUT_OF_BLOCK ) && ( instructionLength != kraken::UNKNOWN_OPCODE );
+      instructionLength = decode( &tempDisasm ) )
   {
     codeChunk.add_to_chunk( tempDisasm );
 
-    if ( tempDisasm.Instruction.BranchType == kraken::JmpType )
+    if ( tempDisasm.Instruction.BranchType == kraken::JmpType ||
+         tempDisasm.Instruction.BranchType == kraken::RetType )
     {
       break;
     }

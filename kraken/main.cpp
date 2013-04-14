@@ -25,12 +25,18 @@ std::string complete2short_instr( const char* completeInstruction )
 
 void show_all_instr(const PeDecoder& peDecoder, const Disassembler& disassem)
 {
-  disassem.go_through_instructions([&peDecoder](const AsmCode& asmCode){
+  int count = 0;
+
+  disassem.go_through_instructions([&peDecoder, &count](const AsmCode& asmCode){
     offset_t offset = peDecoder.rva_to_offset( asmCode.VirtualAddr );
 
     cout << "0x" << std::setw(8) << std::hex << std::setfill('0')
          << offset << "\t" << asmCode.CompleteInstr << endl;
+
+    count++;
   });
+
+  cout << "Cound of disassembled instructions: " << std::dec << count << endl;
 }
 
 void show_instr_set(const PeDecoder& peDecoder, const Disassembler& disassem)

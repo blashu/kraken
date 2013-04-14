@@ -82,12 +82,33 @@ CodeChunk Disassembler::disassemble_next_code_chunk(queue<rva_t>& jumpInstructio
 
   for( auto currentAsmCode = codeChunk.begin(), endAsmCode = codeChunk.end(); currentAsmCode != endAsmCode; ++currentAsmCode )
   {
-    if( JmpType == currentAsmCode->Instruction.BranchType || CallType == currentAsmCode->Instruction.BranchType )
+    switch(currentAsmCode->Instruction.BranchType)
     {
-      if( 0 != currentAsmCode->Instruction.AddrValue )
-      {
-        jumpInstructionQueue.push( currentAsmCode->Instruction.AddrValue );
-      }
+      case JO:
+      case JC:
+      case JE:
+      case JA:
+      case JS:
+      case JP:
+      case JL:
+      case JG:
+      case JB:
+      case JECXZ:
+      case JmpType:
+      case CallType:
+      case JNO:
+      case JNC:
+      case JNE:
+      case JNA:
+      case JNS:
+      case JNP:
+      case JNL:
+      case JNG:
+      case JNB:
+        if( 0 != currentAsmCode->Instruction.AddrValue )
+        {
+          jumpInstructionQueue.push( currentAsmCode->Instruction.AddrValue );
+        }
     }
   }
 
