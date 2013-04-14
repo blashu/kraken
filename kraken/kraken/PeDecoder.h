@@ -1,17 +1,17 @@
-#ifndef __H_PE_DISASSEMBLER__
-#define __H_PE_DISASSEMBLER__
+#ifndef __H_PE_DECODER__
+#define __H_PE_DECODER__
 
 #include <BeaEngine\BeaEngine.h>
 #include "PEStructs.h"
 #include "Decoder.h"
 #include <string>
 
-KRAKEN_API_ class PeDisassembler : public Decoder
+KRAKEN_API_ class PeDecoder : public Decoder
 {
   public:
-    PeDisassembler() {}
+    PeDecoder() {}
 
-    virtual ~PeDisassembler() {}
+    virtual ~PeDecoder() {}
 
     virtual int decode(AsmCode *disasmResult) const;
 
@@ -38,7 +38,7 @@ KRAKEN_API_ class PeDisassembler : public Decoder
 
     /////////////////////////////////////////
     // functions
-    PeDisassembler(const PeDisassembler&){}
+    PeDecoder(const PeDecoder&){}
 
     template <typename T>
     const T* buf(size_t offset) const;

@@ -1,4 +1,4 @@
-#include "PeDisassembler.h"
+#include "PeDecoder.h"
 #include "Decoder.h"
 
 #include <boost\filesystem.hpp>
@@ -6,7 +6,7 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
-int PeDisassembler::decode(AsmCode *disasmResult) const
+int PeDecoder::decode(AsmCode *disasmResult) const
 {
   DISASM disasmedCode;
 
@@ -34,7 +34,7 @@ int PeDisassembler::decode(AsmCode *disasmResult) const
 
 ////////////////////////////////////////////////////
 // public members
-bool PeDisassembler::load( const std::string &path )
+bool PeDecoder::load( const std::string &path )
 {
   if( false == load_file_in_filebuf( path ) )
   {
@@ -56,21 +56,21 @@ bool PeDisassembler::load( const std::string &path )
   return true;
 }
 
-const unsigned char* PeDisassembler::buf() const
+const unsigned char* PeDecoder::buf() const
 {
   return ( _fileBuf.empty() ? ( (const unsigned char*) NULL ) : &(_fileBuf[ 0 ]) );
 }
 
 //TODO validate that fileBuf contains the last byte of T type (check sizeof(T) ).
 template <typename T>
-const T* PeDisassembler::buf( size_t offset ) const
+const T* PeDecoder::buf( size_t offset ) const
 {
   return ( offset >= _fileBuf.size() ? (const T*) NULL : (const T*) &(_fileBuf[ offset ]) );
 }
 
 ////////////////////////////////////////////////////
 // private members
-bool PeDisassembler::is_it_pe_file()
+bool PeDecoder::is_it_pe_file()
 {
   const IMAGE_DOS_HEADER *dosHeader = buf<IMAGE_DOS_HEADER>( 0 );
 
@@ -103,7 +103,7 @@ bool PeDisassembler::is_it_pe_file()
   return true;
 }
 
-bool PeDisassembler::fill_pe_struct_fields()
+bool PeDecoder::fill_pe_struct_fields()
 {
   const IMAGE_DOS_HEADER *dosHeader = buf<IMAGE_DOS_HEADER>( 0 );
   size_t ntHeaderOffset = dosHeader->e_lfanew;
@@ -123,7 +123,7 @@ bool PeDisassembler::fill_pe_struct_fields()
   return true;
 }
 
-bool PeDisassembler::load_file_in_filebuf( const std::string &fileName )
+bool PeDecoder::load_file_in_filebuf( const std::string &fileName )
 {
   fs::path filePath( fileName );
 
@@ -159,7 +159,7 @@ bool PeDisassembler::load_file_in_filebuf( const std::string &fileName )
   return true;
 }
 
-CodeChunk PeDisassembler::decode_chunk( rva_t instrAddr ) const
+CodeChunk PeDecoder::decode_chunk( rva_t instrAddr ) const
 {
   CodeChunk codeChunk;
 
@@ -187,12 +187,12 @@ CodeChunk PeDisassembler::decode_chunk( rva_t instrAddr ) const
   return codeChunk;
 }
 
-rva_t PeDisassembler::entry_point() const
+rva_t PeDecoder::entry_point() const
 {
   return _imageNtHeader32->OptionalHeader.AddressOfEntryPoint + _imageNtHeader32->OptionalHeader.ImageBase;
 }
 
-offset_t PeDisassembler::rva_to_offset(rva_t rva) const
+offset_t PeDecoder::rva_to_offset(rva_t rva) const
 {
   rva -= _imageNtHeader32->OptionalHeader.ImageBase;
 
@@ -210,13 +210,13 @@ offset_t PeDisassembler::rva_to_offset(rva_t rva) const
   return -1;
 }
 
-void PeDisassembler::convert_instruction(const INSTRTYPE &source, Instruction &destination)
+void PeDecoder::convert_instruction(const INSTRTYPE &source, Instruction &destination)
 {
   destination.AddrValue = source.AddrValue;
   destination.BranchType = (BranchType)source.BranchType;
 }
 
-Argument PeDisassembler::convert_argument(const ARGTYPE &sourceArg) const
+Argument PeDecoder::convert_argument(const ARGTYPE &sourceArg) const
 {
   Argument convertedArg;
   convertedArg.AccessMode = sourceArg.AccessMode;

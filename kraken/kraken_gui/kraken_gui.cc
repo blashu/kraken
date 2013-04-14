@@ -1,16 +1,14 @@
 #include <QApplication>
 #include <QLabel>
-#include <PeDisassembler.h>
+#include <PeDecoder.h>
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    PeDisassembler peDisassembler;
+    PeDecoder peDecoder;
 
-    peDisassembler.load("simple_exe/simple_exe.exe");
-
-
+    peDecoder.load("simple_exe/simple_exe.exe");
 
     QLabel hello("Hello world!");
     hello.show();

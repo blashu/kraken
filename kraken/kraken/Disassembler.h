@@ -35,7 +35,7 @@ KRAKEN_API_ class Disassembler
 
     virtual const CodeChunk& back() const;
 
-    virtual void go_through_instrs(std::function<void (const AsmCode&)> process_instr);
+    virtual void go_through_instructions(std::function<void (const AsmCode&)> process_instr) const;
 
   private:
     /////////////////////////////////////////

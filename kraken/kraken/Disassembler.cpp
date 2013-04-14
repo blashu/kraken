@@ -141,7 +141,7 @@ void Disassembler::merge_code_chunks(CodeChunk& resultChunk,
   resultChunk.add_to_chunk( iteratorToIntersection, endChunk->end() );
 }
 
-void Disassembler::go_through_instrs(std::function<void (const AsmCode&)> process_instr)
+void Disassembler::go_through_instructions(std::function<void (const AsmCode&)> process_instr) const
 {
   for(auto chunkIt = begin(), endIt = end(); chunkIt != endIt; ++chunkIt )
   {
