@@ -6,8 +6,8 @@
 #include <Disassembler.h>
 
 #include <iostream>
+#include <iomanip>
 #include <set>
-#include <vector>
 
 using namespace kraken;
 
@@ -21,6 +21,32 @@ std::string complete2short_instr( const char* completeInstruction )
   }
 
   return std::string( completeInstruction, whiteCharPtr );
+}
+
+void show_all_instr(PeDisassembler peDisassembler, Disassembler disassem)
+{
+  disassem.go_through_instrs([&peDisassembler](const AsmCode& asmCode){
+    offset_t offset = peDisassembler.rva_to_offset( asmCode.VirtualAddr );
+
+    cout << "0x" << std::setw(8) << std::hex << std::setfill('0')
+         << offset << "\t" << asmCode.CompleteInstr << endl;
+  });
+}
+
+void show_instr_set(PeDisassembler peDisassembler, Disassembler disassem)
+{
+  std::set<std::string> instructionList;
+  cout << "Exe file contains next list of instruction:" << endl;
+
+  disassem.go_through_instrs([&peDisassembler, &instructionList](const AsmCode& asmCode){
+    instructionList.insert( complete2short_instr( asmCode.CompleteInstr ) );
+  });
+
+  for( auto it = instructionList.begin(), end = instructionList.end(); it != end; ++it )
+  {
+    cout << *it << endl;
+  }
+  cout << instructionList.size() << endl;
 }
 
 int main( int argc, const char** argv )
@@ -41,27 +67,17 @@ int main( int argc, const char** argv )
 
   cout << settings.path_to_bin() << " is successfully loaded." << endl;
 
-  std::set<std::string> instructionList;
   Disassembler disassem( peDisassembler );
 
-  for(auto chunkIt = disassem.begin(), end = disassem.end(); chunkIt != end; ++chunkIt )
+  if( Settings::ActionType::SHOW_ALL_INSTR == settings.action() )
   {
-    for(vector<AsmCode>::const_iterator instrIt = chunkIt->begin(), endInstrIt = chunkIt->end();
-        instrIt != endInstrIt;
-        ++instrIt)
-    {
-      instructionList.insert( complete2short_instr( instrIt->CompleteInstr ) );
-    }
+    show_all_instr(peDisassembler, disassem);
   }
 
-  int count = 0;
-  cout << "Exe file contains next list of instruction:" << endl;
-  for( auto it = instructionList.begin(), end = instructionList.end(); it != end; ++it )
+  if( Settings::ActionType::SHOW_INSTR_SET == settings.action() )
   {
-    cout << *it << endl;
-    count++;
+    show_instr_set(peDisassembler, disassem);
   }
-  cout << count << endl;
 
   return EXIT_SUCCESS;
 }

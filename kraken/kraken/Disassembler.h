@@ -8,6 +8,7 @@
 #include <queue>
 #include <string>
 #include <map>
+#include <functional>
 
 using namespace std;
 using namespace kraken;
@@ -34,6 +35,8 @@ KRAKEN_API_ class Disassembler
 
     virtual const CodeChunk& back() const;
 
+    virtual void go_through_instrs(std::function<void (const AsmCode&)> process_instr);
+
   private:
     /////////////////////////////////////////
     // fields
@@ -58,7 +61,9 @@ KRAKEN_API_ class Disassembler
     // and returns iterator to that chunk, otherwise returns iterator to end
     virtual code_collection_t::iterator check_if_intersects(const CodeChunk& codeChunk);
 
-    virtual void merge_code_chunks(CodeChunk& resultChunk, const CodeChunk& firstCodeChunk, const CodeChunk& secondCodeChunk);
+    virtual void merge_code_chunks(CodeChunk& resultChunk,
+                                   const CodeChunk& firstCodeChunk,
+                                   const CodeChunk& secondCodeChunk);
 };
 
 inline Disassembler::chunk_container_iter Disassembler::begin() const

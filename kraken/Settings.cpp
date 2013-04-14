@@ -21,14 +21,31 @@ namespace kraken
 
   bool Settings::run()
   {
-    po::options_description desc("Allowed options");
-  
-    desc.add_options()
-      ("help", "produce help message")
-      ("exe", po::value<string>()->required(), "path to executable file");
-
     po::variables_map vm;
-    store(po::parse_command_line(_argc, _argv, desc), vm);
+    po::options_description desc("Allowed options");
+
+    try
+    {
+      po::options_description instrList("List of instructions:");
+      instrList.add_options()
+          ("list", "list of all desassembled instructions");
+
+      po::options_description instrSet("Set of instructions:");
+      instrSet.add_options()
+          ("set", "set of desassembled instructions");
+
+      desc.add_options()
+          ("help", "produce help message")
+          ("include-path,I", po::value<string>()->composing(), "include path");
+
+      desc.add(instrList).add(instrSet);
+      store(po::parse_command_line(_argc, _argv, desc), vm);
+    }
+    catch(std::exception const&  ex)
+    {
+      cout << "Can't init settings. " << ex.what() << endl;
+      return false;
+    }
 
     if( vm.count("help") )
     {
@@ -36,8 +53,27 @@ namespace kraken
       return false;
     }
 
-    _path_to_bin = vm[ "exe" ].as<string>();
+    if( false == vm.count("include-path") )
+    {
+      std::cout << desc << std::endl;
+      return false;
+    }
 
+    if( vm.count("set") )
+    {
+      _actionType = ActionType::SHOW_INSTR_SET;
+    }
+    else if( vm.count("list") )
+    {
+      _actionType = ActionType::SHOW_ALL_INSTR;
+    }
+
+    _path_to_bin = vm[ "include-path" ].as<string>();
     return true;
   }
-};
+
+  Settings::ActionType Settings::action()
+  {
+    return _actionType;
+  }
+}

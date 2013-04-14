@@ -140,3 +140,17 @@ void Disassembler::merge_code_chunks(CodeChunk& resultChunk,
 
   resultChunk.add_to_chunk( iteratorToIntersection, endChunk->end() );
 }
+
+void Disassembler::go_through_instrs(std::function<void (const AsmCode&)> process_instr)
+{
+  for(auto chunkIt = begin(), endIt = end(); chunkIt != endIt; ++chunkIt )
+  {
+    for(vector<AsmCode>::const_iterator instrIt = chunkIt->begin(), endInstrIt = chunkIt->end();
+        instrIt != endInstrIt;
+        ++instrIt)
+    {
+      process_instr(*instrIt);
+    }
+  }
+}
+
