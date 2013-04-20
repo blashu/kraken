@@ -1,3 +1,6 @@
+#ifndef __H_CODE_CHUNK_TEST__
+#define __H_CODE_CHUNK_TEST__
+
 #include "..\kraken\CodeChunk.h"
 
 #include <gtest\gtest.h>
@@ -18,3 +21,5 @@ class CodeChunkTest : public :: testing::Test
       _chunk = CodeChunkHelper::GenerateCodeChunk( _baseRva, _lastRva );
     }
 };
+
+#endif

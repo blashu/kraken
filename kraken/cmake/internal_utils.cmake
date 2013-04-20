@@ -146,7 +146,7 @@ endfunction()
 #
 # creates a named C++ executable that depends on the given libraries and
 # is built from the given source files with the given compiler flags.
-function(cxx_executable_with_flags name cxx_flags libs)
+function(kcxx_executable_with_flags name cxx_flags libs)
   add_executable(${name} ${ARGN})
   if (cxx_flags)
     set_target_properties(${name}
@@ -171,7 +171,7 @@ endfunction()
 # from the given source files.  dir/name.cc is implicitly included in
 # the source file list.
 function(cxx_executable name dir libs)
-  cxx_executable_with_flags(
+  kcxx_executable_with_flags(
     ${name} "${cxx_default}" "${libs}" "${dir}/${name}.cc" ${ARGN})
 endfunction()
 
@@ -182,8 +182,8 @@ find_package(PythonInterp)
 #
 # creates a named C++ test that depends on the given libs and is built
 # from the given source files with the given compiler flags.
-function(cxx_test_with_flags name cxx_flags libs)
-  cxx_executable_with_flags(${name} "${cxx_flags}" "${libs}" ${ARGN})
+function(kcxx_test_with_flags name cxx_flags libs)
+  kcxx_executable_with_flags(${name} "${cxx_flags}" "${libs}" ${ARGN})
   add_test(${name} ${name})
 endfunction()
 
@@ -192,9 +192,8 @@ endfunction()
 # creates a named test target that depends on the given libs and is
 # built from the given source files.  Unlike cxx_test_with_flags,
 # test/name.cc is already implicitly included in the source file list.
-function(cxx_test name libs)
-  cxx_test_with_flags("${name}" "${cxx_default}" "${libs}"
-    "test/${name}.cc" ${ARGN})
+function(kcxx_test name libs)
+  kcxx_test_with_flags("${name}" "${cxx_default}" "${libs}" ${ARGN})
 endfunction()
 
 # py_test(name)

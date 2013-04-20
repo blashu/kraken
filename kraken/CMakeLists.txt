@@ -81,16 +81,6 @@ find_package(Boost COMPONENTS program_options system filesystem REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 #######################################
-# Qt
-if(NOT DEFINED CMAKE_PREFIX_PATH)
-    message(SEND_ERROR "You should set CMAKE_PREFIX_PATH to point the Qt library folder. For example: -DCMAKE_PREFIX_PATH=\"C:/Qt/Qt5.0.1/5.0.1/msvc2010/\"")
-    return()
-endif()
-set(CMAKE_AUTOMOC ON)
-find_package(Qt5Core)
-find_package(Qt5Widgets)
-
-#######################################
 # BeaEngine
 add_definitions( -DBEA_ENGINE_STATIC )
 add_definitions( -DBEA_USE_STDCALL )
@@ -123,41 +113,13 @@ target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} BeaEngine)
 target_link_libraries(${PROJECT_NAME} kraken)
 
-#######################################
-# kraken_gui project
-
-aux_source_directory(kraken_gui KRAKEN_GUI_SRC_LIST)
-
-include_directories("kraken_gui")
-cxx_executable(kraken_gui kraken_gui "kraken;${Boost_LIBRARIES}" "${KRAKEN_GUI_SRC_LIST}")
-
-qt5_use_modules(kraken_gui Widgets)
-
-#######################################
-# Build exe project to test main project.
-
-#aux_source_directory(simple_exe SIMPLE_EXE_SRC_LIST)
-#cxx_executable(simple_exe simple_exe "" "${SIMPLE_EXE_SRC_LIST}" )
-
 #=======================================================================
 # Kraken's tests
 # You can ignore it if you don't want to test library.
 #=======================================================================
 
-#######################################
-# Google Mock
-add_subdirectory("${gmock_dir}" "${QtTest_BINARY_DIR}/gmock" EXCLUDE_FROM_ALL)
+add_subdirectory(test)
 
-include_directories("${gmock_dir}/include")
-include_directories("${gmock_dir}/gtest/include")
-
-#######################################
-# Test list
-enable_testing()
-
-aux_source_directory(test KRAKEN_TEST_SRC_LIST)
-set( kraken_test_LIBS kraken gmock_main)
-
-cxx_test(DisassemblerTest "${kraken_test_LIBS}" "${KRAKEN_TEST_SRC_LIST}")
-cxx_test(CodeChunkMapTest "${kraken_test_LIBS}" "${KRAKEN_TEST_SRC_LIST}")
-cxx_test(CodeChunkTest "${kraken_test_LIBS}" "${KRAKEN_TEST_SRC_LIST}")
+# don't move this because it generate mock file in every projects that
+# locate under this subdirectory
+add_subdirectory(kraken_gui)
