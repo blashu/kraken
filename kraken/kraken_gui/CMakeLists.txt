@@ -15,10 +15,12 @@ find_package(Qt5Quick)
 file(GLOB KRAKEN_GUI_QML *.qml)
 file(GLOB KRAKEN_GUI_QRC *.qrc)
 
-aux_source_directory(. KRAKEN_GUI_SRC_LIST)
+file(GLOB KRAKEN_GUI_HEADERS *.h)
+aux_source_directory(. KRAKEN_GUI_SRC)
+
 QT5_ADD_RESOURCES(KRAKEN_GUI_RESOURCE ${KRAKEN_GUI_QRC})
 
-add_executable(kraken_gui ${KRAKEN_GUI_SRC_LIST} ${KRAKEN_GUI_QML} ${KRAKEN_GUI_RESOURCE})
+add_executable(kraken_gui ${KRAKEN_GUI_SRC} ${KRAKEN_GUI_SRC_HEADERS} ${KRAKEN_GUI_QML} ${KRAKEN_GUI_RESOURCE})
 target_link_libraries(kraken_gui kraken)
 
 
