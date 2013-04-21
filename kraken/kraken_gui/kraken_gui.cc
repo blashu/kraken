@@ -1,17 +1,20 @@
-#include <QApplication>
-#include <QLabel>
+#include <QtGui/QGuiApplication>
 #include <PeDecoder.h>
+#include <Disassembler.h>
+
+#include "MainWindow.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+//    PeDecoder peDecoder;
+//    peDecoder.load("simple_exe/simple_exe.exe");
 
-    PeDecoder peDecoder;
+//    Disassembler disassembler(peDecoder);
 
-    peDecoder.load("simple_exe/simple_exe.exe");
+    QGuiApplication app(argc, argv);
 
-    QLabel hello("Hello world!");
-    hello.show();
+    MainWindow mainWindow;
+    mainWindow.showExpanded();
 
     return app.exec();
 }

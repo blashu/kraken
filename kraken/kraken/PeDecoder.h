@@ -34,7 +34,7 @@ KRAKEN_API_ class PeDecoder : public Decoder
 
     SECTION_HEADERS _sectionHeaders;
 
-    const kraken::IMAGE_NT_HEADERS32* _imageNtHeader32;
+    const IMAGE_NT_HEADERS32* _imageNtHeader32;
 
     /////////////////////////////////////////
     // functions

@@ -1,6 +1,12 @@
 #ifndef __H__PE_STRUCTS__
 #define __H__PE_STRUCTS__
 
+#if defined(_MSC_VER)
+#define NOMINMAX
+#include <windows.h>
+#endif
+
+#ifndef _MSC_VER
 namespace kraken
 {
 #define IMAGE_DOS_SIGNATURE                 0x5A4D      // MZ
@@ -135,12 +141,13 @@ namespace kraken
     WORD    NumberOfLinenumbers;
     DWORD   Characteristics;
   } IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;
-
-  typedef struct _SECTION_HEADERS
-  {
-    WORD    NumberOfSections;
-    const IMAGE_SECTION_HEADER* SectionHeaders;
-  } SECTION_HEADERS, *PSECTION_HEADERS;
 }
+#endif
+
+typedef struct _SECTION_HEADERS
+{
+  WORD    NumberOfSections;
+  const IMAGE_SECTION_HEADER* SectionHeaders;
+} SECTION_HEADERS, *PSECTION_HEADERS;
 
 #endif

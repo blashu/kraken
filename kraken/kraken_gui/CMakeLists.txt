@@ -6,16 +6,20 @@ if(NOT DEFINED CMAKE_PREFIX_PATH)
 endif()
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5Core)
-find_package(Qt5Widgets)
+find_package(Qt5Qml)
+find_package(Qt5Quick)
 
 #######################################
 # kraken_gui project
 
-aux_source_directory(. KRAKEN_GUI_SRC_LIST)
+file(GLOB KRAKEN_GUI_QML *.qml)
+file(GLOB KRAKEN_GUI_QRC *.qrc)
 
-add_executable(kraken_gui ${KRAKEN_GUI_SRC_LIST})
+aux_source_directory(. KRAKEN_GUI_SRC_LIST)
+QT5_ADD_RESOURCES(KRAKEN_GUI_RESOURCE ${KRAKEN_GUI_QRC})
+
+add_executable(kraken_gui ${KRAKEN_GUI_SRC_LIST} ${KRAKEN_GUI_QML} ${KRAKEN_GUI_RESOURCE})
 target_link_libraries(kraken_gui kraken)
-target_link_libraries(kraken_gui ${Boost_LIBRARIES})
 
 
 set(QT_DIR "${CMAKE_PREFIX_PATH}")
@@ -35,7 +39,7 @@ endforeach()
 ###########################
 # QT libs
 
-set( QT_LIBS Qt5Core Qt5Widgets Qt5Gui
+set( QT_LIBS Qt5Core Qt5Qml Qt5Network Qt5V8 Qt5Quick Qt5Gui
              libEGL libGLESv2 )
 
 foreach(lib ${QT_LIBS})
@@ -44,4 +48,4 @@ foreach(lib ${QT_LIBS})
                         copy "${QT_BIN}${lib}d.dll" "$<TARGET_FILE_DIR:kraken_gui>")
 endforeach()
 
-qt5_use_modules(kraken_gui Widgets)
+qt5_use_modules(kraken_gui Qml Quick)
