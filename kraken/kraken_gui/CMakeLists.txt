@@ -11,9 +11,10 @@ find_package(Qt5Widgets)
 #######################################
 # kraken_gui project
 
-aux_source_directory(. KRAKEN_GUI_SRC_LIST)
+file(GLOB KRAKEN_GUI_HEADERS *.h)
+aux_source_directory(. KRAKEN_GUI_SRC)
 
-add_executable(kraken_gui ${KRAKEN_GUI_SRC_LIST})
+add_executable(kraken_gui ${KRAKEN_GUI_SRC} ${KRAKEN_GUI_SRC_HEADERS})
 target_link_libraries(kraken_gui kraken)
 target_link_libraries(kraken_gui ${Boost_LIBRARIES})
 

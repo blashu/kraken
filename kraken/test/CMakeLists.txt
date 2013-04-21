@@ -9,7 +9,9 @@ include_directories("${gmock_dir}/gtest/include")
 # Test list
 enable_testing()
 
-aux_source_directory(. KRAKEN_TEST_SRC_LIST)
+file(GLOB KRAKEN_TEST_HEADERS *.h)
+aux_source_directory(. KRAKEN_TEST_SRC)
+
 set( kraken_test_LIBS kraken gmock_main)
 
-kcxx_test(test-all "${kraken_test_LIBS}" test-all.cc CodeChunkHelper.cpp)
+kcxx_test(test-all "${kraken_test_LIBS}" ${KRAKEN_TEST_HEADERS} ${KRAKEN_TEST_SRC})
