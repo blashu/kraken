@@ -118,8 +118,8 @@ target_link_libraries(${PROJECT_NAME} kraken)
 # You can ignore it if you don't want to test library.
 #=======================================================================
 
-add_subdirectory(test)
-
 # don't move this because it generate mock file in every projects that
 # locate under this subdirectory
 add_subdirectory(kraken_gui)
+
+add_subdirectory(test)

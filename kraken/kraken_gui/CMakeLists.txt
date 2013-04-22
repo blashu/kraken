@@ -4,7 +4,7 @@ if(NOT DEFINED CMAKE_PREFIX_PATH)
     message(SEND_ERROR "You should set CMAKE_PREFIX_PATH to point the Qt library folder. For example: -DCMAKE_PREFIX_PATH=\"C:/Qt/Qt5.0.1/5.0.1/msvc2010/\"")
     return()
 endif()
-set(CMAKE_AUTOMOC ON)
+
 find_package(Qt5Core)
 find_package(Qt5Qml)
 find_package(Qt5Quick)
@@ -23,6 +23,7 @@ QT5_ADD_RESOURCES(KRAKEN_GUI_RESOURCE ${KRAKEN_GUI_QRC})
 add_executable(kraken_gui ${KRAKEN_GUI_SRC} ${KRAKEN_GUI_SRC_HEADERS} ${KRAKEN_GUI_QML} ${KRAKEN_GUI_RESOURCE})
 target_link_libraries(kraken_gui kraken)
 
+set_target_properties(kraken_gui PROPERTIES AUTOMOC true)
 
 set(QT_DIR "${CMAKE_PREFIX_PATH}")
 set(QT_BIN "${CMAKE_PREFIX_PATH}/bin/")
