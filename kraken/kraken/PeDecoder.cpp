@@ -1,5 +1,5 @@
-#include "PeDecoder.h"
-#include "Decoder.h"
+#include "include/kraken/PeDecoder.h"
+#include "include/kraken/Decoder.h"
 
 #include <boost\filesystem.hpp>
 

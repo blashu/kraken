@@ -1,4 +1,4 @@
-#include "CodeChunk.h"
+#include "include/kraken/CodeChunk.h"
 
 using namespace std;
 

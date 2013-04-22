@@ -1,7 +1,7 @@
 #ifndef __H_CODE_CHUNK_TEST__
 #define __H_CODE_CHUNK_TEST__
 
-#include "..\kraken\CodeChunk.h"
+#include "kraken/CodeChunk.h"
 
 #include <gtest\gtest.h>
 #include "CodeChunkHelper.h"

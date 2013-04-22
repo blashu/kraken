@@ -1,23 +1,13 @@
-#include "MainWindow.h"
+#include "mainwindow.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtQml/QQmlEngine>
-
-
-MainWindow::MainWindow(QWindow *parent)
-    : QQuickView(parent)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
-    setSource(QUrl("qrc:/main.qml"));
-    connect(engine(), SIGNAL(quit()), SLOT(close()));
-    setResizeMode(QQuickView::SizeRootObjectToView);
+    ui->setupUi(this);
 }
 
 MainWindow::~MainWindow()
 {
-}
-
-void MainWindow::showExpanded()
-{
-    show();
+    delete ui;
 }

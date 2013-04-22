@@ -1,10 +1,10 @@
 #ifndef __H_CODE_CHUNK__
 #define __H_CODE_CHUNK__
 
-#include "kraken.h"
-
 #include <vector>
-#include "AsmCode.h"
+
+#include "kraken/kraken.h"
+#include "kraken/AsmCode.h"
 
 using namespace std;
 using namespace kraken;

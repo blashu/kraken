@@ -1,7 +1,7 @@
 #ifndef __H_DISASSEMBLER_TEST__
 #define __H_DISASSEMBLER_TEST__
 
-#include "../kraken/Disassembler.h"
+#include "kraken/Disassembler.h"
 #include "MockDisassembler.h"
 #include "CodeChunkHelper.h"
 

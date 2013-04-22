@@ -1,4 +1,4 @@
-#include "..\kraken\Decoder.h"
+#include "kraken/Decoder.h"
 
 #include <gmock\gmock.h>
 

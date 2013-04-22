@@ -87,39 +87,33 @@ add_definitions( -DBEA_USE_STDCALL )
 
 include_directories("${beaengine_dir}/include")
 
-if(NOT EXISTS "${beaengine_dir}/CMakeLists_origin.txt")
-    file(COPY "${beaengine_dir}/CMakeLists.txt" DESTINATION "${beaengine_dir}/CMakeLists_origin.txt")
+if(NOT EXISTS "${beaengine_dir}/CMakeLists_origin")
+    file(COPY "${beaengine_dir}/CMakeLists.txt" DESTINATION "${beaengine_dir}/CMakeLists_origin")
     file(COPY "cmake/beaengine/CMakeLists.txt" DESTINATION "${beaengine_dir}")
 endif()
 set(optBUILD_STDCALL ON)
 add_subdirectory("${beaengine_dir}" "${QtTest_BINARY_DIR}/beaengine" EXCLUDE_FROM_ALL)
 
 #######################################
-# Build kraken project
+# kraken project
+include_directories("kraken/include")
+add_subdirectory(kraken)
 
-aux_source_directory(kraken KRAKEN_SRC_LIST)
-
-cxx_library(kraken "${cxx_strict}" "${KRAKEN_SRC_LIST}")
-target_link_libraries(kraken BeaEngine)
-
-include_directories("kraken")
 
 #######################################
 # Main project
 
-add_executable(${PROJECT_NAME} ${SRC_LIST})
+file(GLOB HEADERS_LIST *.h)
+add_executable(${PROJECT_NAME} ${SRC_LIST} ${HEADERS_LIST})
 
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} BeaEngine)
 target_link_libraries(${PROJECT_NAME} kraken)
 
-#=======================================================================
-# Kraken's tests
-# You can ignore it if you don't want to test library.
-#=======================================================================
-
-# don't move this because it generate mock file in every projects that
-# locate under this subdirectory
+#######################################
+# Kraken gui
 add_subdirectory(kraken_gui)
 
+#######################################
+# Krakens' tests
 add_subdirectory(test)

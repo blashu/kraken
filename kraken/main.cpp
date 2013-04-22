@@ -1,9 +1,7 @@
 #include "Settings.h"
 
-#include <kraken.h>
-
-#include <PeDecoder.h>
-#include <Disassembler.h>
+#include <kraken/PeDecoder.h>
+#include <kraken/Disassembler.h>
 
 #include <iostream>
 #include <iomanip>

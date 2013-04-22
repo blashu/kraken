@@ -1,4 +1,4 @@
-#include "CodeChunkMap.h"
+#include "include/kraken/CodeChunkMap.h"
 
 /////////////////////////////////////////////////
 // internal classes

@@ -1,20 +1,19 @@
-#include <QtGui/QGuiApplication>
-#include <PeDecoder.h>
-#include <Disassembler.h>
+#include <QApplication>
+
+#include <kraken/PeDecoder.h>
+#include <kraken/Disassembler.h>
 
 #include "MainWindow.h"
 
-Q_DECL_EXPORT int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 //    PeDecoder peDecoder;
 //    peDecoder.load("simple_exe/simple_exe.exe");
 
 //    Disassembler disassembler(peDecoder);
 
-    QGuiApplication app(argc, argv);
-
-    MainWindow mainWindow;
-    mainWindow.showExpanded();
-
-    return app.exec();
+  QApplication app(argc, argv);
+  MainWindow mainWindow;
+  mainWindow.show();
+  return app.exec();
 }

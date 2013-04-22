@@ -5,44 +5,47 @@ if(NOT DEFINED CMAKE_PREFIX_PATH)
     return()
 endif()
 
-find_package(Qt5Core)
-find_package(Qt5Qml)
-find_package(Qt5Quick)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Widgets REQUIRED)
 
 #######################################
 # kraken_gui project
 
-file(GLOB KRAKEN_GUI_QML *.qml)
-file(GLOB KRAKEN_GUI_QRC *.qrc)
-
 file(GLOB KRAKEN_GUI_HEADERS *.h)
 aux_source_directory(. KRAKEN_GUI_SRC)
 
-QT5_ADD_RESOURCES(KRAKEN_GUI_RESOURCE ${KRAKEN_GUI_QRC})
+# Add resource.
+file(GLOB KRAKEN_GUI_QRC *.qrc)
+qt5_add_resources(KRAKEN_GUI_RESOURCE ${KRAKEN_GUI_QRC})
 
-add_executable(kraken_gui ${KRAKEN_GUI_SRC} ${KRAKEN_GUI_SRC_HEADERS} ${KRAKEN_GUI_QML} ${KRAKEN_GUI_RESOURCE})
+# Add UI and moc files.
+file(GLOB KRAKEN_GUI_UI *.ui)
+qt5_wrap_ui(KRAKEN_GUI_FORMS_HEADERS ${KRAKEN_GUI_UI})
+# Include output directory so that contains IU automatically generated headers.
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+# create gui application
+add_executable(kraken_gui ${KRAKEN_GUI_HEADERS}
+                          ${KRAKEN_GUI_SRC}
+                          ${KRAKEN_GUI_RESOURCE}
+                          ${KRAKEN_GUI_FORMS_HEADERS})
 target_link_libraries(kraken_gui kraken)
-
 set_target_properties(kraken_gui PROPERTIES AUTOMOC true)
+
+qt5_use_modules(kraken_gui Widgets)
+
+
+####################################################
+#
+# Copy dlls to output
 
 set(QT_DIR "${CMAKE_PREFIX_PATH}")
 set(QT_BIN "${CMAKE_PREFIX_PATH}/bin/")
 
-############################
-# QT lib dependences
+############
+# Qt modules
 
-set( QT_LIB_DEPENDENCES icuin49 icuuc49 icudt49 )
-
-foreach(lib ${QT_LIB_DEPENDENCES})
-    add_custom_command(TARGET kraken_gui POST_BUILD
-                        COMMAND "${CMAKE_COMMAND}" -E
-                        copy "${QT_BIN}${lib}.dll" "$<TARGET_FILE_DIR:kraken_gui>")
-endforeach()
-
-###########################
-# QT libs
-
-set( QT_LIBS Qt5Core Qt5Qml Qt5Network Qt5V8 Qt5Quick Qt5Gui
+set( QT_LIBS Qt5Core Qt5Widgets Qt5Network Qt5Gui
              libEGL libGLESv2 )
 
 foreach(lib ${QT_LIBS})
@@ -51,4 +54,13 @@ foreach(lib ${QT_LIBS})
                         copy "${QT_BIN}${lib}d.dll" "$<TARGET_FILE_DIR:kraken_gui>")
 endforeach()
 
-qt5_use_modules(kraken_gui Qml Quick)
+#############################
+# Qt inderect dependence dlls
+
+set( QT_LIB_DEPENDENCES icuin49 icuuc49 icudt49 )
+
+foreach(lib ${QT_LIB_DEPENDENCES})
+    add_custom_command(TARGET kraken_gui POST_BUILD
+                        COMMAND "${CMAKE_COMMAND}" -E
+                        copy "${QT_BIN}${lib}.dll" "$<TARGET_FILE_DIR:kraken_gui>")
+endforeach()

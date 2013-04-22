@@ -1,7 +1,7 @@
 #ifndef __H_CODE_CHUNK_MAP_TEST__
 #define __H_CODE_CHUNK_MAP_TEST__
 
-#include "..\kraken\CodeChunkMap.h"
+#include "kraken/CodeChunkMap.h"
 
 #include <gtest\gtest.h>
 

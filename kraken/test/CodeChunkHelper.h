@@ -1,7 +1,7 @@
 #ifndef __H_CODE_CHUNK_HELPER__
 #define __H_CODE_CHUNK_HELPER__
 
-#include "..\kraken\CodeChunk.h"
+#include "kraken/CodeChunk.h"
 
 class CodeChunkHelper 
 {

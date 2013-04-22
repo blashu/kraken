@@ -1,27 +1,24 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui>
-#include <QtQuick/QQuickView>
+#include <QMainWindow>
 
-namespace Ui
-{
+#include "ui_mainwindow.h"
+
+namespace Ui {
     class MainWindow;
 }
 
-class MainWindow : public QQuickView
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    public:
-        explicit MainWindow(QWindow *parent = 0);
-        ~MainWindow();
+public:
+    explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
-        void addImportPath(const QString &path);
-
-        void showExpanded();
-
-    private:
+private:
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H

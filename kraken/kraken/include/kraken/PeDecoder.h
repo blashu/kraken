@@ -2,9 +2,10 @@
 #define __H_PE_DECODER__
 
 #include <BeaEngine\BeaEngine.h>
-#include "PEStructs.h"
-#include "Decoder.h"
 #include <string>
+
+#include "internal/PEStructs.h"
+#include "kraken/Decoder.h"
 
 KRAKEN_API_ class PeDecoder : public Decoder
 {
