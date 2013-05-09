@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 
+#include <kraken/PeDecoder.h>
+#include <kraken/Disassembler.h>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)

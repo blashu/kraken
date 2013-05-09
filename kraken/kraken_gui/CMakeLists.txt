@@ -29,7 +29,10 @@ add_executable(kraken_gui ${KRAKEN_GUI_HEADERS}
                           ${KRAKEN_GUI_SRC}
                           ${KRAKEN_GUI_RESOURCE}
                           ${KRAKEN_GUI_FORMS_HEADERS})
+target_link_libraries(kraken_gui ${Boost_LIBRARIES})
+target_link_libraries(kraken_gui BeaEngine)
 target_link_libraries(kraken_gui kraken)
+
 set_target_properties(kraken_gui PROPERTIES AUTOMOC true)
 
 qt5_use_modules(kraken_gui Widgets)
