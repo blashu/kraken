@@ -6,19 +6,22 @@
 #include "ui_mainwindow.h"
 
 namespace Ui {
-    class MainWindow;
+  class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
+  public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private:
+  private:
     Ui::MainWindow *ui;
+
+  private slots:
+    void loadFile();
 };
 
 #endif // MAINWINDOW_H

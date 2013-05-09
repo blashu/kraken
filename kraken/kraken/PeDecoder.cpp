@@ -1,5 +1,4 @@
 #include "include/kraken/PeDecoder.h"
-#include "include/kraken/Decoder.h"
 
 #include <boost\filesystem.hpp>
 
