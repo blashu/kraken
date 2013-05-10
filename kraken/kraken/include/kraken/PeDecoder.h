@@ -1,11 +1,12 @@
 #ifndef __H_PE_DECODER__
 #define __H_PE_DECODER__
 
-#include <BeaEngine\BeaEngine.h>
 #include <string>
+#include <vector>
 
+#include <BeaEngine/BeaEngine.h>
 #include "internal/PEStructs.h"
-#include "kraken/Decoder.h"
+#include "Decoder.h"
 
 KRAKEN_API_ class PeDecoder : public Decoder
 {

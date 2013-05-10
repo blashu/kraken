@@ -23,10 +23,10 @@
 #ifndef __KRAKEN_BASIC_TYPES_HPP__
 #define __KRAKEN_BASIC_TYPES_HPP__
 
+#include <stddef.h>
+
 namespace kraken
 {
-  #include <stddef.h>
-
   #if defined(__GNUC__) || defined (__INTEL_COMPILER) || defined(__LCC__)
   #include <stdint.h>
   #endif

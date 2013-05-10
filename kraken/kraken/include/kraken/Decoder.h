@@ -2,7 +2,7 @@
 #define __H_DECODER__
 
 #include "kraken.h"
-#include "CodeChunk.h"
+#include "AsmCode.h"
 
 using namespace kraken;
 
