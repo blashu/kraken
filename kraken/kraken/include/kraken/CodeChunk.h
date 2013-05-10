@@ -38,13 +38,13 @@ KRAKEN_API_ class CodeChunk
     inline const AsmCode& back() const;
 
     // Get RVA of the first instruction in this code chunk
-    inline rva_t first_rva() const;
+    inline va_t first_va() const;
 
     // Get RVA of the last instruction in this code chunk
-    inline rva_t last_rva() const;
+    inline va_t last_va() const;
 
     // Checks if passed rva is contained in this code chunk
-    inline bool CodeChunk::is_address_included(rva_t address) const;
+    inline bool CodeChunk::is_address_included(va_t address) const;
 
     // Check if the passed code chunk intersects with\ is included in the current code chunk
     inline bool intersects_with(const CodeChunk& codeChunk) const;
@@ -86,42 +86,42 @@ inline const AsmCode& CodeChunk::back() const
   return _codeChunk.back();
 }
 
-inline rva_t CodeChunk::first_rva() const
+inline va_t CodeChunk::first_va() const
 {
   return _codeChunk.empty() ? -1 : _codeChunk.begin()->VirtualAddr;
-};
+}
 
-inline rva_t CodeChunk::last_rva() const
+inline va_t CodeChunk::last_va() const
 
 {
   return _codeChunk.empty() ? -1 : _codeChunk.back().VirtualAddr;
-};
+}
 
-inline bool CodeChunk::is_address_included(rva_t address) const
+inline bool CodeChunk::is_address_included(va_t address) const
 {
   if( address < 0 )
   {
     return false;
   }
 
-  return ( ( address >= first_rva() ) &&
-    ( address <= last_rva() ) );
+  return ( ( address >= first_va() ) &&
+    ( address <= last_va() ) );
 }
 
 inline bool CodeChunk::intersects_with(const CodeChunk& codeChunk) const
 {
-  return is_address_included( codeChunk.first_rva() ) || is_address_included( codeChunk.last_rva() );
-};
+  return is_address_included( codeChunk.first_va() ) || is_address_included( codeChunk.last_va() );
+}
 
 inline bool CodeChunk::includes(const CodeChunk& codeChunk) const
 {
-  return is_address_included( codeChunk.first_rva() ) && is_address_included( codeChunk.last_rva() );
-};
+  return is_address_included( codeChunk.first_va() ) && is_address_included( codeChunk.last_va() );
+}
 
 inline void CodeChunk::add_to_chunk(const AsmCode& disasm)
 {
   _codeChunk.push_back( disasm );
-};
+}
 
 inline void CodeChunk::add_to_chunk(vector<AsmCode>::const_iterator begin,
                                     vector<AsmCode>::const_iterator end)

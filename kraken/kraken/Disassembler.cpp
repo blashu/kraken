@@ -11,7 +11,7 @@ using namespace kraken;
 
 bool Disassembler::fill(const Decoder& decoder)
 {
-  queue<rva_t> jumpInstructionQueue;
+  queue<va_t> jumpInstructionQueue;
   jumpInstructionQueue.push( decoder.entry_point() );
 
   while( jumpInstructionQueue.size() != 0 )
@@ -64,13 +64,13 @@ bool Disassembler::fill(const Decoder& decoder)
 
   sort( _codeCollection.begin(), _codeCollection.end(), [] (const CodeChunk& firstChunk, const CodeChunk& secondChunk)
   {
-    return firstChunk.first_rva() < secondChunk.first_rva();
+    return firstChunk.first_va() < secondChunk.first_va();
   } );
 
   return true;
 }
 
-CodeChunk Disassembler::disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Decoder& decoder)
+CodeChunk Disassembler::disassemble_next_code_chunk(queue<va_t>& jumpInstructionQueue, const Decoder& decoder)
 {
   CodeChunk codeChunk = decoder.decode_chunk( jumpInstructionQueue.front() );
   jumpInstructionQueue.pop();
@@ -110,7 +110,7 @@ CodeChunk Disassembler::disassemble_next_code_chunk(queue<rva_t>& jumpInstructio
   return codeChunk;
 }
 
-bool Disassembler::is_instruct_decoded( rva_t address )
+bool Disassembler::is_instruct_decoded( va_t address )
 {
   for( auto chunk : _codeCollection )
   {
@@ -141,7 +141,7 @@ void Disassembler::merge_code_chunks(CodeChunk& resultChunk,
 {
   const CodeChunk* endChunk;
 
-  if( firstCodeChunk.first_rva() < secondCodeChunk.first_rva() )
+  if( firstCodeChunk.first_va() < secondCodeChunk.first_va() )
   {
     resultChunk = firstCodeChunk;
     endChunk = &secondCodeChunk;

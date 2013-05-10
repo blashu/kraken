@@ -54,9 +54,9 @@ KRAKEN_API_ class Disassembler
 
     /////////////////////////////////////////
     // functions
-    bool is_instruct_decoded( rva_t address );
+    bool is_instruct_decoded( va_t address );
 
-    virtual CodeChunk disassemble_next_code_chunk(queue<rva_t>& jumpInstructionQueue, const Decoder& disassemble);
+    virtual CodeChunk disassemble_next_code_chunk( queue<va_t>& jumpInstructionQueue, const Decoder& disassemble );
 
     // OPTIMIZE: this function is not optimized
     // Checks if there is a code chunk that intersects with the one that is passed to this function

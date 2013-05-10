@@ -17,13 +17,13 @@ KRAKEN_API_ class PeDecoder : public Decoder
     virtual int decode(AsmCode *disasmResult) const;
 
     // Disassemble code chunk
-    virtual CodeChunk decode_chunk(rva_t instrAddr) const;
+    virtual CodeChunk decode_chunk(va_t instrVirtAddr) const;
 
     // Returns the entry point of the contained file
-    virtual rva_t entry_point() const;
+    virtual va_t entry_point() const;
 
     // Calculate offset in the memory based on the passed virtual address
-    offset_t rva_to_offset(rva_t rva) const;
+    offset_t va_to_offset(va_t rva) const;
 
     // Load specified file
     bool load(const std::string &path);

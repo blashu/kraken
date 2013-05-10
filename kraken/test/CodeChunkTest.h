@@ -3,22 +3,22 @@
 
 #include "kraken/CodeChunk.h"
 
-#include <gtest\gtest.h>
+#include <gtest/gtest.h>
 #include "CodeChunkHelper.h"
 
 class CodeChunkTest : public :: testing::Test
 {
   protected:
 
-    static const int _baseRva = 100;
+    static const int _baseVa = 100;
 
-    static const int _lastRva = 200;
+    static const int _lastVa = 200;
 
     CodeChunk _chunk;
     
     virtual void SetUp()
     {
-      _chunk = CodeChunkHelper::GenerateCodeChunk( _baseRva, _lastRva );
+      _chunk = CodeChunkHelper::GenerateCodeChunk( _baseVa, _lastVa );
     }
 };
 
