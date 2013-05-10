@@ -2,6 +2,7 @@
 #define __H_CODE_CHUNK__
 
 #include <vector>
+#include <functional>
 
 #include "kraken/kraken.h"
 #include "kraken/AsmCode.h"
@@ -25,6 +26,8 @@ KRAKEN_API_ class CodeChunk
     }
 
     bool operator ==( const CodeChunk &otherChunk ) const;
+
+    void go_through_instructions(std::function<void (const AsmCode&)> process_instr) const;
 
     inline vector<AsmCode>::const_iterator begin() const;
 
@@ -55,7 +58,7 @@ KRAKEN_API_ class CodeChunk
     // Append one code chunk to the other based on iterator to vector
     inline void add_to_chunk(vector<AsmCode>::const_iterator begin, vector<AsmCode>::const_iterator end);
 
-    // Cound of chunks.
+    // Count of chunks.
     inline size_t size() const;
 
     private:

@@ -71,7 +71,8 @@ int main( int argc, const char** argv )
 
   cout << settings.path_to_bin() << " is successfully loaded." << endl;
 
-  Disassembler disassem( peDecoder );
+  Disassembler disassem;
+  disassem.fill(peDecoder);
 
   if( Settings::ActionType::SHOW_ALL_INSTR == settings.action() )
   {

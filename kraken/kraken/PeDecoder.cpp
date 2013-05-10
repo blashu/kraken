@@ -24,6 +24,9 @@ int PeDecoder::decode(AsmCode *disasmResult) const
   disasmResult->Instruction.AddrValue = disasmedCode.Instruction.AddrValue;
   disasmResult->Instruction.BranchType = (BranchType)disasmedCode.Instruction.BranchType;
 
+  assert( sizeof( disasmResult->Instruction.Mnemonic ) == sizeof( disasmedCode.Instruction.Mnemonic ) );
+  memcpy( disasmResult->Instruction.Mnemonic, disasmedCode.Instruction.Mnemonic, sizeof( disasmResult->Instruction.Mnemonic ) );
+
   disasmResult->Argument1 = convert_argument( disasmedCode.Argument1 );
   disasmResult->Argument2 = convert_argument( disasmedCode.Argument2 );
   disasmResult->Argument3 = convert_argument( disasmedCode.Argument3 );

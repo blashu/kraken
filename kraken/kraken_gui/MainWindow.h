@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListView>
 
+#include "DisassemblerModel.h"
 #include "ui_mainwindow.h"
 
 namespace Ui {
@@ -11,16 +13,19 @@ namespace Ui {
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
   public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
   private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *_ui;
+    DisassemblerModel *_model;
 
   private slots:
+    void showUsedInstructions();
+    void showProgramListing();
     void loadFile();
 };
 
