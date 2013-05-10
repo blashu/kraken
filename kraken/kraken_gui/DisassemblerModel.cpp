@@ -17,20 +17,19 @@ QStringList DisassemblerModel::getProgramListing()
   int count = 0;
 
   PeDecoder *peDecoder = &_peDecoder; // hack to make lambda expression work
-  _disassembler.go_through_chunks([peDecoder, &appListing, &count]( const CodeChunk& chunk ){
-
+  _disassembler.go_through_chunks( [peDecoder, &appListing, &count](const CodeChunk& chunk)
+  {
     appListing << QString( "Chunk #%1" ).arg( count );
 
-    chunk.go_through_instructions( [peDecoder, &appListing]( const AsmCode& asmCode ){
-      offset_t offset = peDecoder->rva_to_offset( asmCode.VirtualAddr );
-
-      appListing << QString( "0x%1\t%2" ).arg( offset, 8, 16, QChar( '0' ) ).arg( asmCode.CompleteInstr );
+    chunk.go_through_instructions( [peDecoder, &appListing]( const AsmCode& asmCode )
+    {
+      appListing << QString( "0x%1\t%2" ).arg( asmCode.VirtualAddr, 8, 16, QChar( '0' ) ).arg( asmCode.CompleteInstr );
     });
 
     appListing << QString( "" );
 
     count++;
-  });
+  } );
 
   return appListing;
 }
@@ -39,9 +38,10 @@ QStringList DisassemblerModel::getUsedInstructionsList()
 {
   QSet<QString> instructionSet;
 
-  _disassembler.go_through_instructions([&instructionSet](const AsmCode& asmCode){
+  _disassembler.go_through_instructions( [&instructionSet](const AsmCode& asmCode)
+  {
     instructionSet.insert( asmCode.Instruction.Mnemonic );
-  });
+  } );
 
   QStringList usedInstructionList = QStringList::fromSet(instructionSet);
 
@@ -58,6 +58,18 @@ void DisassemblerModel::showProgramListing()
 void DisassemblerModel::showUsedInstructions()
 {
   setStringList(getUsedInstructionsList());
+}
+
+QVariant DisassemblerModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if ( role != Qt::DisplayRole )
+  {
+    return QVariant();
+  }
+
+
+
+  return ( orientation == Qt::Horizontal ) ? QString( "Instruction" ) : ;
 }
 
 int DisassemblerModel::getChunkCount()
