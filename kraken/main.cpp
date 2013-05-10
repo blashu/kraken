@@ -26,10 +26,10 @@ void show_all_instr(const PeDecoder& peDecoder, const Disassembler& disassem)
   int count = 0;
 
   disassem.go_through_instructions([&peDecoder, &count](const AsmCode& asmCode){
-    offset_t offset = peDecoder.rva_to_offset( asmCode.VirtualAddr );
+    unsigned int rva = asmCode.VirtualAddr - 0x400000;
 
     cout << "0x" << std::setw(8) << std::hex << std::setfill('0')
-         << offset << "\t" << asmCode.CompleteInstr << endl;
+         << rva << "\t" << asmCode.CompleteInstr << endl;
 
     count++;
   });
