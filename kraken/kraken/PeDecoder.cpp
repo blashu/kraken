@@ -10,31 +10,32 @@ PeDecoder::PeDecoder()
   _isAlreadyLoaded = false;
 }
 
-int PeDecoder::decode(AsmCode *disasmResult) const
+int PeDecoder::decode(va_t instrVirtualAddr, AsmCode *asmCode) const
 {
-  DISASM disasmedCode;
+  DISASM beaEngineCode;
 
-  disasmedCode.EIP = (kraken::UIntPtr)disasmResult->Eip;
-  disasmedCode.VirtualAddr = disasmResult->VirtualAddr;
+  beaEngineCode.EIP = (size_t)( buf() + va_to_offset( instrVirtualAddr ) );
+  beaEngineCode.VirtualAddr = instrVirtualAddr;
+  beaEngineCode.Archi = 0;
 
-  int length = Disasm( &disasmedCode );
+  int length = Disasm( &beaEngineCode );
 
-  assert( sizeof( disasmResult->CompleteInstr ) == sizeof( disasmedCode.CompleteInstr ) );
-  memcpy( disasmResult->CompleteInstr, disasmedCode.CompleteInstr, sizeof( disasmResult->CompleteInstr ) );
+  assert( sizeof( asmCode->CompleteInstr ) == sizeof( beaEngineCode.CompleteInstr ) );
+  memcpy( asmCode->CompleteInstr, beaEngineCode.CompleteInstr, sizeof( asmCode->CompleteInstr ) );
 
-  disasmResult->Eip = disasmedCode.EIP;
-  disasmResult->VirtualAddr = disasmedCode.VirtualAddr;
-  disasmResult->Archi = disasmedCode.Archi;
-  
-  disasmResult->Instruction.AddrValue = disasmedCode.Instruction.AddrValue;
-  disasmResult->Instruction.BranchType = (BranchType)disasmedCode.Instruction.BranchType;
+  asmCode->Eip = beaEngineCode.EIP;
+  asmCode->VirtualAddr = beaEngineCode.VirtualAddr;
+  asmCode->Archi = beaEngineCode.Archi;
 
-  assert( sizeof( disasmResult->Instruction.Mnemonic ) == sizeof( disasmedCode.Instruction.Mnemonic ) );
-  memcpy( disasmResult->Instruction.Mnemonic, disasmedCode.Instruction.Mnemonic, sizeof( disasmResult->Instruction.Mnemonic ) );
+  asmCode->Instruction.AddrValue = beaEngineCode.Instruction.AddrValue;
+  asmCode->Instruction.BranchType = (BranchType)beaEngineCode.Instruction.BranchType;
 
-  disasmResult->Argument1 = convert_argument( disasmedCode.Argument1 );
-  disasmResult->Argument2 = convert_argument( disasmedCode.Argument2 );
-  disasmResult->Argument3 = convert_argument( disasmedCode.Argument3 );
+  assert( sizeof( asmCode->Instruction.Mnemonic ) == sizeof( beaEngineCode.Instruction.Mnemonic ) );
+  memcpy( asmCode->Instruction.Mnemonic, beaEngineCode.Instruction.Mnemonic, sizeof( asmCode->Instruction.Mnemonic ) );
+
+  asmCode->Argument1 = convert_argument( beaEngineCode.Argument1 );
+  asmCode->Argument2 = convert_argument( beaEngineCode.Argument2 );
+  asmCode->Argument3 = convert_argument( beaEngineCode.Argument3 );
 
   return length;
 }
@@ -171,34 +172,6 @@ bool PeDecoder::load_file_in_filebuf( const std::string &fileName )
         std::back_inserter( _fileBuf ) );
 
   return true;
-}
-
-CodeChunk PeDecoder::decode_chunk( va_t instrVirtAddr ) const
-{
-  CodeChunk codeChunk;
-  AsmCode tempDisasm;
-
-  tempDisasm.Eip = (size_t)( buf() + va_to_offset( instrVirtAddr ) );
-  tempDisasm.VirtualAddr = instrVirtAddr;
-  tempDisasm.Archi = 0;
-
-  for( int instructionLength = decode( &tempDisasm );
-      ( instructionLength != kraken::OUT_OF_BLOCK ) && ( instructionLength != kraken::UNKNOWN_OPCODE );
-      instructionLength = decode( &tempDisasm ) )
-  {
-    codeChunk.add_to_chunk( tempDisasm );
-
-    if ( tempDisasm.Instruction.BranchType == kraken::JmpType ||
-         tempDisasm.Instruction.BranchType == kraken::RetType )
-    {
-      break;
-    }
-
-    tempDisasm.Eip = tempDisasm.Eip + instructionLength;
-    tempDisasm.VirtualAddr = tempDisasm.VirtualAddr + instructionLength;
-  }
-
-  return codeChunk;
 }
 
 va_t PeDecoder::entry_point() const

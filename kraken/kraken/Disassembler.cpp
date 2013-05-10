@@ -72,39 +72,61 @@ bool Disassembler::fill(const Decoder& decoder)
 
 CodeChunk Disassembler::disassemble_next_code_chunk(queue<va_t>& jumpInstructionQueue, const Decoder& decoder)
 {
-  CodeChunk codeChunk = decoder.decode_chunk( jumpInstructionQueue.front() );
+  CodeChunk codeChunk;
+  AsmCode currentAsmCode;
+
+  va_t instrVirtAddr = jumpInstructionQueue.front();
   jumpInstructionQueue.pop();
 
-  for( auto currentAsmCode = codeChunk.begin(), endAsmCode = codeChunk.end(); currentAsmCode != endAsmCode; ++currentAsmCode )
+  for( int instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode );
+      ( instructionLength != kraken::OUT_OF_BLOCK ) && ( instructionLength != kraken::UNKNOWN_OPCODE );
+      instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode ) )
   {
-    switch(currentAsmCode->Instruction.BranchType)
+    codeChunk.add_to_chunk( currentAsmCode );
+
+    if( currentAsmCode.Instruction.BranchType == kraken::RetType )
     {
-      case JO:
-      case JC:
-      case JE:
-      case JA:
-      case JS:
-      case JP:
-      case JL:
-      case JG:
-      case JB:
-      case JECXZ:
-      case JmpType:
-      case CallType:
-      case JNO:
-      case JNC:
-      case JNE:
-      case JNA:
-      case JNS:
-      case JNP:
-      case JNL:
-      case JNG:
-      case JNB:
-        if( 0 != currentAsmCode->Instruction.AddrValue )
+      break;
+    }
+
+    if( currentAsmCode.Instruction.BranchType == kraken::JmpType )
+    {
+      if( 0 != currentAsmCode.Instruction.AddrValue )
+      {
+        jumpInstructionQueue.push( currentAsmCode.Instruction.AddrValue );
+      }
+      break;
+    }
+
+    switch(currentAsmCode.Instruction.BranchType)
+    {
+      case kraken::JO:
+      case kraken::JC:
+      case kraken::JE:
+      case kraken::JA:
+      case kraken::JS:
+      case kraken::JP:
+      case kraken::JL:
+      case kraken::JG:
+      case kraken::JB:
+      case kraken::JECXZ:
+      case kraken::CallType:
+      case kraken::JNO:
+      case kraken::JNC:
+      case kraken::JNE:
+      case kraken::JNA:
+      case kraken::JNS:
+      case kraken::JNP:
+      case kraken::JNL:
+      case kraken::JNG:
+      case kraken::JNB:
+        if( 0 != currentAsmCode.Instruction.AddrValue )
         {
-          jumpInstructionQueue.push( currentAsmCode->Instruction.AddrValue );
+          jumpInstructionQueue.push( currentAsmCode.Instruction.AddrValue );
         }
     }
+
+    instrVirtAddr += instructionLength;
   }
 
   return codeChunk;
