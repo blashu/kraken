@@ -4,8 +4,8 @@
 #include <QString>
 #include <QStringListModel>
 
-#include <kraken/Disassembler.h>
 #include <kraken/PeDecoder.h>
+#include <kraken/Disassembler.h>
 
 class DisassemblerModel : public QStringListModel
 {
