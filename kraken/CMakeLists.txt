@@ -118,11 +118,11 @@ if(NOT EXISTS "${PIN_BIN}")
     return()
 endif()
 
-set(PIN_INSTR_ADDRESS_TOOL_SOLUTION "${CMAKE_CURRENT_SOURCE_DIR}/pin-instr-addresses")
-set(PIN_INSTR_ADDRESS_TOOL "${PIN_INSTR_ADDRESS_TOOL_SOLUTION}/bin-x86/InstrAddresses.dll")
+set(PIN_TRACE_BIN_TOOL_SOLUTION "${CMAKE_CURRENT_SOURCE_DIR}/pin-trace-bin")
+set(PIN_TRACE_BIN_TOOL "${PIN_TRACE_BIN_TOOL_SOLUTION}/bin-x86/TraceBin.dll")
 
-if(NOT EXISTS "${PIN_BIN}")
-    message(SEND_ERROR "Please, build pin tool instr address tool: ${PIN_INSTR_ADDRESS_TOOL_SOLUTION}")
+if(NOT EXISTS "${PIN_TRACE_BIN_TOOL}")
+    message(SEND_ERROR "Please, build pin tool instr address tool: ${PIN_TRACE_BIN_TOOL_SOLUTION}")
     return()
 endif()
 
@@ -131,10 +131,9 @@ add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD
                     copy "${PIN_BIN}"
                          "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 
-message("${PIN_INSTR_ADDRESS_TOOL}")
 add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD
                     COMMAND "${CMAKE_COMMAND}" -E
-                    copy "${PIN_INSTR_ADDRESS_TOOL}"
+                    copy "${PIN_TRACE_BIN_TOOL}"
                          "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 
 #######################################

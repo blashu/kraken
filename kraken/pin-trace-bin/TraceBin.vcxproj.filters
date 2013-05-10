@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InstrAddresses.cpp">
+    <ClCompile Include="TraceBin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

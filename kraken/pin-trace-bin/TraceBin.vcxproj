@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{639EF517-FCFC-408E-9500-71F0DC0458DB}</ProjectGuid>
-    <RootNamespace>InstrAddresses</RootNamespace>
+    <RootNamespace>TraceBin</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -251,7 +251,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="InstrAddresses.cpp" />
+    <ClCompile Include="TraceBin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README" />
