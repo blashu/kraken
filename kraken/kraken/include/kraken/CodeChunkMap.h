@@ -14,14 +14,14 @@ namespace kraken
       struct ChunkLocation
       {
         // fields
-        rva_t _first;
+        va_t _first;
 
-        rva_t _last;
+        va_t _last;
 
         // ctors
         ChunkLocation();
 
-        ChunkLocation( rva_t first, rva_t last );
+        ChunkLocation( va_t first, va_t last );
 
         ChunkLocation( const CodeChunk& codeChunk );
 
@@ -36,7 +36,7 @@ namespace kraken
       
       size_t size();
 
-      bool includes( rva_t address );
+      bool includes( va_t address );
 
 
     private:

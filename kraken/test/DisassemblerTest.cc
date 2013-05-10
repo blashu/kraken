@@ -6,12 +6,12 @@ using ::testing::_;
 
 TEST_F(DisassemblerTest, Fill_Always_StartsDisasmingFromEntryPoint)
 {
-  const rva_t start_rva = 100;
+  const va_t start_va = 100;
 
   CodeChunk chunk = CodeChunkHelper::GenerateCodeChunk( 100, 200 );
   
-  EXPECT_CALL( _disassembler, entry_point() ).Times( 1 ).WillOnce( Return( start_rva ) );
-  EXPECT_CALL( _disassembler, decode_chunk( start_rva ) ).Times( AtLeast( 1 ) ).WillOnce( Return( chunk ) );
+  EXPECT_CALL( _disassembler, entry_point() ).Times( 1 ).WillOnce( Return( start_va ) );
+  EXPECT_CALL( _disassembler, decode_chunk( start_va ) ).Times( AtLeast( 1 ) ).WillOnce( Return( chunk ) );
 
   _container.fill( _disassembler );
 

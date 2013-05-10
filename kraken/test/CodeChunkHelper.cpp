@@ -1,30 +1,30 @@
 #include "CodeChunkHelper.h"
 
-CodeChunk CodeChunkHelper::GenerateCodeChunk(const rva_t& firstRva, const rva_t& lastRva)
+CodeChunk CodeChunkHelper::GenerateCodeChunk(const va_t& firstVa, const va_t& lastVa)
 {
   CodeChunk chunk;
   
   AsmCode tempDisasm;
-  for( auto passedChunkBaseRva = firstRva; passedChunkBaseRva <= lastRva; ++passedChunkBaseRva )
+  for( auto passedChunkBaseVa = firstVa; passedChunkBaseVa <= lastVa; ++passedChunkBaseVa )
   {
-    tempDisasm.VirtualAddr = passedChunkBaseRva;
+    tempDisasm.VirtualAddr = passedChunkBaseVa;
     chunk.add_to_chunk( tempDisasm );
   }
   
   return chunk;
 }
 
-CodeChunk CodeChunkHelper::GenerateCodeChunkWithOneJump(const rva_t& firstRva, const rva_t& lastRva, const rva_t& JmpRva)
+CodeChunk CodeChunkHelper::GenerateCodeChunkWithOneJump(const va_t& firstVa, const va_t& lastVa, const va_t& JmpVa)
 {
   CodeChunk chunk;
   
   AsmCode tempDisasm;
-  for( auto passedChunkBaseRva = firstRva; passedChunkBaseRva <= lastRva; ++passedChunkBaseRva )
+  for( auto passedChunkBaseVa = firstVa; passedChunkBaseVa <= lastVa; ++passedChunkBaseVa )
   {
-    if ( passedChunkBaseRva == JmpRva )
+    if ( passedChunkBaseVa == JmpVa )
     {
       tempDisasm.Instruction.BranchType = kraken::JmpType;
-      tempDisasm.Instruction.AddrValue = JmpRva;
+      tempDisasm.Instruction.AddrValue = JmpVa;
     }
     else
     {
@@ -32,7 +32,7 @@ CodeChunk CodeChunkHelper::GenerateCodeChunkWithOneJump(const rva_t& firstRva, c
       tempDisasm.Instruction.AddrValue = -1;
     }
 
-    tempDisasm.VirtualAddr = passedChunkBaseRva;
+    tempDisasm.VirtualAddr = passedChunkBaseVa;
     chunk.add_to_chunk( tempDisasm );
   }
   

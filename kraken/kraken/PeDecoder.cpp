@@ -173,13 +173,13 @@ bool PeDecoder::load_file_in_filebuf( const std::string &fileName )
   return true;
 }
 
-CodeChunk PeDecoder::decode_chunk( rva_t instrAddr ) const
+CodeChunk PeDecoder::decode_chunk( va_t instrVirtAddr ) const
 {
   CodeChunk codeChunk;
   AsmCode tempDisasm;
 
-  tempDisasm.Eip = (size_t)( buf() + rva_to_offset( instrAddr ) );
-  tempDisasm.VirtualAddr = instrAddr;
+  tempDisasm.Eip = (size_t)( buf() + va_to_offset( instrVirtAddr ) );
+  tempDisasm.VirtualAddr = instrVirtAddr;
   tempDisasm.Archi = 0;
 
   for( int instructionLength = decode( &tempDisasm );
@@ -201,23 +201,23 @@ CodeChunk PeDecoder::decode_chunk( rva_t instrAddr ) const
   return codeChunk;
 }
 
-rva_t PeDecoder::entry_point() const
+va_t PeDecoder::entry_point() const
 {
   return _imageNtHeader32->OptionalHeader.AddressOfEntryPoint + _imageNtHeader32->OptionalHeader.ImageBase;
 }
 
-offset_t PeDecoder::rva_to_offset(rva_t rva) const
+offset_t PeDecoder::va_to_offset(va_t virtAddr) const
 {
-  rva -= _imageNtHeader32->OptionalHeader.ImageBase;
+  virtAddr -= _imageNtHeader32->OptionalHeader.ImageBase;
 
   for( int i = 0; i < _sectionHeaders.NumberOfSections; ++i )
   {
     size_t startVirtAddr = _sectionHeaders.SectionHeaders[ i ].VirtualAddress;
     size_t endVirtAddr = startVirtAddr + _sectionHeaders.SectionHeaders[ i ].SizeOfRawData;
 
-    if( startVirtAddr <= rva && rva < endVirtAddr )
+    if( startVirtAddr <= virtAddr && virtAddr < endVirtAddr )
     {
-      return rva - startVirtAddr + _sectionHeaders.SectionHeaders[ i ].PointerToRawData;
+      return virtAddr - startVirtAddr + _sectionHeaders.SectionHeaders[ i ].PointerToRawData;
     }
   }
 

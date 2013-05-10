@@ -11,9 +11,9 @@ KRAKEN_API_ class Decoder
   public:
     virtual int decode(AsmCode *asmCode) const = 0;
 
-    virtual CodeChunk decode_chunk(rva_t instrAddr) const = 0;
+    virtual CodeChunk decode_chunk(va_t instrVirtualAddr) const = 0;
 
-    virtual rva_t entry_point() const = 0;
+    virtual va_t entry_point() const = 0;
 };
 
 #endif

@@ -8,18 +8,18 @@ CodeChunkMap::ChunkLocation::ChunkLocation()
 { 
   _first = 0; 
   _last = 0; 
-};
+}
 
-CodeChunkMap::ChunkLocation::ChunkLocation( rva_t first, rva_t last ) 
+CodeChunkMap::ChunkLocation::ChunkLocation( va_t first, va_t last )
 { 
   _first = first; 
   _last = last; 
-};
+}
 
 CodeChunkMap::ChunkLocation::ChunkLocation( const CodeChunk& codeChunk )
 {
-  _first = codeChunk.first_rva();
-  _last = codeChunk.last_rva();
+  _first = codeChunk.first_va();
+  _last = codeChunk.last_va();
 }
 
 // functions
@@ -49,7 +49,7 @@ size_t CodeChunkMap::size()
   return _map.size();
 }
 
-bool CodeChunkMap::includes( rva_t address )
+bool CodeChunkMap::includes( va_t address )
 {
   auto it = _map.find( ChunkLocation( address, address ) );
   

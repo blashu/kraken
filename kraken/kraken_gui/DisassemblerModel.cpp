@@ -22,7 +22,7 @@ QStringList DisassemblerModel::getProgramListing()
     appListing << QString( "Chunk #%1" ).arg( count );
 
     chunk.go_through_instructions( [peDecoder, &appListing]( const AsmCode& asmCode ){
-      offset_t offset = peDecoder->rva_to_offset( asmCode.VirtualAddr );
+      offset_t offset = peDecoder->va_to_offset( asmCode.VirtualAddr );
 
       appListing << QString( "0x%1\t%2" ).arg( offset, 8, 16, QChar( '0' ) ).arg( asmCode.CompleteInstr );
     });

@@ -6,9 +6,9 @@
 class CodeChunkHelper 
 {
   public:
-    static CodeChunk GenerateCodeChunk(const rva_t& firstRva, const rva_t& lastRva);
+    static CodeChunk GenerateCodeChunk(const va_t& firstVa, const va_t& lastVa);
 
-    static CodeChunk GenerateCodeChunkWithOneJump(const rva_t& firstRva, const rva_t& lastRva, const rva_t& JmpRva);
+    static CodeChunk GenerateCodeChunkWithOneJump(const va_t& firstVa, const va_t& lastVa, const va_t& JmpVa);
 };
 
 #endif
