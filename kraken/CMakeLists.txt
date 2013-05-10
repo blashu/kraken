@@ -2,8 +2,6 @@ project(kraken_console)
 cmake_minimum_required(VERSION 2.8.9)
 aux_source_directory(. SRC_LIST)
 
-set( MY_SRCS "kraken/Disassembler.h")
-
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     message(STATUS "Release mode")
 else()
@@ -42,6 +40,8 @@ endif()
 ########################################################################
 #
 # Paths to external projects
+
+set(SOLUTION_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
 # A directory to find Google Test sources.
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/gmock/CMakeLists.txt")
@@ -109,6 +109,33 @@ add_executable(${PROJECT_NAME} ${SRC_LIST} ${HEADERS_LIST})
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} BeaEngine)
 target_link_libraries(${PROJECT_NAME} kraken)
+
+set(PIN_BIN_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../pin-windows")
+set(PIN_BIN "${PIN_BIN_DIR}/pin.exe")
+
+if(NOT EXISTS "${PIN_BIN}")
+    message(SEND_ERROR "Please, place pin tool in ${PIN_BIN_DIR}")
+    return()
+endif()
+
+set(PIN_INSTR_ADDRESS_TOOL_SOLUTION "${CMAKE_CURRENT_SOURCE_DIR}/pin-instr-addresses")
+set(PIN_INSTR_ADDRESS_TOOL "${PIN_INSTR_ADDRESS_TOOL_SOLUTION}/bin-x86/InstrAddresses.dll")
+
+if(NOT EXISTS "${PIN_BIN}")
+    message(SEND_ERROR "Please, build pin tool instr address tool: ${PIN_INSTR_ADDRESS_TOOL_SOLUTION}")
+    return()
+endif()
+
+add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD
+                    COMMAND "${CMAKE_COMMAND}" -E
+                    copy "${PIN_BIN}"
+                         "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+
+message("${PIN_INSTR_ADDRESS_TOOL}")
+add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD
+                    COMMAND "${CMAKE_COMMAND}" -E
+                    copy "${PIN_INSTR_ADDRESS_TOOL}"
+                         "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 
 #######################################
 # Kraken gui
