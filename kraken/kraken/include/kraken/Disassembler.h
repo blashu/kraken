@@ -19,11 +19,11 @@ KRAKEN_API_ class Disassembler
     typedef vector<CodeChunk> chunk_container_t;
     typedef chunk_container_t::const_iterator chunk_container_iter;
 
-    Disassembler(const Decoder& decoder);
+    Disassembler() {}
 
     // Fills chunk container with disassembled chunks of code, while handling
     // unconditional branch instructions and possible chunk intersections
-    virtual bool fill(const Decoder& disassembler);
+    virtual bool fill(const Decoder& decode);
     
     virtual ~Disassembler() {}
 
@@ -35,7 +35,13 @@ KRAKEN_API_ class Disassembler
 
     virtual const CodeChunk& back() const;
 
+    virtual void go_through_chunks(std::function<void (const CodeChunk&)> process_instr) const;
+
     virtual void go_through_instructions(std::function<void (const AsmCode&)> process_instr) const;
+
+    virtual int get_chunk_count() const;
+
+    virtual int get_instruction_count() const;
 
   private:
     /////////////////////////////////////////
@@ -45,10 +51,6 @@ KRAKEN_API_ class Disassembler
     code_collection_t _codeCollection;
 
     CodeChunkMap _chunkMap;
-
-    /////////////////////////////////////////
-    // ctors
-    Disassembler() {}
 
     /////////////////////////////////////////
     // functions

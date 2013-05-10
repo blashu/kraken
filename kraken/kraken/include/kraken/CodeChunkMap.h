@@ -2,7 +2,6 @@
 #define __H_CODE_CHUNK_MAP__
 
 #include "CodeChunk.h"
-#include "AsmCode.h"
 
 #include <map>
 

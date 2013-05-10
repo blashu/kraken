@@ -9,11 +9,6 @@ using namespace kraken;
 // because we are removing them from vector, combining them in one chunk and re-adding it to vector. This may cause 
 // some problems and it may be a good idea to combine them inside an existing code chunk or use list container instead of vector
 
-Disassembler::Disassembler(const Decoder& decoder)
-{
-  fill( decoder );
-}
-
 bool Disassembler::fill(const Decoder& decoder)
 {
   queue<rva_t> jumpInstructionQueue;
@@ -38,7 +33,7 @@ bool Disassembler::fill(const Decoder& decoder)
     {
       _codeCollection.push_back( disassembledChunk );
 
-      // Add to chunk map. Don't fogive to delete from chunk map when delete from code collection
+      // Add to chunk map. Don't forget to delete from chunk map when delete from code collection
       _chunkMap.add( disassembledChunk );
     }
     else
@@ -162,6 +157,14 @@ void Disassembler::merge_code_chunks(CodeChunk& resultChunk,
   resultChunk.add_to_chunk( iteratorToIntersection, endChunk->end() );
 }
 
+void Disassembler::go_through_chunks(std::function<void (const CodeChunk&)> process_chunk) const
+{
+  for(auto chunkIt = begin(), endIt = end(); chunkIt != endIt; ++chunkIt )
+  {
+    process_chunk(*chunkIt);
+  }
+}
+
 void Disassembler::go_through_instructions(std::function<void (const AsmCode&)> process_instr) const
 {
   for(auto chunkIt = begin(), endIt = end(); chunkIt != endIt; ++chunkIt )
@@ -175,3 +178,17 @@ void Disassembler::go_through_instructions(std::function<void (const AsmCode&)> 
   }
 }
 
+int Disassembler::get_chunk_count() const
+{
+  return _codeCollection.size();
+}
+
+int Disassembler::get_instruction_count() const
+{
+  int instructionCount = 0;
+  for(auto &codeChunk : _codeCollection) {
+    instructionCount += codeChunk.size();
+  }
+
+  return instructionCount;
+}

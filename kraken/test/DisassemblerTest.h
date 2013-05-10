@@ -12,8 +12,7 @@ class DisassemblerTest : public :: testing::Test
 
     Disassembler _container;
 
-    DisassemblerTest() : _container( _disassembler )
-    {}
+    DisassemblerTest() {}
 };
 
 #endif

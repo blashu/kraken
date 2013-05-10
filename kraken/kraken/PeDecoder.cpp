@@ -1,5 +1,4 @@
 #include "include/kraken/PeDecoder.h"
-#include "include/kraken/Decoder.h"
 
 #include <boost/filesystem.hpp>
 
@@ -29,6 +28,9 @@ int PeDecoder::decode(AsmCode *disasmResult) const
   
   disasmResult->Instruction.AddrValue = disasmedCode.Instruction.AddrValue;
   disasmResult->Instruction.BranchType = (BranchType)disasmedCode.Instruction.BranchType;
+
+  assert( sizeof( disasmResult->Instruction.Mnemonic ) == sizeof( disasmedCode.Instruction.Mnemonic ) );
+  memcpy( disasmResult->Instruction.Mnemonic, disasmedCode.Instruction.Mnemonic, sizeof( disasmResult->Instruction.Mnemonic ) );
 
   disasmResult->Argument1 = convert_argument( disasmedCode.Argument1 );
   disasmResult->Argument2 = convert_argument( disasmedCode.Argument2 );
