@@ -10,7 +10,7 @@
 KRAKEN_API_ class PeDecoder : public Decoder
 {
   public:
-    PeDecoder() {}
+    PeDecoder();
 
     virtual ~PeDecoder() {}
 
@@ -31,6 +31,10 @@ KRAKEN_API_ class PeDecoder : public Decoder
   private:
     /////////////////////////////////////////
     // fields
+    bool _isAlreadyLoaded;
+
+    bool _resultOfFirstLoad;
+
     std::vector<unsigned char> _fileBuf;
 
     SECTION_HEADERS _sectionHeaders;
@@ -54,7 +58,7 @@ KRAKEN_API_ class PeDecoder : public Decoder
 
     Argument convert_argument(const ARGTYPE &sourceArg) const;
 
-    void convert_instruction(const INSTRTYPE &source, Instruction &destination);
+    void convert_instruction(const INSTRTYPE &source, InstrType &destination);
 };
 
 #endif

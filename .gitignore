@@ -60,6 +60,7 @@ Ankh.NoLoad
 kraken-build/*
 gmock/*
 beaengine/*
+pin-windows/*
  
 # Directories #
 ####################################

@@ -1,10 +1,15 @@
 #include "include/kraken/PeDecoder.h"
 #include "include/kraken/Decoder.h"
 
-#include <boost\filesystem.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace std;
 namespace fs = boost::filesystem;
+
+PeDecoder::PeDecoder()
+{
+  _isAlreadyLoaded = false;
+}
 
 int PeDecoder::decode(AsmCode *disasmResult) const
 {
@@ -36,6 +41,12 @@ int PeDecoder::decode(AsmCode *disasmResult) const
 // public members
 bool PeDecoder::load( const std::string &path )
 {
+  if( _isAlreadyLoaded )
+  {
+    return _resultOfFirstLoad;
+  }
+  _resultOfFirstLoad = false;
+
   if( false == load_file_in_filebuf( path ) )
   {
     _fileBuf = vector<unsigned char>();
@@ -53,6 +64,7 @@ bool PeDecoder::load( const std::string &path )
     return false;
   }
 
+  _resultOfFirstLoad = true;
   return true;
 }
 
@@ -153,8 +165,8 @@ bool PeDecoder::load_file_in_filebuf( const std::string &fileName )
 
   fileStream >> std::noskipws;
   copy( istream_iterator( fileStream ),
-    istream_iterator(),
-    std::back_inserter( _fileBuf ) );
+        istream_iterator(),
+        std::back_inserter( _fileBuf ) );
 
   return true;
 }
@@ -162,7 +174,6 @@ bool PeDecoder::load_file_in_filebuf( const std::string &fileName )
 CodeChunk PeDecoder::decode_chunk( rva_t instrAddr ) const
 {
   CodeChunk codeChunk;
-
   AsmCode tempDisasm;
 
   tempDisasm.Eip = (size_t)( buf() + rva_to_offset( instrAddr ) );
@@ -211,7 +222,7 @@ offset_t PeDecoder::rva_to_offset(rva_t rva) const
   return -1;
 }
 
-void PeDecoder::convert_instruction(const INSTRTYPE &source, Instruction &destination)
+void PeDecoder::convert_instruction(const INSTRTYPE &source, InstrType &destination)
 {
   destination.AddrValue = source.AddrValue;
   destination.BranchType = (BranchType)source.BranchType;

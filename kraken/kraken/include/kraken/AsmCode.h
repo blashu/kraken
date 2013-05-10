@@ -112,7 +112,7 @@ namespace kraken
     Int64 Displacement;
   };
 
-  struct Instruction
+  struct InstrType
   {
     char Mnemonic[MNEMONIC_LENGTH];
 
@@ -136,7 +136,7 @@ namespace kraken
     rva_t VirtualAddr;
     offset_t Eip;
     unsigned int Archi;
-    Instruction Instruction;
+    InstrType Instruction;
     Argument Argument1;
     Argument Argument2;
     Argument Argument3;
