@@ -1,22 +1,13 @@
 #ifndef __H_ASM_CODE__
 #define __H_ASM_CODE__
 
+#include "kraken.h"
 #include "BasicTypes.h"
 
 namespace kraken
 {
   #define INSTRUCT_LENGTH 64
   #define MNEMONIC_LENGTH 16
-
-  // Virtual addres of instruction in loaded image.
-  typedef long long va_t;
-
-  // Relative virtual address. Equals va minus image base.
-  //typedef long long rva_t;
-
-  // Type contains instruction offset in file.
-  // For dll and exe can be calculate as RVA - IMAGE_SECTION_HEADER.VirtualAddress + IMAGE_SECTION_HEADER.PointerToRawData
-  typedef long long offset_t;
 
   enum SPECIAL_INFO
   {

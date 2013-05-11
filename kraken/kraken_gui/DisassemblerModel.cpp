@@ -60,18 +60,6 @@ void DisassemblerModel::showUsedInstructions()
   setStringList(getUsedInstructionsList());
 }
 
-QVariant DisassemblerModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-  if ( role != Qt::DisplayRole )
-  {
-    return QVariant();
-  }
-
-
-
-  return ( orientation == Qt::Horizontal ) ? QString( "Instruction" ) : ;
-}
-
 int DisassemblerModel::getChunkCount()
 {
   return _disassembler.get_chunk_count();

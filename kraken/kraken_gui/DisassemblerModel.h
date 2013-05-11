@@ -6,6 +6,7 @@
 #include <QStringListModel>
 
 #include <kraken/PeDecoder.h>
+
 #include <kraken/Disassembler.h>
 
 class DisassemblerModel : public QStringListModel
@@ -15,8 +16,6 @@ class DisassemblerModel : public QStringListModel
 
     void showProgramListing();
     void showUsedInstructions();
-
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
     int getChunkCount();
     int getInstructionCount();
