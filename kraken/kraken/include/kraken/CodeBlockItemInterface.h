@@ -3,20 +3,32 @@
 
 #include <string>
 #include <vector>
+#include <boost/tuple/tuple.hpp>
+#include <boost/tuple/tuple_comparison.hpp>
 #include <kraken/kraken.h>
 
+using namespace boost;
 using namespace std;
 
 namespace kraken
 {
+  typedef boost::tuples::tuple<int, int> codeItemLocation_t;
+
   class CodeBlockItemInterface
   {
     public:
-      virtual va_t get_va() = 0;
+
+      virtual ~CodeBlockItemInterface() = 0;
+
+      virtual va_t va() = 0;
       virtual string to_string(const string& format = "") = 0;
       virtual bool is_branch() = 0;
-      virtual const vector<va_t>& go_to() = 0;
+      virtual const vector<codeItemLocation_t>& go_to() = 0;
   };
+}
+
+inline kraken::CodeBlockItemInterface::~CodeBlockItemInterface()
+{
 }
 
 #endif

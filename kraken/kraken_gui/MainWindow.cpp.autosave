@@ -62,5 +62,5 @@ void MainWindow::showProgramListing()
 
 void MainWindow::showItemIndexes()
 {
-
+  
 }
