@@ -26,12 +26,6 @@ std::ostream * out = &cerr;
 /* ===================================================================== */
 // Command line switches
 /* ===================================================================== */
-KNOB<string> KnobOutputFile(KNOB_MODE_WRITEONCE,  "pintool",
-  "o", "", "specify file name for InstrAddresses output");
-
-KNOB<BOOL>   KnobCount(KNOB_MODE_WRITEONCE,  "pintool",
-  "count", "1", "count instructions, basic blocks and threads in the application");
-
 
 /* ===================================================================== */
 // Utilities
@@ -53,18 +47,6 @@ INT32 Usage()
 /* ===================================================================== */
 // Analysis routines
 /* ===================================================================== */
-
-/*!
-* Increase counter of the executed basic blocks and instructions.
-* This function is called for every basic block when it is about to be executed.
-* @param[in]   numInstInBbl    number of instructions in the basic block
-* @note use atomic operations for multi-threaded applications
-*/
-VOID CountBbl(UINT32 numInstInBbl)
-{
-  bblCount++;
-  insCount += numInstInBbl;
-}
 
 UINT32 GetOffsetInMainExecutableByAddrint( ADDRINT addr )
 {
@@ -106,8 +88,6 @@ VOID Trace(TRACE trace, VOID *v)
     if( ( 0x00 != headRva ) &&
         ( headInstrOffset.find( headRva ) == headInstrOffset.end() ) ) 
     {
-      // Insert a call to CountBbl() before every basic bloc, passing the number of instructions
-      //BBL_InsertCall(bbl, IPOINT_BEFORE, (AFUNPTR)CountBbl, IARG_UINT32, BBL_NumIns(bbl), IARG_END);
       bblCount++;
       insCount += BBL_NumIns(bbl);
 
@@ -116,26 +96,10 @@ VOID Trace(TRACE trace, VOID *v)
       INS tailIns = BBL_InsTail( bbl );
       UINT32 tailRva = GetOffsetInMainExecutableByAddrint( INS_Address( tailIns ) );
 
-      *out << std::setw( 15 ) << INS_Mnemonic( headIns )  << " "
-           << StringFromAddrint( headRva ) << " - "
+      *out << StringFromAddrint( headRva ) << " - "
            << StringFromAddrint( tailRva ) << std::endl;
     }
   }
-}
-
-/*!
-* Increase counter of threads in the application.
-* This function is called for every thread created by the application when it is
-* about to start running (including the root thread).
-* @param[in]   threadIndex     ID assigned by PIN to the new thread
-* @param[in]   ctxt            initial register state for the new thread
-* @param[in]   flags           thread creation flags (OS specific)
-* @param[in]   v               value specified by the tool in the 
-*                              PIN_AddThreadStartFunction function call
-*/
-VOID ThreadStart(THREADID threadIndex, CONTEXT *ctxt, INT32 flags, VOID *v)
-{
-  threadCount++;
 }
 
 /*!
@@ -148,10 +112,9 @@ VOID ThreadStart(THREADID threadIndex, CONTEXT *ctxt, INT32 flags, VOID *v)
 VOID Fini(INT32 code, VOID *v)
 {
   *out <<  "===============================================" << endl;
-  *out <<  "InstrAddresses analysis results: " << endl;
+  *out <<  "TraceBin analysis results: " << endl;
   *out <<  "Number of instructions: " << insCount  << endl;
   *out <<  "Number of basic blocks: " << bblCount  << endl;
-  //*out <<  "Number of threads: " << threadCount  << endl;
   *out <<  "===============================================" << endl;
 }
 
@@ -171,29 +134,11 @@ int main(int argc, char *argv[])
     return Usage();
   }
 
-  string fileName = KnobOutputFile.Value();
+  // Register function to be called to instrument traces
+  TRACE_AddInstrumentFunction(Trace, 0);
 
-  if (!fileName.empty()) { out = new std::ofstream(fileName.c_str());}
-
-  if (KnobCount)
-  {
-    // Register function to be called to instrument traces
-    TRACE_AddInstrumentFunction(Trace, 0);
-
-    // Register function to be called for every thread before it starts running
-    //PIN_AddThreadStartFunction(ThreadStart, 0);
-
-    // Register function to be called when the application exits
-    PIN_AddFiniFunction(Fini, 0);
-  }
-
-  cerr <<  "===============================================" << endl;
-  cerr <<  "This application is instrumented by InstrAddresses" << endl;
-  if (!KnobOutputFile.Value().empty()) 
-  {
-    cerr << "See file " << KnobOutputFile.Value() << " for analysis results" << endl;
-  }
-  cerr <<  "===============================================" << endl;
+  // Register function to be called when the application exits
+  PIN_AddFiniFunction(Fini, 0);
 
   // Start the program, never returns
   PIN_StartProgram();

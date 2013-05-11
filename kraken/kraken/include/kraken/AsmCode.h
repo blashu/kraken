@@ -1,7 +1,6 @@
 #ifndef __H_ASM_CODE__
 #define __H_ASM_CODE__
 
-#include <string.h>
 #include "BasicTypes.h"
 
 namespace kraken

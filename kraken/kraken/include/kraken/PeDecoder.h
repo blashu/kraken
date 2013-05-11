@@ -1,11 +1,12 @@
 #ifndef __H_PE_DECODER__
 #define __H_PE_DECODER__
 
-#include <BeaEngine\BeaEngine.h>
 #include <string>
+#include <vector>
 
+#include <BeaEngine/BeaEngine.h>
 #include "internal/PEStructs.h"
-#include "kraken/Decoder.h"
+#include "Decoder.h"
 
 KRAKEN_API_ class PeDecoder : public Decoder
 {
@@ -14,10 +15,7 @@ KRAKEN_API_ class PeDecoder : public Decoder
 
     virtual ~PeDecoder() {}
 
-    virtual int decode(AsmCode *disasmResult) const;
-
-    // Disassemble code chunk
-    virtual CodeChunk decode_chunk(va_t instrVirtAddr) const;
+    virtual int decode(va_t instrVirtualAddr, AsmCode *asmCode) const;
 
     // Returns the entry point of the contained file
     virtual va_t entry_point() const;

@@ -1,3 +1,6 @@
+#ifndef __H_KRAKEN__
+#define __H_KRAKEN__
+
 #ifdef _MSC_VER
 
 #if KRAKEN_CREATE_SHARED_LIBRARY
@@ -9,3 +12,5 @@
 #endif
 
 #endif  // _MSC_VER
+
+#endif

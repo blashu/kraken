@@ -4,8 +4,8 @@
 #include <vector>
 #include <functional>
 
-#include "kraken/kraken.h"
-#include "kraken/AsmCode.h"
+#include "kraken.h"
+#include "AsmCode.h"
 
 using namespace std;
 using namespace kraken;

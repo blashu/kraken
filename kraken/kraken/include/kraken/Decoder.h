@@ -2,16 +2,14 @@
 #define __H_DECODER__
 
 #include "kraken.h"
-#include "CodeChunk.h"
+#include "AsmCode.h"
 
 using namespace kraken;
 
 KRAKEN_API_ class Decoder
 {
   public:
-    virtual int decode(AsmCode *asmCode) const = 0;
-
-    virtual CodeChunk decode_chunk(va_t instrVirtualAddr) const = 0;
+    virtual int decode(va_t instrVirtualAddr, AsmCode *asmCode) const = 0;
 
     virtual va_t entry_point() const = 0;
 };
