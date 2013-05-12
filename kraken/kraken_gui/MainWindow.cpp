@@ -1,6 +1,6 @@
-#include <QFileDialog>
-
 #include "mainwindow.h"
+
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -11,12 +11,15 @@ MainWindow::MainWindow(QWidget *parent) :
   _codeModel = NULL;
   _selectionModel = NULL;
 
+  _ui->codeView->setContextMenuPolicy( Qt::CustomContextMenu );
+
   // making statistics block look neat
   _ui->statisticsText->viewport()->setAutoFillBackground( false );
   _ui->statisticsText->setBackgroundRole( QPalette::Window );
   _ui->statisticsText->viewport()->setMouseTracking( true );
   _ui->statisticsText->viewport()->setCursor( Qt::ArrowCursor );
 
+  connect( _ui->codeView, SIGNAL( customContextMenuRequested( QPoint ) ), SLOT( showCodeItemContextMenu( QPoint ) ) );
   connect( _ui->actionLoad, SIGNAL( triggered() ), SLOT( loadFile() ) );
   connect( _ui->actionShowProgramListing, SIGNAL( triggered() ), SLOT( showProgramListing() ) );
 }
@@ -30,12 +33,15 @@ void MainWindow::loadFile()
 {
   QString pathToFile = QFileDialog::getOpenFileName( this, tr( "Load executable" ), "", tr( "Executable files (*.exe)" ) );
 
+  if ( pathToFile == NULL  )
+  {
+    return;
+  }
+
   if ( _codeModel != NULL )
   {
-    disconnect( _selectionModel, SIGNAL( selectionChanged( QItemSelection,QItemSelection ) ), this, SLOT( showItemIndexes() ) );
-
-    _ui->listView->setSelectionModel( NULL );
-    _ui->listView->setModel( NULL );
+    _ui->codeView->setSelectionModel( NULL );
+    _ui->codeView->setModel( NULL );
 
     delete _selectionModel;
     delete _codeModel;
@@ -44,10 +50,8 @@ void MainWindow::loadFile()
   _codeModel = new CodeModel( pathToFile, this );
   _selectionModel = new QItemSelectionModel( _codeModel, this );
 
-  _ui->listView->setModel( _codeModel );
-  _ui->listView->setSelectionModel( _selectionModel );
-
-  connect( _selectionModel, SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ), SLOT( showItemIndexes() ) );
+  _ui->codeView->setModel( _codeModel );
+  _ui->codeView->setSelectionModel( _selectionModel );
 
   _ui->statisticsText->clear();
   _ui->statisticsText->appendPlainText( QString( "Chunk count: %1\nInstruction count: %2" ).arg( _codeModel->getCodeBlockCount() ).arg( _codeModel->getCodeBlockItemCount() ) );
@@ -60,7 +64,26 @@ void MainWindow::showProgramListing()
   _codeModel->showProgramListing();
 }
 
-void MainWindow::showItemIndexes()
-{
 
+void MainWindow::showCodeItemContextMenu(QPoint pos)
+{
+    QMenu myMenu;
+    auto goToFirstReferenceAction = myMenu.addAction( tr( "Go to first reference" ) );
+
+    if ( !_codeModel->isCodeItemBranchType( _ui->codeView->currentIndex() ) )
+    {
+      goToFirstReferenceAction->setDisabled( true );
+    }
+    else
+    {
+      goToFirstReferenceAction->setEnabled( true );
+    }
+
+    QAction* selectedAction = myMenu.exec( _ui->codeView->mapToGlobal( pos ) );
+
+    if ( goToFirstReferenceAction == selectedAction)
+    {
+      auto firstReferencedCodeItem = _codeModel->getFirstReferencedCodeItemIndex( _selectionModel->currentIndex() );
+      _selectionModel->setCurrentIndex( firstReferencedCodeItem, QItemSelectionModel::ClearAndSelect );
+    }
 }
