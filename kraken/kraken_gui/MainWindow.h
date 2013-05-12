@@ -3,8 +3,9 @@
 
 #include <QMainWindow>
 #include <QListView>
+#include <QItemSelectionModel>
 
-#include "DisassemblerModel.h"
+#include "CodeModel.h"
 #include "ui_mainwindow.h"
 
 namespace Ui {
@@ -21,11 +22,12 @@ class MainWindow : public QMainWindow
 
   private:
     Ui::MainWindow *_ui;
-    DisassemblerModel *_model;
+    CodeModel *_codeModel;
+    QItemSelectionModel *_selectionModel;
 
   private slots:
-    void showUsedInstructions();
     void showProgramListing();
+    void showItemIndexes();
     void loadFile();
 };
 
