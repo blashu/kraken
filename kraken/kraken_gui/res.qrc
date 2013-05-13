@@ -1,3 +1,6 @@
 <RCC>
     <qresource prefix="/"/>
+    <qresource prefix="/icons">
+        <file>resources/main-window-icon.png</file>
+    </qresource>
 </RCC>
