@@ -15,6 +15,7 @@ class CodeModel : public QStringListModel
     Q_OBJECT
 
   public:
+    CodeModel() {}
     CodeModel(QString string, QObject* pobj);
 
     void showProgramListing();
@@ -35,7 +36,6 @@ class CodeModel : public QStringListModel
     QStringList getProgramListing();
     CodeBlockItemInterface* getCodeItemByModelIndex(const QModelIndex& index) const;
     QModelIndex getModelIndexByCodeItemLocation(const codeItemLocation_t& codeItemLocation) const;
-    CodeModel() {}
 };
 
 #endif

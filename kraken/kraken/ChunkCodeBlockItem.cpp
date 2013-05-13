@@ -24,10 +24,10 @@ string ChunkCodeBlockItem::to_string(const string& format)
 
 bool ChunkCodeBlockItem::is_branch()
 {
-  return 0x00 != goTo.size();
+  return 0x00 != _goTo.size();
 }
 
 const vector<codeItemLocation_t>& ChunkCodeBlockItem::go_to()
 {
-  return goTo;
+  return _goTo;
 }

@@ -20,7 +20,7 @@ namespace kraken {
 
       private:
         const CodeChunk* _codeChunk;
-        std::vector<ChunkCodeBlockItem> items;
+        std::vector<ChunkCodeBlockItem> _items;
 
     };
   }

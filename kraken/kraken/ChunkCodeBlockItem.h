@@ -21,7 +21,7 @@ namespace kraken {
 
       private:
         const AsmCode* _asmCode;
-        std::vector<codeItemLocation_t> goTo;
+        std::vector<codeItemLocation_t> _goTo;
     };
   }
 
