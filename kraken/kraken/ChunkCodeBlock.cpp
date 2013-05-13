@@ -11,7 +11,7 @@ ChunkCodeBlock::ChunkCodeBlock( const CodeChunk* codeChunk )
       begin != end;
       ++begin)
   {
-    items.push_back(ChunkCodeBlockItem(&(*begin)));
+    _items.push_back(ChunkCodeBlockItem(&(*begin)));
   }
 }
 
@@ -21,9 +21,9 @@ ChunkCodeBlock::~ChunkCodeBlock()
 
 CodeBlockItemInterface* ChunkCodeBlock::get_item_by_id(int id)
 {
-  if( ( 0 < id ) || ( id < items.size() ) )
+  if( ( 0 < id ) || ( id < _items.size() ) )
   {
-    return reinterpret_cast<CodeBlockItemInterface*>( &(items[id]) );
+    return reinterpret_cast<CodeBlockItemInterface*>( &(_items[id]) );
   }
   return NULL;
 }

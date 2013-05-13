@@ -4,10 +4,17 @@
 #include "CodeModel.h"
 
 using namespace std;
+using namespace kraken;
 
 CodeModel::CodeModel(QString pathToFile, QObject* pobj) : QStringListModel(pobj)
 {
-  _codeListing = std::shared_ptr<CodeListingInterface>(new CodeListingDummy());
+  _decompiler.set_target(pathToFile.toUtf8().constData());
+  if( DP_ERROR == _decompiler.decompile() )
+  {
+    //TODO print message
+  }
+
+  _codeListing = _decompiler.low_level_listing();
 
   setStringList(getProgramListing());
 }
@@ -19,15 +26,20 @@ void CodeModel::showProgramListing()
 
 QStringList CodeModel::getProgramListing()
 {
-  _listingToModelMap.clear();
-
   QStringList appListing;
+
+  _listingToModelMap.clear();
+  if( false == _codeListing )
+  {
+    return appListing;
+  }
 
   for ( int blockId = 0, blockCount = _codeListing->block_count(); blockId < blockCount; blockId++ )
   {
     appListing << QString( "Block #%1" ).arg( blockId );
 
-    for ( int itemId = 0, itemCount = _codeListing->item_count(); itemId < itemCount; itemId++ )
+    auto block = _codeListing->get_block_by_id(blockId);
+    for ( int itemId = 0, itemCount = block->get_item_count(); itemId < itemCount; itemId++ )
     {
       auto item = _codeListing->get_item_by_id( blockId, itemId );
 

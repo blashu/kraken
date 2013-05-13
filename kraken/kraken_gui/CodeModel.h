@@ -4,6 +4,7 @@
 #include <memory>
 #include <boost/bimap.hpp>
 #include <QStringListModel>
+#include <kraken/Decompiler.h>
 
 #include <kraken/CodeListingInterface.h>
 
@@ -29,7 +30,8 @@ class CodeModel : public QStringListModel
     typedef bimap<int, codeItemLocation_t> listingMap;
     typedef listingMap::value_type codeItemLocationValue_t;
 
-    std::shared_ptr<CodeListingInterface> _codeListing;
+    Decompiler _decompiler;
+    CodeListingInterface* _codeListing;
     listingMap _listingToModelMap;
 
     void addItemToStringListAndMap(QStringList& list, QString& item, codeItemLocation_t itemLocation);
