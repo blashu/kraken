@@ -45,7 +45,10 @@ int main( int argc, const char** argv )
   Decompiler decompiler;
 
   decompiler.set_target(settings.path_to_bin());
-  decompiler.decompile();
+  if( DP_ERROR == decompiler.decompile() )
+  {
+    cout << "Error while decompiling. See log for details." << endl;
+  }
 
   auto lll = decompiler.low_level_listing();
 
