@@ -3,6 +3,8 @@
 
 #include "kraken/CodeChunk.h"
 
+using namespace kraken;
+
 class CodeChunkHelper 
 {
   public:

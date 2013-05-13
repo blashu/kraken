@@ -26,19 +26,10 @@ namespace kraken
 
     try
     {
-      po::options_description instrList("List of instructions:");
-      instrList.add_options()
-          ("list", "list of all desassembled instructions");
-
-      po::options_description instrSet("Set of instructions:");
-      instrSet.add_options()
-          ("set", "set of desassembled instructions");
-
       desc.add_options()
           ("help", "produce help message")
           ("include-path,I", po::value<string>()->composing(), "include path");
 
-      desc.add(instrList).add(instrSet);
       store(po::parse_command_line(_argc, _argv, desc), vm);
     }
     catch(std::exception const&  ex)
@@ -59,21 +50,7 @@ namespace kraken
       return false;
     }
 
-    if( vm.count("set") )
-    {
-      _actionType = ActionType::SHOW_INSTR_SET;
-    }
-    else if( vm.count("list") )
-    {
-      _actionType = ActionType::SHOW_ALL_INSTR;
-    }
-
     _path_to_bin = vm[ "include-path" ].as<string>();
     return true;
-  }
-
-  Settings::ActionType Settings::action()
-  {
-    return _actionType;
   }
 }

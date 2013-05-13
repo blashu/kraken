@@ -1,4 +1,8 @@
 #include "include/kraken/Decompiler.h"
+#include "ChunkCodeListing.h"
+
+using namespace kraken;
+using namespace kraken::internal;
 
 #include <boost/log/trivial.hpp>
 
@@ -32,20 +36,15 @@ const char* kraken::DecompPhaseName( DecompPhases dp )
   }
 }
 
-kraken::Decompiler::Decompiler()
+Decompiler::Decompiler()
 {
   _nextPhase = DP_TARGET_FILE_IS_NOT_SET;
   _isRuntimeTraceEnable = false;
-  _decoder = NULL;
+  _disassembler = std::make_shared<Disassembler>(Disassembler());
 }
 
 Decompiler::~Decompiler()
-{
-  if( NULL != _decoder )
-  {
-    delete _decoder;
-  }
-}
+{}
 
 void Decompiler::set_target(const string& path)
 {
@@ -53,17 +52,17 @@ void Decompiler::set_target(const string& path)
   _nextPhase = DP_LOAD_BINARY;
 }
 
-void kraken::Decompiler::enable_runtime_trace_phase()
+void Decompiler::enable_runtime_trace_phase()
 {
   _isRuntimeTraceEnable = true;
 }
 
-void kraken::Decompiler::disable_runtime_trace_phase()
+void Decompiler::disable_runtime_trace_phase()
 {
   _isRuntimeTraceEnable = false;
 }
 
-kraken::DecompPhases kraken::Decompiler::decompile()
+DecompPhases Decompiler::decompile()
 {
   DecompPhases currentPhase;
   do
@@ -75,7 +74,7 @@ kraken::DecompPhases kraken::Decompiler::decompile()
 }
 
 
-kraken::DecompPhases kraken::Decompiler::decompile_next_phase()
+DecompPhases Decompiler::decompile_next_phase()
 {
   BOOST_LOG_TRIVIAL(info) << "==== " << "Start decomipe phase: "
                           << DecompPhaseName(_nextPhase) << " ====";
@@ -94,7 +93,7 @@ kraken::DecompPhases kraken::Decompiler::decompile_next_phase()
       if( peDecoder->load( _pathToTarget ) )
       {
         BOOST_LOG_TRIVIAL(info) << "File is sucessfully loaded.";
-        _decoder = peDecoder;
+        _decoder = std::shared_ptr<Decoder>( peDecoder );
       }
       else
       {
@@ -106,12 +105,15 @@ kraken::DecompPhases kraken::Decompiler::decompile_next_phase()
 
     break; case DP_DISASSEMBLE:
     {
-      if( _disassem.fill(*_decoder) )
+      _disassembler = std::make_shared<Disassembler>(Disassembler());
+
+      if( _disassembler->fill(*_decoder) )
       {
         BOOST_LOG_TRIVIAL(info) << "File is sucessfully disassembled.";
       }
       else
       {
+        _disassembler.reset();
         BOOST_LOG_TRIVIAL(info) << "Can't disassemble file.";
         _nextPhase = DP_ERROR;
       }
@@ -139,4 +141,20 @@ kraken::DecompPhases kraken::Decompiler::decompile_next_phase()
   }
   _nextPhase = static_cast<DecompPhases>( _nextPhase + 1 );
   return static_cast<DecompPhases>( _nextPhase - 1 );
+}
+
+CodeListingInterface* Decompiler::low_level_listing()
+{
+  if( _lowLevelListing )
+  {
+    return &(*_lowLevelListing);
+  }
+
+  if( false == _disassembler )
+  {
+    return NULL;
+  }
+
+  _lowLevelListing = std::shared_ptr<CodeListingInterface>(reinterpret_cast<CodeListingInterface*>( new ChunkCodeListing(_disassembler)) );
+  return &(*_lowLevelListing);
 }

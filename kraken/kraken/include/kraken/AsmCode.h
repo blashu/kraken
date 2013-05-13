@@ -153,6 +153,15 @@ namespace kraken
     {
       return this->VirtualAddr == otherAsmCode.VirtualAddr;
     }
+
+    bool is_branch()
+    {
+      if( Instruction.BranchType == Undefined )
+      {
+        return false;
+      }
+      return true;
+    }
   };
 }
 

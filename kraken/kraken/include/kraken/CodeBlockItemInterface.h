@@ -17,7 +17,6 @@ namespace kraken
   class CodeBlockItemInterface
   {
     public:
-
       virtual ~CodeBlockItemInterface() = 0;
 
       virtual va_t va() = 0;
