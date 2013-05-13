@@ -12,6 +12,8 @@ class CodeBlockItemDummy : public CodeBlockItemInterface
   public:
     ~CodeBlockItemDummy() {}
 
+    CodeBlockItemDummy();
+
     va_t va();
     string to_string(const string& format = "");
     bool is_branch();
@@ -21,6 +23,11 @@ class CodeBlockItemDummy : public CodeBlockItemInterface
     vector<codeItemLocation_t> _goToArray;
 };
 
+
+CodeBlockItemDummy::CodeBlockItemDummy()
+{
+  _goToArray.push_back( codeItemLocation_t( 8, 10 ) );
+}
 
 va_t CodeBlockItemDummy::va()
 {
@@ -34,7 +41,7 @@ string CodeBlockItemDummy::to_string(const string& format)
 
 bool CodeBlockItemDummy::is_branch()
 {
-  return false;
+  return true;
 }
 
 const vector<codeItemLocation_t>& CodeBlockItemDummy::go_to()

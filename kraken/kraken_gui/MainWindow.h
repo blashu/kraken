@@ -27,8 +27,8 @@ class MainWindow : public QMainWindow
 
   private slots:
     void showProgramListing();
-    void showItemIndexes();
     void loadFile();
+    void showCodeItemContextMenu(QPoint);
 };
 
 #endif // MAINWINDOW_H

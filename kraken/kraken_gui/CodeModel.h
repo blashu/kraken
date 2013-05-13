@@ -18,19 +18,23 @@ class CodeModel : public QStringListModel
     CodeModel(QString string, QObject* pobj);
 
     void showProgramListing();
-    int getCodeBlockCount();
-    int getCodeBlockItemCount();
+    int getCodeBlockCount() const;
+    int getCodeBlockItemCount() const;    
 
-    QModelIndex getFirstReferencedCode(QModelIndex index);
+    bool isCodeItemBranchType(const QModelIndex& index) const;
+    QModelIndex getFirstReferencedCodeItemIndex(const QModelIndex& index) const;
 
   private:
     typedef bimap<int, codeItemLocation_t> listingMap;
-    typedef listingMap::value_type listingMapTuple;
+    typedef listingMap::value_type codeItemLocationValue_t;
 
     std::shared_ptr<CodeListingInterface> _codeListing;
     listingMap _listingToModelMap;
 
+    void addItemToStringListAndMap(QStringList& list, QString& item, codeItemLocation_t itemLocation);
     QStringList getProgramListing();
+    CodeBlockItemInterface* getCodeItemByModelIndex(const QModelIndex& index) const;
+    QModelIndex getModelIndexByCodeItemLocation(const codeItemLocation_t& codeItemLocation) const;
     CodeModel() {}
 };
 
