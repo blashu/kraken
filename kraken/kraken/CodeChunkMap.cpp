@@ -1,5 +1,7 @@
 #include "include/kraken/CodeChunkMap.h"
 
+using namespace kraken;
+
 /////////////////////////////////////////////////
 // internal classes
 

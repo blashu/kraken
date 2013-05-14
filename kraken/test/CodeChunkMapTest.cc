@@ -1,5 +1,7 @@
 #include "CodeChunkMapTest.h"
 
+using namespace kraken;
+
 TEST_F(CodeChunkMapTest, Add_AddTwoSequentualItems_SizeIsTwo)
 {
   _map.add( CodeChunkMap::ChunkLocation( 0, 10 ) );

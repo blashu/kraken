@@ -1,11 +1,13 @@
 #ifndef __H_DECOMPILER__
 #define __H_DECOMPILER__
 
-#include <string>
-#include <kraken/PeDecoder.h>
-#include <kraken/Disassembler.h>
+//TODO After fix issue #3: replace pedecoder with decoder and move pedecoder to cpp
+#include "PeDecoder.h"
+#include "Disassembler.h"
+#include "CodeListingInterface.h"
 
-#include "kraken.h"
+#include <string>
+#include <memory>
 
 namespace kraken {
   /*!
@@ -46,15 +48,16 @@ namespace kraken {
        */
       DecompPhases decompile_next_phase();
 
+      CodeListingInterface* low_level_listing();
+
     private:
       std::string _pathToTarget;
-      Decoder* _decoder;
-      Disassembler _disassem;
+      std::shared_ptr<Decoder> _decoder;
+      std::shared_ptr<Disassembler> _disassembler;
+      std::shared_ptr<CodeListingInterface> _lowLevelListing;
 
       bool _isRuntimeTraceEnable;
       DecompPhases _nextPhase;
-
-
   };
 }
 

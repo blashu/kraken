@@ -5,9 +5,8 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/file.hpp>
-#include <iomanip>
-#include <iostream>
 #include <kraken/Decompiler.h>
+#include <iostream>
 #include <set>
 
 using namespace kraken;
@@ -15,51 +14,7 @@ namespace logging = boost::log;
 namespace keywords = boost::log::keywords;
 namespace expr = boost::log::expressions;
 
-std::string complete2short_instr( const char* completeInstruction )
-{
-  const char* whiteCharPtr;
-
-  if( NULL == ( whiteCharPtr = strchr( completeInstruction, ' ' ) ) )
-  {
-    return completeInstruction;
-  }
-
-  return std::string( completeInstruction, whiteCharPtr );
-}
-
-void show_all_instr(const Disassembler& disassem)
-{
-  int count = 0;
-
-  disassem.go_through_instructions([&count](const AsmCode& asmCode){
-    unsigned int rva = asmCode.VirtualAddr - 0x400000;
-
-    cout << "0x" << std::setw(8) << std::hex << std::setfill('0')
-         << rva << "\t" << asmCode.CompleteInstr << endl;
-
-    count++;
-  });
-
-  cout << "Cound of disassembled instructions: " << std::dec << count << endl;
-}
-
-void show_instr_set(const Disassembler& disassem)
-{
-  std::set<std::string> instructionList;
-  cout << "Exe file contains next list of instruction:" << endl;
-
-  disassem.go_through_instructions([&instructionList](const AsmCode& asmCode){
-    instructionList.insert( complete2short_instr( asmCode.CompleteInstr ) );
-  });
-
-  for( auto it = instructionList.begin(), end = instructionList.end(); it != end; ++it )
-  {
-    cout << *it << endl;
-  }
-  cout << instructionList.size() << endl;
-}
-
-void init_logging()
+void init_logger()
 {
   logging::add_common_attributes();
 
@@ -75,12 +30,8 @@ void init_logging()
       )
   );
 }
-
 int main( int argc, const char** argv )
 {
-  init_logging();
-  BOOST_LOG_TRIVIAL(info) << "Start app.";
-
   Settings settings( argc, argv );
 
   if( false == settings.run() )
@@ -88,10 +39,30 @@ int main( int argc, const char** argv )
     return EXIT_FAILURE;
   }
 
+  init_logger();
+  BOOST_LOG_TRIVIAL(info) << "Start app.";
+
   Decompiler decompiler;
 
   decompiler.set_target(settings.path_to_bin());
-  decompiler.decompile();
+  if( DP_ERROR == decompiler.decompile() )
+  {
+    cout << "Error while decompiling. See log for details." << endl;
+  }
+
+  auto lll = decompiler.low_level_listing();
+
+  for( int blockId = 0, blocksCount = lll->block_count(); blockId < blocksCount; blockId++ )
+  {
+    auto block = lll->get_block_by_id(blockId);
+
+    cout << "=> Block " << blockId << endl << endl;
+    for( int itemId = 0, itemsCount = block->get_item_count(); itemId < itemsCount; itemId++ )
+    {
+      cout << (block->get_item_by_id(itemId)->to_string()) << endl;
+    }
+    cout << "------------------" << endl;
+  }
 
   return EXIT_SUCCESS;
 }

@@ -1,6 +1,7 @@
 #include "include/kraken/CodeChunk.h"
 
 using namespace std;
+using namespace kraken;
 
 bool CodeChunk::operator == ( const CodeChunk &otherChunk ) const
 {
