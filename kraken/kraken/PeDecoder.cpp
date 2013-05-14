@@ -20,6 +20,13 @@ int PeDecoder::decode(va_t instrVirtualAddr, AsmCode *asmCode) const
 
   int length = Disasm( &beaEngineCode );
 
+  if( length <= 0 )
+  {
+    return length;
+  }
+
+  asmCode->length = length;
+
   assert( sizeof( asmCode->CompleteInstr ) == sizeof( beaEngineCode.CompleteInstr ) );
   memcpy( asmCode->CompleteInstr, beaEngineCode.CompleteInstr, sizeof( asmCode->CompleteInstr ) );
 

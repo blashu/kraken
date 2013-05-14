@@ -79,7 +79,7 @@ CodeChunk Disassembler::disassemble_next_code_chunk(queue<va_t>& jumpInstruction
   jumpInstructionQueue.pop();
 
   for( int instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode );
-      ( instructionLength != kraken::OUT_OF_BLOCK ) && ( instructionLength != kraken::UNKNOWN_OPCODE );
+      instructionLength > 0;
       instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode ) )
   {
     codeChunk.add_to_chunk( currentAsmCode );

@@ -138,6 +138,8 @@ namespace kraken
     Argument Argument3;
     char CompleteInstr[INSTRUCT_LENGTH];
 
+    UInt8 length;
+
     AsmCode()
     {
       VirtualAddr = 0;
@@ -146,7 +148,10 @@ namespace kraken
       CompleteInstr[0] = '\0';
       Instruction.AddrValue = 0;
       Instruction.BranchType = Undefined;
+
+      length = 0;
     }
+
 
     // TODO change comparation principle so that it would be based on start rva, Instruction and size of the AsmCode
     inline bool operator == (const AsmCode& otherAsmCode) const
