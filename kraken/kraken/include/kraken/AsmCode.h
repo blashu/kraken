@@ -154,7 +154,7 @@ namespace kraken
       return this->VirtualAddr == otherAsmCode.VirtualAddr;
     }
 
-    bool is_branch()
+    bool is_branch() const
     {
       if( Instruction.BranchType == Undefined )
       {

@@ -27,17 +27,17 @@ class CodeModel : public QStringListModel
     QModelIndex getFirstReferencedCodeItemIndex(const QModelIndex& index) const;
 
   private:
-    typedef bimap<int, codeItemLocation_t> listingMap;
+    typedef bimap<int, code_item_location_t> listingMap;
     typedef listingMap::value_type codeItemLocationValue_t;
 
     Decompiler _decompiler;
     CodeListingInterface* _codeListing;
     listingMap _listingToModelMap;
 
-    void addItemToStringListAndMap(QStringList& list, QString& item, codeItemLocation_t itemLocation);
+    void addItemToStringListAndMap(QStringList& list, QString& item, code_item_location_t itemLocation);
     QStringList getProgramListing();
     CodeBlockItemInterface* getCodeItemByModelIndex(const QModelIndex& index) const;
-    QModelIndex getModelIndexByCodeItemLocation(const codeItemLocation_t& codeItemLocation) const;
+    QModelIndex getModelIndexByCodeItemLocation(const code_item_location_t& codeItemLocation) const;
 };
 
 #endif

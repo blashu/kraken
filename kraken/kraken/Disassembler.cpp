@@ -98,32 +98,10 @@ CodeChunk Disassembler::disassemble_next_code_chunk(queue<va_t>& jumpInstruction
       break;
     }
 
-    switch(currentAsmCode.Instruction.BranchType)
+    // if branch type
+    if( 0 != currentAsmCode.Instruction.AddrValue )
     {
-      case kraken::JO:
-      case kraken::JC:
-      case kraken::JE:
-      case kraken::JA:
-      case kraken::JS:
-      case kraken::JP:
-      case kraken::JL:
-      case kraken::JG:
-      case kraken::JB:
-      case kraken::JECXZ:
-      case kraken::CallType:
-      case kraken::JNO:
-      case kraken::JNC:
-      case kraken::JNE:
-      case kraken::JNA:
-      case kraken::JNS:
-      case kraken::JNP:
-      case kraken::JNL:
-      case kraken::JNG:
-      case kraken::JNB:
-        if( 0 != currentAsmCode.Instruction.AddrValue )
-        {
-          jumpInstructionQueue.push( currentAsmCode.Instruction.AddrValue );
-        }
+      jumpInstructionQueue.push( currentAsmCode.Instruction.AddrValue );
     }
 
     instrVirtAddr += instructionLength;

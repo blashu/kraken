@@ -7,21 +7,23 @@
 namespace kraken {
   namespace internal
   {
+    class ChunkCodeListing;
+
     class ChunkCodeBlockItem : CodeBlockItemInterface
     {
       public:
-        ChunkCodeBlockItem( const AsmCode* asmCode );
-
+        ChunkCodeBlockItem( ChunkCodeListing* codeListing, const AsmCode* asmCode );
         virtual ~ChunkCodeBlockItem();
 
         virtual va_t va();
         virtual string to_string(const string& format = "");
         virtual bool is_branch();
-        virtual const vector<codeItemLocation_t>& go_to();
+        virtual const vector<code_item_location_t>& go_to();
 
       private:
+        ChunkCodeListing* _codeListing;
         const AsmCode* _asmCode;
-        std::vector<codeItemLocation_t> _goTo;
+        std::vector<code_item_location_t> _goTo;
     };
   }
 
