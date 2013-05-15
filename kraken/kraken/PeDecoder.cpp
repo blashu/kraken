@@ -27,6 +27,7 @@ int PeDecoder::decode(va_t instrVirtualAddr, AsmCode *asmCode) const
 
   asmCode->length = length;
 
+
   assert( sizeof( asmCode->CompleteInstr ) == sizeof( beaEngineCode.CompleteInstr ) );
   memcpy( asmCode->CompleteInstr, beaEngineCode.CompleteInstr, sizeof( asmCode->CompleteInstr ) );
 
@@ -36,6 +37,7 @@ int PeDecoder::decode(va_t instrVirtualAddr, AsmCode *asmCode) const
 
   asmCode->Instruction.AddrValue = beaEngineCode.Instruction.AddrValue;
   asmCode->Instruction.BranchType = (BranchType)beaEngineCode.Instruction.BranchType;
+  asmCode->Instruction.Opcode = beaEngineCode.Instruction.Opcode;
 
   assert( sizeof( asmCode->Instruction.Mnemonic ) == sizeof( beaEngineCode.Instruction.Mnemonic ) );
   memcpy( asmCode->Instruction.Mnemonic, beaEngineCode.Instruction.Mnemonic, sizeof( asmCode->Instruction.Mnemonic ) );

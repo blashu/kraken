@@ -59,6 +59,7 @@ namespace kraken
 
       /////////////////////////////////////////
       // functions
+      void log_instruction_statics();
       void disassemble_next_jump( const Decoder& disassemble, queue<va_t>& jumpInstructionQueue );
       void fill_code_collection_using_instruction_map();
       bool is_instruct_decoded( va_t address );

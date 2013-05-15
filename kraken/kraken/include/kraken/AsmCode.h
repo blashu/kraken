@@ -115,19 +115,24 @@ namespace kraken
 
     va_t AddrValue;
     BranchType BranchType;
+    UInt32 Opcode;
 
     InstrType()
     {
+      Mnemonic[0] = '\0';
+
       AddrValue = 0;
       BranchType = Undefined;
-      Mnemonic[0] = '\0';
+      Opcode = 0;
     }
 
     InstrType( const InstrType& instrType )
     {
+      memcpy( Mnemonic, instrType.Mnemonic, sizeof( Mnemonic ) );
+
       AddrValue = instrType.AddrValue;
       BranchType = instrType.BranchType;
-      memcpy( Mnemonic, instrType.Mnemonic, sizeof( Mnemonic ) );
+      Opcode = instrType.Opcode;
     }
   };
 
