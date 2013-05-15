@@ -3,6 +3,7 @@
 
 #include "kraken.h"
 #include "BasicTypes.h"
+#include <string.h>
 
 namespace kraken
 {
@@ -114,6 +115,20 @@ namespace kraken
 
     va_t AddrValue;
     BranchType BranchType;
+
+    InstrType()
+    {
+      AddrValue = 0;
+      BranchType = Undefined;
+      Mnemonic[0] = '\0';
+    }
+
+    InstrType( const InstrType& instrType )
+    {
+      AddrValue = instrType.AddrValue;
+      BranchType = instrType.BranchType;
+      memcpy( Mnemonic, instrType.Mnemonic, sizeof( Mnemonic ) );
+    }
   };
 
   struct Argument
@@ -146,12 +161,23 @@ namespace kraken
       Eip = 0;
       Archi = 0;
       CompleteInstr[0] = '\0';
-      Instruction.AddrValue = 0;
-      Instruction.BranchType = Undefined;
-
       length = 0;
     }
 
+    AsmCode( const AsmCode& asmCode )
+    {
+      VirtualAddr = asmCode.VirtualAddr;
+      Eip = asmCode.Eip;
+      Archi = asmCode.Archi;
+      memcpy( CompleteInstr, asmCode.CompleteInstr, sizeof( CompleteInstr ) );
+      Instruction = asmCode.Instruction;
+      length = asmCode.length;
+    }
+
+    inline va_t last_va()
+    {
+      return VirtualAddr + length - 1;
+    }
 
     // TODO change comparation principle so that it would be based on start rva, Instruction and size of the AsmCode
     inline bool operator == (const AsmCode& otherAsmCode) const

@@ -2,20 +2,24 @@
 #define __H_DISASSEMBLER__
 
 #include "Decoder.h"
-#include "CodeChunkMap.h"
+#include "CodeChunk.h"
 
 #include <vector>
 #include <queue>
 #include <string>
 #include <map>
 #include <functional>
+#include <boost/ptr_container/ptr_map.hpp>
 
 using namespace std;
 
-class kraken::internal::ChunkCodeListing;
-
 namespace kraken
 {
+  namespace interval
+  {
+    class ChunkCodeListing;
+  }
+
   KRAKEN_API_ class Disassembler
   {
     public:
@@ -23,7 +27,7 @@ namespace kraken
 
       // Fills chunk container with disassembled chunks of code, while handling
       // unconditional branch instructions and possible chunk intersections
-      virtual bool fill(const Decoder& decode);
+      virtual bool do_work(const Decoder& decode);
 
       virtual ~Disassembler() {}
 
@@ -51,22 +55,24 @@ namespace kraken
 
       code_collection_t _codeCollection;
 
-      CodeChunkMap _chunkMap;
+      boost::ptr_map<va_t, AsmCode> _asmCodeMap;
 
       /////////////////////////////////////////
       // functions
       bool is_instruct_decoded( va_t address );
 
-      virtual CodeChunk disassemble_next_code_chunk( queue<va_t>& jumpInstructionQueue, const Decoder& disassemble );
+      void disassemble_next_jump( const Decoder& disassemble, queue<va_t>& jumpInstructionQueue );
 
       // OPTIMIZE: this function is not optimized
       // Checks if there is a code chunk that intersects with the one that is passed to this function
       // and returns iterator to that chunk, otherwise returns iterator to end
-      virtual code_collection_t::iterator check_if_intersects(const CodeChunk& codeChunk);
+      code_collection_t::iterator check_if_intersects(const CodeChunk& codeChunk);
 
-      virtual void merge_code_chunks(CodeChunk& resultChunk,
+      void merge_code_chunks(CodeChunk& resultChunk,
                                      const CodeChunk& firstCodeChunk,
                                      const CodeChunk& secondCodeChunk);
+
+      void fill_code_collection_using_asm_map();
   };
 
   inline const_chunk_container_iter Disassembler::begin() const

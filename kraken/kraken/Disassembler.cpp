@@ -9,80 +9,38 @@ using namespace kraken;
 // because we are removing them from vector, combining them in one chunk and re-adding it to vector. This may cause 
 // some problems and it may be a good idea to combine them inside an existing code chunk or use list container instead of vector
 
-bool Disassembler::fill(const Decoder& decoder)
+bool Disassembler::do_work(const Decoder& decoder)
 {
   queue<va_t> jumpInstructionQueue;
   jumpInstructionQueue.push( decoder.entry_point() );
 
-  while( jumpInstructionQueue.size() != 0 )
+  while( false == jumpInstructionQueue.empty() )
   {
-    //_ASSERT( _chunkMap.includes( jumpInstructionQueue.front() ) == is_instruct_decoded( jumpInstructionQueue.front() ) );
-
-    if( _chunkMap.includes( jumpInstructionQueue.front() ) )
-    {
-      jumpInstructionQueue.pop();
-      continue;
-    }
-
-    auto disassembledChunk = disassemble_next_code_chunk( jumpInstructionQueue, decoder );
-
-    auto iteratorToIntersection = check_if_intersects( disassembledChunk );
-
-    // Checking if disassembled code chunk intersects with any of the previously disassembled ones    
-    if( iteratorToIntersection == _codeCollection.end() )
-    {
-      _codeCollection.push_back( disassembledChunk );
-
-      // Add to chunk map. Don't forget to delete from chunk map when delete from code collection
-      _chunkMap.add( disassembledChunk );
-    }
-    else
-    {
-      if( iteratorToIntersection->includes( disassembledChunk ) ) 
-      {
-        continue;
-      }
-      else if( disassembledChunk.includes( *iteratorToIntersection ) )
-      {
-        _chunkMap.remove( *iteratorToIntersection );
-
-        _codeCollection.erase( iteratorToIntersection );
-        _codeCollection.push_back( disassembledChunk );
-
-        _chunkMap.add( disassembledChunk );
-      }
-      else
-      {
-        CodeChunk mergedCodeChunk;
-
-        merge_code_chunks( mergedCodeChunk, *iteratorToIntersection, disassembledChunk );
-
-        _codeCollection[ iteratorToIntersection - _codeCollection.begin() ] = mergedCodeChunk;
-      }
-    }
+    disassemble_next_jump( decoder, jumpInstructionQueue );
   }
 
-  sort( _codeCollection.begin(), _codeCollection.end(), [] (const CodeChunk& firstChunk, const CodeChunk& secondChunk)
-  {
-    return firstChunk.first_va() < secondChunk.first_va();
-  } );
+  fill_code_collection_using_asm_map();
 
   return true;
 }
 
-CodeChunk Disassembler::disassemble_next_code_chunk(queue<va_t>& jumpInstructionQueue, const Decoder& decoder)
+void Disassembler::disassemble_next_jump(const Decoder& decoder, queue<va_t>& jumpInstructionQueue)
 {
-  CodeChunk codeChunk;
   AsmCode currentAsmCode;
 
   va_t instrVirtAddr = jumpInstructionQueue.front();
   jumpInstructionQueue.pop();
 
+  if( _asmCodeMap.find( instrVirtAddr ) != _asmCodeMap.end() )
+  {
+    return;
+  }
+
   for( int instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode );
       instructionLength > 0;
       instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode ) )
   {
-    codeChunk.add_to_chunk( currentAsmCode );
+    _asmCodeMap.insert(currentAsmCode.VirtualAddr, new AsmCode( currentAsmCode ) );
 
     if( currentAsmCode.Instruction.BranchType == kraken::RetType )
     {
@@ -106,8 +64,6 @@ CodeChunk Disassembler::disassemble_next_code_chunk(queue<va_t>& jumpInstruction
 
     instrVirtAddr += instructionLength;
   }
-
-  return codeChunk;
 }
 
 bool Disassembler::is_instruct_decoded( va_t address )
@@ -155,6 +111,50 @@ void Disassembler::merge_code_chunks(CodeChunk& resultChunk,
   auto iteratorToIntersection = std::find( endChunk->begin(), endChunk->end(), resultChunk.back() );
 
   resultChunk.add_to_chunk( iteratorToIntersection, endChunk->end() );
+}
+
+CodeChunk create_code_chunk( boost::ptr_map<va_t, AsmCode>::const_iterator begin,
+                        boost::ptr_map<va_t, AsmCode>::const_iterator end )
+{
+  CodeChunk newCodeChunk;
+
+  for( auto it = begin; it != end; ++it )
+  {
+    newCodeChunk.add_to_chunk( *(it->second) );
+  }
+  return newCodeChunk;
+}
+
+void Disassembler::fill_code_collection_using_asm_map()
+{
+  _codeCollection.clear();
+
+  if( _asmCodeMap.empty() )
+  {
+    return;
+  }
+
+  AsmCode* firstAsmCode = _asmCodeMap.begin()->second;
+  va_t lastVirtAddr = firstAsmCode->last_va();
+
+  auto beginOfNewChunk = _asmCodeMap.begin();
+  for( auto it = ++_asmCodeMap.begin(), end = _asmCodeMap.end(); it != end; ++it)
+  {
+    AsmCode* currentAsmCode = it->second;
+
+    if( currentAsmCode->VirtualAddr == ( lastVirtAddr + 1 ) )
+    {
+      lastVirtAddr += currentAsmCode->length;
+    }
+    else
+    {
+      _codeCollection.push_back( create_code_chunk( beginOfNewChunk, it ) );
+
+      beginOfNewChunk = it;
+      lastVirtAddr = currentAsmCode->last_va();
+    }
+  }
+  _codeCollection.push_back( create_code_chunk( beginOfNewChunk, _asmCodeMap.end() ) );
 }
 
 void Disassembler::go_through_chunks(std::function<void (const CodeChunk&)> process_chunk) const
