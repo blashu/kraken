@@ -11,15 +11,13 @@ ChunkCodeListing::ChunkCodeListing( std::shared_ptr<Disassembler> disassembler )
 
   vector<chunk_interval_t> chunkIntervals;
 
-  for(auto begin = disassembler->begin(), end = disassembler->end();
-      begin != end;
-      ++begin)
+  for(auto it = disassembler->begin(), end = disassembler->end(); it != end; ++it)
   {
-    _blocks.push_back(ChunkCodeBlock( this, &(*begin)) );
+    _blocks.push_back(ChunkCodeBlock( this, &(*it)) );
 
     _itemCount += _blocks.back().get_item_count();
 
-    chunkIntervals.push_back(chunk_interval_t(begin->first_va(), begin->last_va(),
+    chunkIntervals.push_back(chunk_interval_t(it->first_va(), it->last_va(),
                                               _blocks.size() - 1));
   }
 
@@ -54,7 +52,7 @@ code_item_location_t ChunkCodeListing::get_item_location_by_va(va_t virtualAddre
   vector<chunk_interval_t> foundIntervals;
   _chunkMap.findOverlapping(virtualAddress, virtualAddress + 1, foundIntervals);
 
-  if( 0x00 == foundIntervals.size() )
+  if( foundIntervals.empty() )
   {
     return code_item_location_t(-1, -1);
   }

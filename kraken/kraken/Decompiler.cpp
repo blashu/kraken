@@ -107,7 +107,7 @@ DecompPhases Decompiler::decompile_next_phase()
     {
       _disassembler = std::make_shared<Disassembler>(Disassembler());
 
-      if( _disassembler->fill(*_decoder) )
+      if( _disassembler->do_work(*_decoder) )
       {
         BOOST_LOG_TRIVIAL(info) << "File is sucessfully disassembled.";
       }
