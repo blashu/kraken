@@ -9,11 +9,11 @@ ChunkCodeBlock::ChunkCodeBlock(ChunkCodeListing* codeListing, const CodeChunk* c
 {
   _codeChunk = codeChunk;
 
-  for(auto begin = codeChunk->begin(), end = codeChunk->end();
-      begin != end;
-      ++begin)
+  for(auto it = codeChunk->begin(), end = codeChunk->end();
+      it != end;
+      ++it)
   {
-    _items.push_back(ChunkCodeBlockItem(codeListing, &(*begin)));
+    _items.push_back(ChunkCodeBlockItem(codeListing, &(*it)));
   }
 }
 
