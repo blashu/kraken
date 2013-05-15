@@ -27,7 +27,7 @@ string ChunkCodeBlockItem::to_string(const string& format)
 
 bool ChunkCodeBlockItem::is_branch()
 {
-  return 0x00 != go_to().size();
+  return false == go_to().empty();
 }
 
 const vector<code_item_location_t>& ChunkCodeBlockItem::go_to()

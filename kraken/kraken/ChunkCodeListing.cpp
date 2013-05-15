@@ -54,7 +54,7 @@ code_item_location_t ChunkCodeListing::get_item_location_by_va(va_t virtualAddre
   vector<chunk_interval_t> foundIntervals;
   _chunkMap.findOverlapping(virtualAddress, virtualAddress + 1, foundIntervals);
 
-  if( 0x00 == foundIntervals.size() )
+  if( foundIntervals.empty() )
   {
     return code_item_location_t(-1, -1);
   }
