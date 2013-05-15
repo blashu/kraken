@@ -25,11 +25,12 @@ namespace kraken
     public:
       Disassembler() {}
 
+      virtual ~Disassembler() {}
+
       // Fills chunk container with disassembled chunks of code, while handling
       // unconditional branch instructions and possible chunk intersections
       virtual bool do_work(const Decoder& decode);
 
-      virtual ~Disassembler() {}
 
       virtual inline const_chunk_container_iter begin() const;
 
@@ -54,25 +55,13 @@ namespace kraken
       typedef vector<CodeChunk> code_collection_t;
 
       code_collection_t _codeCollection;
-
-      boost::ptr_map<va_t, AsmCode> _asmCodeMap;
+      boost::ptr_map<va_t, AsmCode> _instructionMap;
 
       /////////////////////////////////////////
       // functions
-      bool is_instruct_decoded( va_t address );
-
       void disassemble_next_jump( const Decoder& disassemble, queue<va_t>& jumpInstructionQueue );
-
-      // OPTIMIZE: this function is not optimized
-      // Checks if there is a code chunk that intersects with the one that is passed to this function
-      // and returns iterator to that chunk, otherwise returns iterator to end
-      code_collection_t::iterator check_if_intersects(const CodeChunk& codeChunk);
-
-      void merge_code_chunks(CodeChunk& resultChunk,
-                                     const CodeChunk& firstCodeChunk,
-                                     const CodeChunk& secondCodeChunk);
-
-      void fill_code_collection_using_asm_map();
+      void fill_code_collection_using_instruction_map();
+      bool is_instruct_decoded( va_t address );
   };
 
   inline const_chunk_container_iter Disassembler::begin() const
