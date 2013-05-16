@@ -79,9 +79,7 @@ void Disassembler::disassemble_next_jump(const Decoder& decoder, queue<va_t>& ju
     return;
   }
 
-  for( int instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode );
-      instructionLength > 0;
-      instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode ) )
+  while( decoder.decode(instrVirtAddr, &currentAsmCode ) )
   {
     _instructionMap.insert(currentAsmCode.VirtualAddr, new AsmCode( currentAsmCode ) );
 
@@ -105,7 +103,7 @@ void Disassembler::disassemble_next_jump(const Decoder& decoder, queue<va_t>& ju
       jumpInstructionQueue.push( currentAsmCode.Instruction.AddrValue );
     }
 
-    instrVirtAddr += instructionLength;
+    instrVirtAddr += currentAsmCode.length;
   }
 }
 
