@@ -1,6 +1,7 @@
 #include "include/kraken/PeDecoder.h"
 
 #include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -100,13 +101,13 @@ bool PeDecoder::is_it_pe_file()
 
   if( NULL == dosHeader )
   {
-    cout << "File too small. Can't read dos header." << endl;
+    BOOST_LOG_TRIVIAL(info) << "File too small. Can't read dos header." << endl;
     return false;
   }
 
   if( IMAGE_DOS_SIGNATURE != dosHeader->e_magic )
   {
-    cout << "File isn't PE file. It hasn't got IMAGE_DOS_SIGNATURE." << endl;
+    BOOST_LOG_TRIVIAL(info) << "File isn't PE file. It hasn't got IMAGE_DOS_SIGNATURE." << endl;
     return false;
   }
 
@@ -114,13 +115,13 @@ bool PeDecoder::is_it_pe_file()
 
   if( NULL == ( imageNtHeader32 = buf<IMAGE_NT_HEADERS32>( dosHeader->e_lfanew ) ) )
   {
-    cout << "File too small. Can't read image NT headers 32." << endl;
+    BOOST_LOG_TRIVIAL(info) << "File too small. Can't read image NT headers 32." << endl;
     return false;
   }
 
   if( IMAGE_NT_SIGNATURE != imageNtHeader32->Signature )
   {
-    cout << "File isn't PE file. It hasn't got IMAGE_NT_SIGNATURE." << endl;
+    BOOST_LOG_TRIVIAL(info) << "File isn't PE file. It hasn't got IMAGE_NT_SIGNATURE." << endl;
     return false;
   }
 
@@ -153,19 +154,19 @@ bool PeDecoder::load_file_in_filebuf( const std::string &fileName )
 
   if( false == fs::exists( filePath ) )
   {
-    cout << fileName << " doesn't exist." << endl;
+    BOOST_LOG_TRIVIAL(info) << fileName << " doesn't exist." << endl;
     return false;
   }
 
   if( false == fs::is_regular_file( filePath ) )
   {
-    cout << fileName << " isn't file." << endl;
+    BOOST_LOG_TRIVIAL(info) << fileName << " isn't file." << endl;
     return false;
   }
 
   if( true == fs::is_empty( filePath ) )
   {
-    cout << fileName << " is empty." << endl;
+    BOOST_LOG_TRIVIAL(info) << fileName << " is empty." << endl;
   }
 
   ifstream fileStream( fileName, ios::binary | ios::in );
