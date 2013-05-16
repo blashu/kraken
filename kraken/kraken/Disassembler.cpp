@@ -1,6 +1,11 @@
 #include "include/kraken/Disassembler.h"
 
 #include <algorithm>
+#include <boost/log/trivial.hpp>
+#include <map>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 using namespace kraken;
@@ -17,7 +22,49 @@ bool Disassembler::do_work(const Decoder& decoder)
 
   fill_code_collection_using_instruction_map();
 
+  log_instruction_statics();
+
   return true;
+}
+
+void Disassembler::log_instruction_statics()
+{
+  std::map<UInt32, string> stringOpcodeMap;
+  std::map<UInt32, int> countOpcodesMap;
+
+  go_through_instructions([&stringOpcodeMap, &countOpcodesMap](const AsmCode& asmCode)
+  {
+    UInt32 opcode = asmCode.Instruction.Opcode;
+
+    if( stringOpcodeMap.end() == stringOpcodeMap.find( opcode ) )
+    {
+      stringOpcodeMap[opcode] = asmCode.Instruction.Mnemonic;
+      countOpcodesMap[opcode] = 1;
+    }
+    else
+    {
+      countOpcodesMap[opcode] += 1;
+    }
+  });
+
+  stringstream listOfOpcodesStream;
+
+  listOfOpcodesStream << "\tOpcode\t\tMnemonic\t\tCount" << endl;
+  for( auto it = stringOpcodeMap.begin(), end = stringOpcodeMap.end();
+       it != end;
+       ++it)
+  {
+    listOfOpcodesStream << "\t0x" << std::hex << std::setw(2) << std::setfill('0') << it->first
+                  << "\t\t" << std::setw(9) << std::setfill(' ') << it->second
+                  << "\t\t" << std::dec << countOpcodesMap[it->first] << endl;
+  }
+
+  BOOST_LOG_TRIVIAL(info) << ">>> Instruction statistics <<<" << endl
+                          << "Count of instructions: " << _instructionMap.size() << endl
+                          << "Count of unique opcodes: " << stringOpcodeMap.size() << endl
+                          << "List of opcodes: " << endl
+                          << listOfOpcodesStream.str();
+
 }
 
 void Disassembler::disassemble_next_jump(const Decoder& decoder, queue<va_t>& jumpInstructionQueue)
@@ -32,9 +79,7 @@ void Disassembler::disassemble_next_jump(const Decoder& decoder, queue<va_t>& ju
     return;
   }
 
-  for( int instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode );
-      instructionLength > 0;
-      instructionLength = decoder.decode(instrVirtAddr, &currentAsmCode ) )
+  while( decoder.decode(instrVirtAddr, &currentAsmCode ) )
   {
     _instructionMap.insert(currentAsmCode.VirtualAddr, new AsmCode( currentAsmCode ) );
 
@@ -58,7 +103,7 @@ void Disassembler::disassemble_next_jump(const Decoder& decoder, queue<va_t>& ju
       jumpInstructionQueue.push( currentAsmCode.Instruction.AddrValue );
     }
 
-    instrVirtAddr += instructionLength;
+    instrVirtAddr += currentAsmCode.length;
   }
 }
 

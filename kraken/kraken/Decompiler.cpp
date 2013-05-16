@@ -48,6 +48,8 @@ Decompiler::~Decompiler()
 
 void Decompiler::set_target(const string& path)
 {
+  BOOST_LOG_TRIVIAL(info) << "Set target: " << path;
+
   _pathToTarget = path;
   _nextPhase = DP_LOAD_BINARY;
 }

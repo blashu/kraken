@@ -1,6 +1,7 @@
 #include "include/kraken/PeDecoder.h"
 
 #include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp>
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -10,16 +11,15 @@ PeDecoder::PeDecoder()
   _isAlreadyLoaded = false;
 }
 
-int PeDecoder::decode(va_t instrVirtualAddr, AsmCode *asmCode) const
+bool PeDecoder::decode(va_t virtualAddr, AsmCode *asmCode) const
 {
   DISASM beaEngineCode;
 
-  beaEngineCode.EIP = (size_t)( buf() + va_to_offset( instrVirtualAddr ) );
-  beaEngineCode.VirtualAddr = instrVirtualAddr;
+  beaEngineCode.EIP = (size_t)( buf() + va_to_offset( virtualAddr ) );
+  beaEngineCode.VirtualAddr = virtualAddr;
   beaEngineCode.Archi = 0;
 
   int length = Disasm( &beaEngineCode );
-
   if( length <= 0 )
   {
     return length;
@@ -34,15 +34,11 @@ int PeDecoder::decode(va_t instrVirtualAddr, AsmCode *asmCode) const
   asmCode->VirtualAddr = beaEngineCode.VirtualAddr;
   asmCode->Archi = beaEngineCode.Archi;
 
-  asmCode->Instruction.AddrValue = beaEngineCode.Instruction.AddrValue;
-  asmCode->Instruction.BranchType = (BranchType)beaEngineCode.Instruction.BranchType;
+  convert_instruction( beaEngineCode.Instruction, asmCode->Instruction );
 
-  assert( sizeof( asmCode->Instruction.Mnemonic ) == sizeof( beaEngineCode.Instruction.Mnemonic ) );
-  memcpy( asmCode->Instruction.Mnemonic, beaEngineCode.Instruction.Mnemonic, sizeof( asmCode->Instruction.Mnemonic ) );
-
-  asmCode->Argument1 = convert_argument( beaEngineCode.Argument1 );
-  asmCode->Argument2 = convert_argument( beaEngineCode.Argument2 );
-  asmCode->Argument3 = convert_argument( beaEngineCode.Argument3 );
+  convert_argument( beaEngineCode.Argument1, asmCode->Argument1 );
+  convert_argument( beaEngineCode.Argument2, asmCode->Argument2 );
+  convert_argument( beaEngineCode.Argument3, asmCode->Argument3 );
 
   return length;
 }
@@ -98,13 +94,13 @@ bool PeDecoder::is_it_pe_file()
 
   if( NULL == dosHeader )
   {
-    cout << "File too small. Can't read dos header." << endl;
+    BOOST_LOG_TRIVIAL(info) << "File too small. Can't read dos header." << endl;
     return false;
   }
 
   if( IMAGE_DOS_SIGNATURE != dosHeader->e_magic )
   {
-    cout << "File isn't PE file. It hasn't got IMAGE_DOS_SIGNATURE." << endl;
+    BOOST_LOG_TRIVIAL(info) << "File isn't PE file. It hasn't got IMAGE_DOS_SIGNATURE." << endl;
     return false;
   }
 
@@ -112,13 +108,13 @@ bool PeDecoder::is_it_pe_file()
 
   if( NULL == ( imageNtHeader32 = buf<IMAGE_NT_HEADERS32>( dosHeader->e_lfanew ) ) )
   {
-    cout << "File too small. Can't read image NT headers 32." << endl;
+    BOOST_LOG_TRIVIAL(info) << "File too small. Can't read image NT headers 32." << endl;
     return false;
   }
 
   if( IMAGE_NT_SIGNATURE != imageNtHeader32->Signature )
   {
-    cout << "File isn't PE file. It hasn't got IMAGE_NT_SIGNATURE." << endl;
+    BOOST_LOG_TRIVIAL(info) << "File isn't PE file. It hasn't got IMAGE_NT_SIGNATURE." << endl;
     return false;
   }
 
@@ -151,19 +147,19 @@ bool PeDecoder::load_file_in_filebuf( const std::string &fileName )
 
   if( false == fs::exists( filePath ) )
   {
-    cout << fileName << " doesn't exist." << endl;
+    BOOST_LOG_TRIVIAL(info) << fileName << " doesn't exist." << endl;
     return false;
   }
 
   if( false == fs::is_regular_file( filePath ) )
   {
-    cout << fileName << " isn't file." << endl;
+    BOOST_LOG_TRIVIAL(info) << fileName << " isn't file." << endl;
     return false;
   }
 
   if( true == fs::is_empty( filePath ) )
   {
-    cout << fileName << " is empty." << endl;
+    BOOST_LOG_TRIVIAL(info) << fileName << " is empty." << endl;
   }
 
   ifstream fileStream( fileName, ios::binary | ios::in );
@@ -186,18 +182,18 @@ va_t PeDecoder::entry_point() const
   return _imageNtHeader32->OptionalHeader.AddressOfEntryPoint + _imageNtHeader32->OptionalHeader.ImageBase;
 }
 
-offset_t PeDecoder::va_to_offset(va_t virtAddr) const
+offset_t PeDecoder::va_to_offset(va_t va) const
 {
-  virtAddr -= _imageNtHeader32->OptionalHeader.ImageBase;
+  va -= _imageNtHeader32->OptionalHeader.ImageBase;
 
   for( int i = 0; i < _sectionHeaders.NumberOfSections; ++i )
   {
     size_t startVirtAddr = _sectionHeaders.SectionHeaders[ i ].VirtualAddress;
     size_t endVirtAddr = startVirtAddr + _sectionHeaders.SectionHeaders[ i ].SizeOfRawData;
 
-    if( startVirtAddr <= virtAddr && virtAddr < endVirtAddr )
+    if( startVirtAddr <= va && va < endVirtAddr )
     {
-      return virtAddr - startVirtAddr + _sectionHeaders.SectionHeaders[ i ].PointerToRawData;
+      return va - startVirtAddr + _sectionHeaders.SectionHeaders[ i ].PointerToRawData;
     }
   }
 
@@ -208,20 +204,22 @@ void PeDecoder::convert_instruction(const INSTRTYPE &source, InstrType &destinat
 {
   destination.AddrValue = source.AddrValue;
   destination.BranchType = (BranchType)source.BranchType;
+  destination.Opcode = source.Opcode;
+
+  assert( sizeof( source.Mnemonic ) == sizeof( destination.Mnemonic ) );
+  memcpy( destination.Mnemonic, source.Mnemonic, sizeof( destination.Mnemonic ) );
 }
 
-Argument PeDecoder::convert_argument(const ARGTYPE &sourceArg) const
+void PeDecoder::convert_argument(const ARGTYPE &sourceArg, Argument &destination)
 {
-  Argument convertedArg;
-  convertedArg.AccessMode = sourceArg.AccessMode;
-  memcpy( convertedArg.ArgMnemonic, sourceArg.ArgMnemonic, sizeof( sourceArg.ArgMnemonic ) );
-  convertedArg.ArgPosition = sourceArg.ArgPosition;
-  convertedArg.ArgSize = sourceArg.ArgSize;
-  convertedArg.ArgType = (ArgumentType)sourceArg.ArgType;
-  convertedArg.SegmentReg = sourceArg.SegmentReg;
-  convertedArg.Memory.BaseRegister = sourceArg.Memory.BaseRegister;
-  convertedArg.Memory.Displacement = sourceArg.Memory.BaseRegister;
-  convertedArg.Memory.IndexRegister = sourceArg.Memory.IndexRegister;
-  convertedArg.Memory.Scale = sourceArg.Memory.Scale;
-  return convertedArg;
+  destination.AccessMode = sourceArg.AccessMode;
+  memcpy( destination.ArgMnemonic, sourceArg.ArgMnemonic, sizeof( sourceArg.ArgMnemonic ) );
+  destination.ArgPosition = sourceArg.ArgPosition;
+  destination.ArgSize = sourceArg.ArgSize;
+  destination.ArgType = (ArgumentType)sourceArg.ArgType;
+  destination.SegmentReg = sourceArg.SegmentReg;
+  destination.Memory.BaseRegister = sourceArg.Memory.BaseRegister;
+  destination.Memory.Displacement = sourceArg.Memory.BaseRegister;
+  destination.Memory.IndexRegister = sourceArg.Memory.IndexRegister;
+  destination.Memory.Scale = sourceArg.Memory.Scale;
 }

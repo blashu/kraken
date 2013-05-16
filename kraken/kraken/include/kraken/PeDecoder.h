@@ -12,18 +12,30 @@ KRAKEN_API_ class PeDecoder : public Decoder
 {
   public:
     PeDecoder();
-
     virtual ~PeDecoder() {}
 
-    virtual int decode(va_t instrVirtualAddr, AsmCode *asmCode) const;
+    /*!
+     * Decode instruction by virtual address.
+     *
+     * \param[in]  virtualAddr  Virtual address of decoding instruction.
+     * \param[out] asmCode      Decoded instruction.
+     * \return true if decoding is success otherwise false.
+     */
+    virtual bool decode(va_t instrVirtualAddr, AsmCode *asmCode) const;
 
-    // Returns the entry point of the contained file
+     /*!
+     * Returns the entry point of binary file.
+     *
+     * \return Entry point.
+     */
     virtual va_t entry_point() const;
 
-    // Calculate offset in the memory based on the passed virtual address
-    offset_t va_to_offset(va_t rva) const;
-
-    // Load specified file
+    /*!
+     * Loads binary file and prepares one to decode internal instructions.
+     *
+     * \param path Path to file.
+     * \return true if decoding is success otherwise false.
+     */
     bool load(const std::string &path);
         
   private:
@@ -43,6 +55,8 @@ KRAKEN_API_ class PeDecoder : public Decoder
     // functions
     PeDecoder(const PeDecoder&){}
 
+    offset_t va_to_offset(va_t va) const;
+
     template <typename T>
     const T* buf(size_t offset) const;
 
@@ -54,9 +68,9 @@ KRAKEN_API_ class PeDecoder : public Decoder
   
     bool fill_pe_struct_fields();
 
-    Argument convert_argument(const ARGTYPE &sourceArg) const;
+    static void convert_argument(const ARGTYPE &source, Argument &destination);
 
-    void convert_instruction(const INSTRTYPE &source, InstrType &destination);
+    static void convert_instruction(const INSTRTYPE &source, InstrType &destination);
 };
 
 #endif
