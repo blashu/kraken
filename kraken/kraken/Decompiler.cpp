@@ -41,6 +41,7 @@ Decompiler::Decompiler()
   _nextPhase = DP_TARGET_FILE_IS_NOT_SET;
   _isRuntimeTraceEnable = false;
   _disassembler = std::make_shared<Disassembler>(Disassembler());
+
 }
 
 Decompiler::~Decompiler()
@@ -99,7 +100,7 @@ DecompPhases Decompiler::decompile_next_phase()
       }
       else
       {
-        BOOST_LOG_TRIVIAL(error) << "Can't load target file.";
+        BOOST_LOG_TRIVIAL(warning) << "Can't load target file.";
         _nextPhase = DP_ERROR;
         delete peDecoder;
       }
@@ -116,7 +117,7 @@ DecompPhases Decompiler::decompile_next_phase()
       else
       {
         _disassembler.reset();
-        BOOST_LOG_TRIVIAL(info) << "Can't disassemble file.";
+        BOOST_LOG_TRIVIAL(warning) << "Can't disassemble file.";
         _nextPhase = DP_ERROR;
       }
     }
@@ -132,7 +133,17 @@ DecompPhases Decompiler::decompile_next_phase()
     }
 
     break; case DP_GENERATE_SSA:
+      _ssaBuilder = std::make_shared<SSABuilder>(SSABuilder());
 
+      if( _ssaBuilder->build( _disassembler->_instructionMap, _decoder->entry_point() ))
+      {
+        BOOST_LOG_TRIVIAL(info) << "SSA representation has been successfully generated.";
+      }
+      else
+      {
+        BOOST_LOG_TRIVIAL(warning) << "Unable to generate SSA representation.";
+        _nextPhase = DP_ERROR;
+      }
 
     break; case DP_END:
       return DP_END;

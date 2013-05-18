@@ -5,6 +5,7 @@
 #include "PeDecoder.h"
 #include "Disassembler.h"
 #include "CodeListingInterface.h"
+#include "SSABuilder.h"
 
 #include <string>
 #include <memory>
@@ -52,9 +53,13 @@ namespace kraken {
 
     private:
       std::string _pathToTarget;
+
       std::shared_ptr<Decoder> _decoder;
+
       std::shared_ptr<Disassembler> _disassembler;
       std::shared_ptr<CodeListingInterface> _lowLevelListing;
+
+      std::shared_ptr<SSABuilder> _ssaBuilder;
 
       bool _isRuntimeTraceEnable;
       DecompPhases _nextPhase;

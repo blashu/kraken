@@ -15,6 +15,8 @@ using namespace std;
 
 namespace kraken
 {
+  class Decompiler;
+
   namespace interval
   {
     class ChunkCodeListing;
@@ -46,9 +48,11 @@ namespace kraken
 
       virtual int get_chunk_count() const;
 
-      virtual int get_instruction_count() const;
+      int get_instruction_count() const;
 
       friend class kraken::internal::ChunkCodeListing;
+
+      friend class kraken::Decompiler;
     private:
       /////////////////////////////////////////
       // fields
