@@ -17,7 +17,7 @@ namespace kraken
   typedef long long va_t;
 
   // Relative virtual address. Equals va minus image base.
-  //typedef long long rva_t;
+  typedef long long rva_t;
 
   // Type contains instruction offset in file.
   // For dll and exe can be calculate as RVA - IMAGE_SECTION_HEADER.VirtualAddress + IMAGE_SECTION_HEADER.PointerToRawData
