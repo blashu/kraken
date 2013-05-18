@@ -40,7 +40,6 @@ void MainWindow::loadFile()
 
   if ( _codeModel != NULL )
   {
-    _ui->codeView->setSelectionModel( NULL );
     _ui->codeView->setModel( NULL );
 
     delete _selectionModel;
