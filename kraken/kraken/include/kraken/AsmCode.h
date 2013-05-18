@@ -101,6 +101,17 @@ namespace kraken
     REG15 = 0x8000
   };
 
+  enum SegType
+  {
+    ST_UNKNOWN = 0,
+    ST_ESReg = 1,
+    ST_DSReg = 2,
+    ST_FSReg = 3,
+    ST_GSReg = 4,
+    ST_CSReg = 5,
+    ST_SSReg = 6
+  };
+
   struct MemoryType
   {
     Int32 BaseRegister;
@@ -144,7 +155,7 @@ namespace kraken
     Int32 ArgPosition;   
     UInt32 AccessMode;
     MemoryType Memory;
-    UInt32 SegmentReg;
+    SegType SegmentReg;
   };
 
   struct AsmCode
