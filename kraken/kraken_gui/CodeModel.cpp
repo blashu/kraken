@@ -45,7 +45,7 @@ bool CodeModel::isCodeItemBranchType(const QModelIndex& index) const
 
 QModelIndex CodeModel::getFirstReferencedCodeItemIndex(const QModelIndex& modelIndex) const
 {
-  if (!modelIndex.isValid())
+  if ( false == modelIndex.isValid() )
   {
     return modelIndex;
   }
@@ -58,6 +58,22 @@ QModelIndex CodeModel::getFirstReferencedCodeItemIndex(const QModelIndex& modelI
   }
 
   return getModelIndexByCodeItemLocation( codeItem->go_to().front() );
+}
+
+QModelIndex CodeModel::getCodeItemByVa(QString va)
+{
+  int counter = 0;
+  foreach ( QString stringItem, stringList() )
+  {
+    if ( stringItem.startsWith( va ) )
+    {
+      return index( counter );
+    }
+
+    counter++;
+  }
+
+  return QModelIndex();
 }
 
 QStringList CodeModel::getProgramListing()
@@ -74,7 +90,7 @@ QStringList CodeModel::getProgramListing()
   {
     appListing << QString( "Block #%1" ).arg( blockId );
 
-    auto block = _codeListing->get_block_by_id(blockId);
+    auto block = _codeListing->get_block_by_id( blockId );
     for ( int itemId = 0, itemCount = block->get_item_count(); itemId < itemCount; itemId++ )
     {
       auto item = _codeListing->get_item_by_id( blockId, itemId );

@@ -91,7 +91,14 @@
     <addaction name="actionShowProgramListing"/>
     <addaction name="actionShowUsedInstructions"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionFind_va"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -140,6 +147,11 @@
    </property>
    <property name="text">
     <string>&amp;Show used instructions</string>
+   </property>
+  </action>
+  <action name="actionFind_va">
+   <property name="text">
+    <string>&amp;Find va</string>
    </property>
   </action>
  </widget>

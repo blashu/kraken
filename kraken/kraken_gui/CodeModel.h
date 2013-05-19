@@ -21,10 +21,11 @@ class CodeModel : public QStringListModel
 
     void showProgramListing();
     int getCodeBlockCount() const;
-    int getCodeBlockItemCount() const;    
+    int getCodeBlockItemCount() const;
 
     bool isCodeItemBranchType(const QModelIndex& index) const;
     QModelIndex getFirstReferencedCodeItemIndex(const QModelIndex& index) const;
+    QModelIndex getCodeItemByVa(QString va);
 
   private:
     typedef bimap<int, code_item_location_t> listingMap;

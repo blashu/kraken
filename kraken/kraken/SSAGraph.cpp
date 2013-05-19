@@ -40,7 +40,6 @@ SSAStatement* SSAGraph::jmp_handler(SSAGraph* graph, AsmCode& asmCode)
       return NULL;
     }
 
-
     auto ssaConstAddress = SSAConstArgument::create_const_arg( address );
 
     SSAExpression expression(reinterpret_cast<SSAExpressionArgument*>(ssaConstAddress), NULL, SSAExpression::UnconditionalJmp );
