@@ -118,6 +118,22 @@ namespace kraken
     Int32 IndexRegister;
     Int32 Scale;
     Int64 Displacement;
+
+    MemoryType()
+    {
+      BaseRegister = 0;
+      IndexRegister = 0;
+      Scale = 0;
+      Displacement = 0;
+    }
+
+    MemoryType( const MemoryType& memoryType )
+    {
+      BaseRegister = memoryType.BaseRegister;
+      IndexRegister = memoryType.IndexRegister;
+      Scale = memoryType.Scale;
+      Displacement = memoryType.Displacement;
+    }
   };
 
   struct InstrType
@@ -156,6 +172,27 @@ namespace kraken
     UInt32 AccessMode;
     MemoryType Memory;
     SegType SegmentReg;
+
+    Argument()
+    {
+      ArgMnemonic[0] = '\0';
+      ArgType = (ArgumentType)0;
+      ArgSize = 0;
+      ArgPosition = 0;
+      AccessMode = 0;
+      SegmentReg = (SegType) 0;
+    }
+
+    Argument( const Argument& argument )
+    {
+      memcpy( ArgMnemonic, argument.ArgMnemonic, sizeof( ArgMnemonic ) );
+      ArgType = argument.ArgType;
+      ArgSize = argument.ArgSize;
+      ArgPosition = argument.ArgPosition;
+      AccessMode = argument.AccessMode;
+      Memory = argument.Memory;
+      SegmentReg = argument.SegmentReg;
+    }
   };
 
   struct AsmCode
@@ -185,8 +222,13 @@ namespace kraken
       VirtualAddr = asmCode.VirtualAddr;
       Eip = asmCode.Eip;
       Archi = asmCode.Archi;
-      memcpy( CompleteInstr, asmCode.CompleteInstr, sizeof( CompleteInstr ) );
       Instruction = asmCode.Instruction;
+
+      Argument1 = asmCode.Argument1;
+      Argument2 = asmCode.Argument2;
+      Argument3 = asmCode.Argument3;
+
+      memcpy( CompleteInstr, asmCode.CompleteInstr, sizeof( CompleteInstr ) );
       length = asmCode.length;
     }
 
