@@ -4,6 +4,12 @@
 
 using namespace kraken;
 
+SSADefinition::SSADefinition(va_t virtualAddress)
+{
+  _va = virtualAddress;
+  _index = 0;
+}
+
 SSADefinition::SSADefinition(std::string baseName, va_t virtualAddress, int index)
 {
   _baseName = baseName;
@@ -14,6 +20,11 @@ SSADefinition::SSADefinition(std::string baseName, va_t virtualAddress, int inde
 std::string SSADefinition::name() const
 {
   std::stringstream name;
+
+  if( _baseName.empty() )
+  {
+    return _baseName;
+  }
 
   if ( _index != 0 )
   {

@@ -10,8 +10,6 @@ namespace kraken
     public:
       SSABuilder();
 
-      SSABuilder(boost::ptr_map<va_t, AsmCode> instructionMap, va_t entryPoint);
-
       bool build(boost::ptr_map<va_t, AsmCode> instructionMap, va_t entryPoint);
 
     private:

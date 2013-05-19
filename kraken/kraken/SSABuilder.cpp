@@ -6,8 +6,7 @@ SSABuilder::SSABuilder()
 {
 }
 
-
-SSABuilder::SSABuilder(boost::ptr_map<va_t, AsmCode> instructionMap, va_t entryPoint)
+bool SSABuilder::build(boost::ptr_map<va_t, AsmCode> instructionMap, va_t entryPoint)
 {
-  _graph.fill( instructionMap, entryPoint );
+  return _graph.fill( instructionMap, entryPoint );
 }

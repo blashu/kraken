@@ -16,7 +16,7 @@ namespace kraken
 
       static SSAConstArgument* create_const_arg(uint64_t constant);
 
-      std::string to_string(std::string format = 0) const;
+      std::string to_string(std::string format = "") const;
 
     private:
       int _constant;

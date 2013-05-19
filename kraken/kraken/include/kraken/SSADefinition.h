@@ -10,11 +10,13 @@ namespace kraken
     public:
       SSADefinition(){}
 
-      SSADefinition(std::string baseName, va_t virtualAddress = 0, int index = 0);
+      SSADefinition(va_t virtualAddress);
+
+      SSADefinition(std::string baseName, va_t virtualAddress, int index = 0);
 
       ~SSADefinition(){}
 
-      std::string to_string(std::string format) const;
+      std::string to_string(std::string format = "") const;
 
       std::string name() const;
 

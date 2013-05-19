@@ -142,6 +142,7 @@ DecompPhases Decompiler::decompile_next_phase()
       else
       {
         BOOST_LOG_TRIVIAL(warning) << "Unable to generate SSA representation.";
+        _ssaBuilder.reset();
         _nextPhase = DP_ERROR;
       }
 

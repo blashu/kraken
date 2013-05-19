@@ -11,7 +11,7 @@ namespace kraken
     public:
       virtual ~SSAExpressionArgument() = 0;
 
-      virtual std::string to_string(std::string format = 0) const = 0;
+      virtual std::string to_string(std::string format = "") const = 0;
   };
 
   inline SSAExpressionArgument::~SSAExpressionArgument()

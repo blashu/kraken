@@ -29,33 +29,31 @@ SSAStatement* SSAGraph::mov_handler(SSAGraph* graph, AsmCode& asmCode)
 
 SSAStatement* SSAGraph::jmp_handler(SSAGraph* graph, AsmCode& asmCode)
 {
+  SSADefinition definition( asmCode.VirtualAddr );
 
-    SSADefinition definition( asmCode.Instruction.Mnemonic, asmCode.VirtualAddr );
+  auto address = asmCode.Instruction.AddrValue;
 
-    auto address = asmCode.Instruction.AddrValue;
+  if( address < 0 )
+  {
+    BOOST_LOG_TRIVIAL(error) << "Unable to parse jmp instruction on address " << address;
+    return NULL;
+  }
 
-    if( address < 0 )
-    {
-      BOOST_LOG_TRIVIAL(error) << "Unable to parse jmp instruction on address " << address;
-      return NULL;
-    }
+  auto ssaConstAddress = SSAConstArgument::create_const_arg( address );
 
+  SSAExpression expression(reinterpret_cast<SSAExpressionArgument*>(ssaConstAddress), NULL, SSAExpression::UnconditionalJmp );
 
-    auto ssaConstAddress = SSAConstArgument::create_const_arg( address );
+  auto newStatement = new SSAStatement( definition, SSAStatement::JmpType, expression );
 
-    SSAExpression expression(reinterpret_cast<SSAExpressionArgument*>(ssaConstAddress), NULL, SSAExpression::UnconditionalJmp );
+  BOOST_LOG_TRIVIAL(debug) << newStatement->to_string();
 
-    return new SSAStatement( definition, SSAStatement::JmpType, expression );
+  return newStatement;
 }
 
 SSAGraph::SSAGraph()
 {
   if ( _instructionHandlersMap.empty() )
   {
-    _instructionHandlersMap.insert( pair<std::string, instr_handler_callback>( "add ", add_handler ) );
-    _instructionHandlersMap.insert( pair<std::string, instr_handler_callback>( "sub ", sub_handler ) );
-    _instructionHandlersMap.insert( pair<std::string, instr_handler_callback>( "push ", push_handler ) );
-    _instructionHandlersMap.insert( pair<std::string, instr_handler_callback>( "mov ", mov_handler ) );
     _instructionHandlersMap.insert( pair<std::string, instr_handler_callback>( "jmp ", jmp_handler ) );
   }
 }
@@ -72,7 +70,7 @@ bool SSAGraph::fill(boost::ptr_map<va_t, AsmCode> instructionMap, va_t entryPoin
       BOOST_LOG_TRIVIAL(error) << "Unable to generate SSA statement for instruction "
                                << asmCode->Instruction.Mnemonic
                                << "because there is no handler for it.";
-      return false;
+      continue;
     }
 
     auto statement = handlerIt->second( this, *asmCode );
@@ -81,7 +79,7 @@ bool SSAGraph::fill(boost::ptr_map<va_t, AsmCode> instructionMap, va_t entryPoin
       BOOST_LOG_TRIVIAL(error) << "Unable to generate SSA statement for instruction "
                                << asmCode->Instruction.Mnemonic
                                << "because handler couldn't generate one.";
-      return false;
+      continue;
     }
 
     _statements.push_back( statement );
