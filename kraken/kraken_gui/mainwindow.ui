@@ -89,7 +89,6 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionShowProgramListing"/>
-    <addaction name="actionShowUsedInstructions"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
