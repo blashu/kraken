@@ -24,6 +24,8 @@ SSAStatement* SSAGraph::push_handler(SSAGraph* graph, AsmCode& asmCode)
 
 SSAStatement* SSAGraph::mov_handler(SSAGraph* graph, AsmCode& asmCode)
 {
+  //asmCode.Argument1.ArgType
+
   return NULL;
 }
 
@@ -33,20 +35,17 @@ SSAStatement* SSAGraph::jmp_handler(SSAGraph* graph, AsmCode& asmCode)
 
   auto address = asmCode.Instruction.AddrValue;
 
-  if( address < 0 )
+  if( address <= 0 )
   {
     BOOST_LOG_TRIVIAL(error) << "Unable to parse jmp instruction on address " << address;
     return NULL;
   }
 
-  auto ssaConstAddress = SSAConstArgument::create_const_arg( address );
-
-  SSAExpression expression(reinterpret_cast<SSAExpressionArgument*>(ssaConstAddress), NULL, SSAExpression::UnconditionalJmp );
+  auto ssaConstAddress = reinterpret_cast<SSAExpressionArgument*>(SSAConstArgument::create_const_arg( address ));
+  SSAExpression expression(SSAExpression::UnconditionalJmp, ssaConstAddress);
 
   auto newStatement = new SSAStatement( definition, SSAStatement::JmpType, expression );
-
   BOOST_LOG_TRIVIAL(debug) << newStatement->to_string();
-
   return newStatement;
 }
 

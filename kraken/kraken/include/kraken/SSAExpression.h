@@ -20,7 +20,9 @@ namespace kraken
 
       static const char* ExpressionTypeStrings[ET_COUNT];
 
-      SSAExpression(const SSAExpressionArgument* arg1, const SSAExpressionArgument* arg2, ExpressionType expressionType);
+      SSAExpression(ExpressionType expressionType, const SSAExpressionArgument* arg1);
+
+      SSAExpression(const SSAExpressionArgument* arg1, ExpressionType expressionType, const SSAExpressionArgument* arg2);
 
       std::string to_string() const;
 
