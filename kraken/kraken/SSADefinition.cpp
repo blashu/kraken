@@ -10,7 +10,7 @@ SSADefinition::SSADefinition(va_t virtualAddress)
   _index = 0;
 }
 
-SSADefinition::SSADefinition(std::string baseName, va_t virtualAddress, int index)
+SSADefinition::SSADefinition(va_t virtualAddress, std::string baseName, int index)
 {
   _baseName = baseName;
   _va = virtualAddress;

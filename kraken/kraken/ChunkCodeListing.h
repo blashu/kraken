@@ -11,7 +11,7 @@
 
 namespace kraken {
   namespace internal {
-    KRAKEN_API_ class ChunkCodeListing : CodeListingInterface
+    KRAKEN_API_ class ChunkCodeListing : public CodeListingInterface
     {
       public:
         ChunkCodeListing( std::shared_ptr<Disassembler> disassembler );

@@ -6,6 +6,8 @@
 #include "SSADefinition.h"
 #include "SSAExpression.h"
 
+#include <memory>
+
 namespace kraken
 {
   class SSAStatement
@@ -21,12 +23,12 @@ namespace kraken
         EndlessLoop
       };
 
-      SSAStatement(SSADefinition definition, StatementType statementType, SSAExpression expression);
+      SSAStatement(std::shared_ptr<SSADefinition> definition, StatementType statementType, SSAExpression expression);
 
       std::string to_string();
 
     private:
-      SSADefinition _definition;
+      std::shared_ptr<SSADefinition> _definition;
 
       SSAExpression _expression;
 

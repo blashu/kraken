@@ -2,14 +2,14 @@
 
 using namespace kraken;
 
-boost::ptr_map<uint64_t, SSAConstArgument> SSAConstArgument::_numToSSAConstArgMap;
+std::map<uint64_t, std::shared_ptr<SSAConstArgument>> SSAConstArgument::_numToSSAConstArgMap;
 
 SSAConstArgument::SSAConstArgument(uint64_t constant)
 {
   _constant = constant;
 }
 
-SSAConstArgument* SSAConstArgument::create_const_arg(uint64_t constant)
+std::shared_ptr<SSAConstArgument> SSAConstArgument::create_const_arg(uint64_t constant)
 {
   auto iter = _numToSSAConstArgMap.find( constant );
 
@@ -18,9 +18,9 @@ SSAConstArgument* SSAConstArgument::create_const_arg(uint64_t constant)
     return iter->second;
   }
 
-  auto ssaConst = new SSAConstArgument( constant );
+  auto ssaConst = std::shared_ptr<SSAConstArgument>( new SSAConstArgument( constant ) );
 
-  _numToSSAConstArgMap.insert( constant, ssaConst );
+  _numToSSAConstArgMap.insert( std::make_pair( constant, ssaConst ) );
 
   return ssaConst;
 }

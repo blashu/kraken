@@ -3,8 +3,9 @@
 
 #include <kraken/kraken.h>
 #include <kraken/AsmCode.h>
+#include <map>
+#include <vector>
 #include <boost/ptr_container/ptr_map.hpp>
-#include <boost/ptr_container/ptr_vector.hpp>
 
 #include "SSAStatement.h"
 
@@ -19,19 +20,21 @@ namespace kraken
 
       bool fill(boost::ptr_map<va_t, AsmCode> instructionMap, va_t entryPoint);
 
-    private:
-      static SSAStatement* add_handler(SSAGraph* graph, AsmCode& asmCode);
-      static SSAStatement* sub_handler(SSAGraph* graph, AsmCode& asmCode);
-      static SSAStatement* push_handler(SSAGraph* graph, AsmCode& asmCode);
-      static SSAStatement* mov_handler(SSAGraph* graph, AsmCode& asmCode);
-      static SSAStatement* jmp_handler(SSAGraph* graph, AsmCode& asmCode);
+      typedef vector<SSAStatement> statement_chain;
+      typedef statement_chain& statement_chain_ref;
 
-      typedef SSAStatement* (*instr_handler_callback)(SSAGraph*, AsmCode&);
+    private:
+      static vector<SSAStatement> add_handler(AsmCode& asmCode);
+      static vector<SSAStatement> sub_handler(AsmCode& asmCode);
+      static vector<SSAStatement> push_handler(AsmCode& asmCode);
+      static vector<SSAStatement> mov_handler(AsmCode& asmCode);
+      static vector<SSAStatement> jmp_handler(AsmCode& asmCode);
+
+      typedef vector<SSAStatement> (*instr_handler_callback)(AsmCode&);
 
       static std::map<std::string, instr_handler_callback> _instructionHandlersMap;
 
-      std::map<va_t, int> _vaInstructionMap;
-      boost::ptr_vector<SSAStatement> _statements;
+      std::map<va_t, statement_chain> _vaStatementChainMap;
   };
 }
 

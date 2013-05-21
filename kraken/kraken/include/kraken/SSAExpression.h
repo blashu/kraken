@@ -3,6 +3,8 @@
 
 #include "SSAExpressionArgument.h"
 
+#include <memory>
+
 namespace kraken
 {
   class SSAExpression
@@ -20,17 +22,19 @@ namespace kraken
 
       static const char* ExpressionTypeStrings[ET_COUNT];
 
-      SSAExpression(ExpressionType expressionType, const SSAExpressionArgument* arg1);
+      SSAExpression(ExpressionType expressionType, std::shared_ptr<SSAExpressionArgument> arg1);
 
-      SSAExpression(const SSAExpressionArgument* arg1, ExpressionType expressionType, const SSAExpressionArgument* arg2);
+      SSAExpression(std::shared_ptr<SSAExpressionArgument> arg1,
+                    ExpressionType expressionType,
+                    std::shared_ptr<SSAExpressionArgument> arg2);
 
       std::string to_string() const;
 
     private:
       SSAExpression(){}
 
-      const SSAExpressionArgument* _operand1;
-      const SSAExpressionArgument* _operand2;
+      std::shared_ptr<SSAExpressionArgument> _operand1;
+      std::shared_ptr<SSAExpressionArgument> _operand2;
 
       ExpressionType _type;
   };

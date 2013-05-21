@@ -25,7 +25,7 @@ CodeBlockItemInterface* ChunkCodeBlock::get_item_by_id(int id)
 {
   if( ( 0 < id ) || ( id < _items.size() ) )
   {
-    return reinterpret_cast<CodeBlockItemInterface*>( &(_items[id]) );
+    return &(_items[id]);
   }
   return NULL;
 }

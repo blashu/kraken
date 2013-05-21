@@ -5,14 +5,14 @@
 
 namespace kraken
 {
-  class SSADefinition : SSAExpressionArgument
+  class SSADefinition : public SSAExpressionArgument
   {
     public:
       SSADefinition(){}
 
       SSADefinition(va_t virtualAddress);
 
-      SSADefinition(std::string baseName, va_t virtualAddress, int index = 0);
+      SSADefinition(va_t virtualAddress, std::string baseName, int index = 0);
 
       ~SSADefinition(){}
 

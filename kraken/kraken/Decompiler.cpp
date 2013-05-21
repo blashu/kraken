@@ -169,6 +169,6 @@ CodeListingInterface* Decompiler::low_level_listing()
     return NULL;
   }
 
-  _lowLevelListing = std::shared_ptr<CodeListingInterface>(reinterpret_cast<CodeListingInterface*>( new ChunkCodeListing(_disassembler)) );
+  _lowLevelListing = std::shared_ptr<CodeListingInterface>( new ChunkCodeListing(_disassembler) );
   return &(*_lowLevelListing);
 }

@@ -9,7 +9,7 @@ namespace kraken {
   {
     class ChunkCodeListing;
 
-    class ChunkCodeBlockItem : CodeBlockItemInterface
+    class ChunkCodeBlockItem : public CodeBlockItemInterface
     {
       public:
         ChunkCodeBlockItem( ChunkCodeListing* codeListing, const AsmCode* asmCode );

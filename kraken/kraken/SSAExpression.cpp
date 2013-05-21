@@ -10,7 +10,7 @@ const char* SSAExpression::ExpressionTypeStrings[ET_COUNT] = {
   "+"
 };
 
-SSAExpression::SSAExpression(ExpressionType expressionType, const SSAExpressionArgument* arg1)
+SSAExpression::SSAExpression(ExpressionType expressionType, std::shared_ptr<SSAExpressionArgument> arg1)
 {
   assert(NULL != arg1);
 
@@ -19,7 +19,9 @@ SSAExpression::SSAExpression(ExpressionType expressionType, const SSAExpressionA
   _type = expressionType;
 }
 
-SSAExpression::SSAExpression(const SSAExpressionArgument* arg1, SSAExpression::ExpressionType expressionType, const SSAExpressionArgument* arg2)
+SSAExpression::SSAExpression(std::shared_ptr<SSAExpressionArgument> arg1,
+                             SSAExpression::ExpressionType expressionType,
+                             std::shared_ptr<SSAExpressionArgument> arg2)
 {
   assert(NULL != arg1);
   assert(NULL != arg2);
